@@ -1,0 +1,128 @@
+# Build script for gcc.
+#
+# Copyright (c) 2016-2023 Matias Fonzo, <selk@dragora.org>.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+version=13.2.0
+
+# Prerequisites
+gmp_version=6.2.1
+mpfr_version=4.2.0
+mpc_version=1.3.1
+isl_version=0.24
+
+cd -- "$TMPDIR"
+
+rm -rf gcc-${version} gmp-${gmp_version} \
+    mpfr-${mpfr_version} mpc-${mpc_version} isl-${isl_version}
+unpack "${worktree}/sources/gcc-${version}.tar.gz" \
+    "${worktree}/sources/gmp-${gmp_version}.tar.xz" \
+    "${worktree}/sources/mpfr-${mpfr_version}.tar.xz" \
+    "${worktree}/sources/mpc-${mpc_version}.tar.gz" \
+    "${worktree}/sources/isl-${isl_version}.tar.bz2"
+
+# Build instructions
+cd gcc-${version}
+
+# Make symlinks for requisites
+ln -s ../gmp-${gmp_version} gmp
+ln -s ../mpfr-${mpfr_version} mpfr
+ln -s ../mpc-${mpc_version} mpc
+ln -s ../isl-${isl_version} isl
+
+# Apply patches for MPFR
+(
+    cd mpfr || exit 1
+
+    for file in "${worktree}"/patches/mpfr/*; do
+        if test -f "$file"; then
+            rm -f PATCHES
+            patch -p1 <"$file"
+        fi
+    done
+)
+
+# Update detection for hosts based on musl
+
+cp -f "${worktree}/files/config.guess" gmp/configfsf.guess
+cp -f "${worktree}/files/config.sub" gmp/config.sub
+
+cp -f "${worktree}/files/config.guess" isl/config.guess
+cp -f "${worktree}/files/config.sub" isl/config.sub
+
+# Build in a separate directory
+rm -rf ../gcc-build
+mkdir ../gcc-build
+cd ../gcc-build
+
+option_list="
+ --prefix="$crossdir" \
+ --libdir="${crossdir}/lib${libSuffix}" \
+ --build=$host \
+ --host=$host \
+ --target=$target \
+ --enable-languages=c,c++ \
+ --enable-clocale=generic \
+ --enable-initfini-array \
+ --enable-tls \
+ --enable-libstdcxx-time \
+ --enable-checking=release \
+ --enable-fully-dynamic-string \
+ --enable-libssp \
+ --disable-symvers \
+ --disable-gnu-indirect-function \
+ --disable-libsanitizer \
+ --disable-libmpx \
+ --disable-nls \
+ --disable-python \
+ --with-sysroot="${crossdir}/$target" \
+ $multilib_options \
+ $gcc_options
+"
+
+if test -n "$IS_DARKCRUSADE"; then
+    ../gcc-${version}/configure CC="$BTCC" CXX="$BTCXX" AR="ar" \
+        CFLAGS="$BTCFLAGS" CXXFLAGS="$BTCXXFLAGS" LDFLAGS="$BTLDFLAGS" \
+        $option_list
+else
+    ../gcc-${version}/configure AR="ar" \
+        CFLAGS="$BTCFLAGS" CXXFLAGS="$BTCXXFLAGS" LDFLAGS="$BTLDFLAGS" \
+        $option_list
+fi
+
+unset option_list IS_DARKCRUSADE
+
+make -j${jobs} all \
+    MAKEINFO="true" \
+    AS_FOR_TARGET="${target}-as" \
+    LD_FOR_TARGET="${target}-ld"
+
+make -j${jobs} MAKEINFO="true" install
+
+# Insert again libssp_nonshared.a overwritten the recent library
+${target}-gcc \
+    -c "${worktree}/archive/gcc/__stack_chk_fail_local.c" \
+    -o __stack_chk_fail_local.o
+
+${target}-ar rc libssp_nonshared.a __stack_chk_fail_local.o
+${target}-ranlib libssp_nonshared.a
+cp -f libssp_nonshared.a "${crossdir}/${target}/lib/"
+
+cd -- "$TMPDIR"
+
+cleanup() {
+    rm -rf gcc-${version} gcc-build \
+        gmp-${gmp_version} mpfr-${mpfr_version} \
+        mpc-${mpc_version} isl-${isl_version}
+}

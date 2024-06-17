@@ -1,0 +1,27 @@
+*OUTPUT.bootstrap*
+*OUTPUT.darkcrusade*
+compilers/*/*.lz
+compilers/*/*.log.*
+qi/config.mak
+qi/etc/qirc
+qi/src/qi
+qi/*.tar.lz
+qi/*.tar.lz.sha256
+*.tar.gz
+*.tar.bz2
+*.tar.lz
+*.tar.xz
+*.tgz
+*.tar
+*.zip
+*.gem
+*.png
+*~
+
+# Ignore suffixes at sources/
+sources/*.gz
+sources/*.bz2
+sources/*.lz
+
+# To ignore (possible) decompressed sources at sources/
+sources/*/

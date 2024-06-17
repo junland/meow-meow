@@ -1,0 +1,16 @@
+#
+# x86_64: x86-64 (generic).
+#
+
+kernel_arch=x86_64
+libc_arch=x86_64
+
+libSuffix=64
+
+multilib_options="--with-multilib-list=m64"
+gcc_options="--with-arch=x86-64 --with-tune=generic"
+
+target=x86_64-${VENDOR}linux-gnu
+
+# Define architecture for the package manager
+package_arch=amd64

@@ -1,0 +1,13 @@
+--- src/paths.h.orig	2020-11-16 22:52:07.000000000 -0300
++++ src/paths.h	2021-01-20 07:07:21.393878441 -0300
+@@ -45,8 +45,8 @@
+ #define INITLVL2	"/var/log/initrunlvl"	/* COMPAT: New runlevel */
+ 				/* Note: INITLVL2 definition needs INITLVL */
+ #define HALTSCRIPT1	"/etc/init.d/halt"	/* Called by "fast" shutdown */
+-#define HALTSCRIPT2	"/etc/rc.d/rc.0"	/* Called by "fast" shutdown */
++#define HALTSCRIPT2	"/etc/rc.d/rc.shutdown"	/* Called by "fast" shutdown */
+ #define REBOOTSCRIPT1	"/etc/init.d/reboot"	/* Ditto. */
+-#define REBOOTSCRIPT2	"/etc/rc.d/rc.6"	/* Ditto. */
++#define REBOOTSCRIPT2	"/etc/rc.d/rc.reboot"	/* Ditto. */
+ #endif
+ 

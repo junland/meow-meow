@@ -1,0 +1,25 @@
+--- src/w.c.orig	2022-11-10 07:12:21.732839621 -0300
++++ src/w.c	2022-12-15 22:30:34.409557261 -0300
+@@ -43,11 +43,7 @@
+ #include <termios.h>
+ #include <time.h>
+ #include <unistd.h>
+-#ifdef HAVE_UTMPX_H
+-#	include <utmpx.h>
+-#else
+-#	include <utmp.h>
+-#endif
++#include <utmp.h>
+ #include <arpa/inet.h>
+ 
+ #include "c.h"
+--- library/escape.c.orig	2022-10-04 08:34:22.006478230 -0300
++++ library/escape.c	2022-12-15 22:31:14.886599428 -0300
+@@ -21,6 +21,7 @@
+ #include <limits.h>
+ #include <stdio.h>
+ #include <string.h>
++#include <langinfo.h>
+ 
+ #include "escape.h"
+ #include "readproc.h"

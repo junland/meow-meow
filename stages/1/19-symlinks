@@ -1,0 +1,48 @@
+# Build script for essential symlinks.
+#
+# Copyright (c) 2014-2019, 2023 Matias Fonzo, <selk@dragora.org>.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# Essential symbolic links for rootdir
+
+# Binaries
+for file in awk bash bc cat dd echo env file grep ln ls pwd rm sed sh stty; do
+    ln -sf "/tools/bin/${file}" "${rootdir}/bin"
+done
+
+ln -sf gcc /tools/bin/cc
+ln -sf /tools/bin/perl "${rootdir}/usr/bin"
+ln -sf /tools/bin/install "${rootdir}/usr/bin"
+ln -sf /proc/self/mounts "${rootdir}/etc/mtab"
+
+# Libraries
+ln -sf /tools/lib${libSuffix}/libgcc_s.so "${rootdir}/usr/lib${libSuffix}"
+ln -sf /tools/lib${libSuffix}/libgcc_s.so.1 "${rootdir}/usr/lib${libSuffix}"
+
+ln -sf /tools/lib${libSuffix}/libstdc++.so "${rootdir}/usr/lib${libSuffix}"
+ln -sf /tools/lib${libSuffix}/libstdc++.so.6 "${rootdir}/usr/lib${libSuffix}"
+ln -sf /tools/lib${libSuffix}/libstdc++.a "${rootdir}/usr/lib${libSuffix}"
+
+ln -sf /tools/lib${libSuffix}/libssp.so "${rootdir}/usr/lib${libSuffix}"
+ln -sf /tools/lib${libSuffix}/libssp.so.0 "${rootdir}/usr/lib${libSuffix}"
+ln -sf /tools/lib${libSuffix}/libssp.so.0.0.0 "${rootdir}/usr/lib${libSuffix}"
+ln -sf /tools/lib${libSuffix}/libssp.a "${rootdir}/usr/lib${libSuffix}"
+ln -sf /tools/lib${libSuffix}/libssp_nonshared.a "${rootdir}/usr/lib${libSuffix}"
+
+# Strip temporary prefix
+for file in libstdc++.la libssp.la libssp_nonshared.la; do
+    sed -e 's/tools/usr/' /tools/lib${libSuffix}/$file \
+        >"${rootdir}/usr/lib${libSuffix}/$file"
+done
+unset file

@@ -1,0 +1,43 @@
+# Build script for glibc.
+
+version=2.37
+
+cd -- "$TMPDIR"
+rm -rf glibc-${version}
+unpack "${worktree}/sources/glibc-${version}.tar.xz"
+
+# Build instructions
+cd glibc-${version}
+
+mkdir build && cd build
+
+echo "rootsbindir=/usr/bin" >configparms
+echo "install_root=${crossdir}/$target" >>configparms
+
+BUILD_CC="gcc" CC="${target}-gcc" AR="${target}-ar" RANLIB="$(TARGET)-ranlib" CFLAGS="$BTCFLAGS" LDFLAGS="$BTLDFLAGS -Wl,-rpath,${crossdir}/$target/lib" \
+    ../configure \
+    --prefix=/usr \
+    --host=$host \
+    --build=$build \
+    --with-headers=$crossdir/$target/usr/include \
+    --enable-kernel=5.14 \
+    --disable-nls \
+    --disable-static \
+    --enable-64-bit-bfd \
+    --disable-multilib \
+    --with-__thread \
+    --enable-multi-arch \
+    --disable-profile \
+    --enable-addons \
+    --with-fp=yes \
+    --enable-plugins \
+    --enable-threads \
+    --disable-werror
+
+make -j${jobs}
+
+make -j${jobs} DESTDIR="${crossdir}/$target" install
+
+cleanup() {
+    cd -- "$TMPDIR" && rm -rf glibc-${version}
+}

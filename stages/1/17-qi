@@ -1,0 +1,103 @@
+# Build script for qi.
+#
+# Copyright (c) 2015-2024 Matias Fonzo, <selk@dragora.org>.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+echo "Making Qi from ${worktree}/qi ..."
+
+cd -- "${worktree}/qi"
+
+# Set default compiler options for Dragora
+case $arch in
+i586)
+    package_cflags="-O2 -march=pentium-mmx -mtune=pentiumpro -fstack-clash-protection -fstack-protector-strong --param=ssp-buffer-size=4 -pipe"
+    package_cxxflags="$package_cflags"
+    package_ldflags="-s"
+    package_cppflags="-D_FORTIFY_SOURCE=2"
+    ;;
+x86_64)
+    package_cflags="-fPIC -O2 -mtune=generic -fstack-clash-protection -fcf-protection=full -fstack-protector-strong --param=ssp-buffer-size=4 -pipe"
+    package_cxxflags="$package_cflags"
+    package_ldflags="-s"
+    package_cppflags="-D_FORTIFY_SOURCE=2"
+    ;;
+*)
+    package_cflags="-O2 -fstack-protector-strong --param=ssp-buffer-size=4 -pipe"
+    package_cxxflags="$package_cflags"
+    package_ldflags="-s"
+    package_cppflags="-D_FORTIFY_SOURCE=2"
+    ;;
+esac
+
+make -j1 clean
+
+./configure \
+ --prefix=/tools \
+ --localstatedir=/var \
+ --packagedir=/usr/pkg \
+ --targetdir=/ \
+ --arch=$package_arch \
+ --qi-cflags="$package_cflags" \
+ --qi-cxxflags="$package_cxxflags" \
+ --qi-ldflags="$package_ldflags" \
+ --qi-cppflags="$package_cppflags"
+
+unset -v package_cflags package_cxxflags package_ldflags package_cppflags
+
+make -j1 install
+
+# Clean up the source repository
+
+rm -f config.mak
+make -j1 clean
+
+# Make available "usr/pkg" directory and output directory
+mkdir -p -- "${rootdir}/usr/pkg" "${rootdir}/var/cache/qi/packages"
+
+# Adjust prefixes in config for final system installation
+sed -i \
+ -e 's|/tools|/usr|g'   \
+ -e 's|/usr/etc|/etc|'  \
+ /tools/etc/qirc
+
+# Include additional settings from targets/
+
+# We prefix '--enable-multilib' for targets supporting it,
+# the native GCC wants this option explicitly
+if test -n "$multilib_options"
+then
+    case $multilib_options in
+    *--disable-multilib* | *--enable-multilib* | *--with-multilib-list=)
+        true
+        ;;
+    *)
+        multilib_options="--enable-multilib $multilib_options"
+        ;;
+    esac
+fi
+
+cat << EOF >> /tools/etc/qirc
+
+# Multilib options
+multilib_options="$multilib_options"
+
+# lib<equal> suffix (multilib, if any)
+libSuffix="$libSuffix"
+
+# GCC (arch-specific) options
+gcc_options="$gcc_options"
+EOF
+
+chmod 644 /tools/etc/qirc
+

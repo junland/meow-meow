@@ -54,11 +54,15 @@ rm -rf ../binutils-build
 mkdir ../binutils-build
 cd ../binutils-build
 
+mkdir -p "${sysrootdir}/lib"
+
+ln -s "${crossdir}/lib" "${crossdir}/lib64"
+
 ../binutils-${version}/configure \
     AR="ar" AS="as" CC="$BTCC" CXX="$BTCXX" \
     CFLAGS="$BTCFLAGS" CXXFLAGS="$BTCXXFLAGS" LDFLAGS="$BTLDFLAGS" \
     --prefix="$crossdir" \
-    --libdir="${crossdir}/lib${libSuffix}" \
+    --libdir="${crossdir}/lib" \
     --host=$host \
     --target=$target \
     --enable-deterministic-archives \
@@ -72,7 +76,7 @@ cd ../binutils-build
     --disable-gprofng \
     --disable-gdb \
     --with-mmap \
-    --with-sysroot="${crossdir}/$target" \
+    --with-sysroot="${sysrootdir}" \
     $multilib_options
 
 make -j${jobs} V=1 MAKEINFO="true"

@@ -68,7 +68,7 @@ cd ../gcc-build
 
 option_list="
  --prefix="$crossdir" \
- --libdir="${crossdir}/lib${libSuffix}" \
+ --libdir="${crossdir}/lib" \
  --build=$host \
  --host=$host \
  --target=$target \
@@ -86,7 +86,7 @@ option_list="
  --disable-libmpx \
  --disable-nls \
  --disable-python \
- --with-sysroot="${crossdir}/$target" \
+ --with-sysroot="${sysrootdir}" \
  $multilib_options \
  $gcc_options
 "
@@ -117,7 +117,7 @@ ${target}-gcc \
 
 ${target}-ar rc libssp_nonshared.a __stack_chk_fail_local.o
 ${target}-ranlib libssp_nonshared.a
-cp -f libssp_nonshared.a "${crossdir}/${target}/lib/"
+cp -f libssp_nonshared.a "${sysrootdir}"/lib/"
 
 cd -- "$TMPDIR"
 

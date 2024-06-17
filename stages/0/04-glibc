@@ -12,14 +12,18 @@ cd glibc-${version}
 mkdir build && cd build
 
 echo "rootsbindir=/usr/bin" >configparms
-echo "install_root=${crossdir}/$target" >>configparms
+echo "install_root=${crossdir}" >>configparms
 
-BUILD_CC="gcc" CC="${target}-gcc" AR="${target}-ar" RANLIB="$(TARGET)-ranlib" CFLAGS="$BTCFLAGS" LDFLAGS="$BTLDFLAGS -Wl,-rpath,${crossdir}/$target/lib" \
+echo "libc_cv_forced_unwind=yes" > config.cache
+
+BUILD_CC="gcc" CC="${target}-gcc" AR="${target}-ar" RANLIB="$(TARGET)-ranlib" CFLAGS="$BTCFLAGS" LDFLAGS="$BTLDFLAGS -Wl,-rpath,${sysrootdir}/lib" \
     ../configure \
     --prefix=/usr \
     --host=$host \
     --build=$build \
-    --with-headers=$crossdir/$target/usr/include \
+    --with-headers="${sysrootdir}/usr/include" \
+    --with-binutils="${crossdir}/bin" \
+    --libexecdir=/usr/lib \
     --enable-kernel=5.14 \
     --disable-nls \
     --disable-static \
@@ -32,11 +36,12 @@ BUILD_CC="gcc" CC="${target}-gcc" AR="${target}-ar" RANLIB="$(TARGET)-ranlib" CF
     --with-fp=yes \
     --enable-plugins \
     --enable-threads \
+    --cache-file=config.cache \
     --disable-werror
 
 make -j${jobs}
 
-make -j${jobs} DESTDIR="${crossdir}/$target" install
+make -j${jobs} install_root="${sysrootdir}" install
 
 cleanup() {
     cd -- "$TMPDIR" && rm -rf glibc-${version}

@@ -68,14 +68,16 @@ cd ../gcc-build
 
 ../gcc-${version}/configure \
     AR="ar" CC="$BTCC" CXX="$BTCXX" \
-    CFLAGS="$BTCFLAGS" CXXFLAGS="$BTCXXFLAGS" LDFLAGS="$BTLDFLAGS -Wl,-rpath,${crossdir}/$target/lib" \
+    CFLAGS="$BTCFLAGS" CXXFLAGS="$BTCXXFLAGS" LDFLAGS="$BTLDFLAGS" \
     --prefix="$crossdir" \
-    --libdir="${crossdir}/lib${libSuffix}" \
-    --with-sysroot="${crossdir}/$target" \
+    --libdir="${crossdir}/lib" \
+    --with-sysroot="${sysrootdir}" \
     --build=$host \
     --host=$host \
     --target=$target \
     --without-headers \
+    --enable-clocale=generic \
+    --enable-initfini-array \
     --with-newlib \
     --disable-decimal-float \
     --disable-libgomp \
@@ -92,6 +94,8 @@ cd ../gcc-build
     --enable-languages=c \
     --disable-shared \
     --with-glibc-version=2.37 \
+    --without-ppl \
+    --without-cloog \
     $multilib_options \
     $gcc_options
 

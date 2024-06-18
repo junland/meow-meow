@@ -24,7 +24,6 @@ unpack "${worktree}/sources/binutils-${version}.tar.xz"
 cd binutils-${version}
 
 # Apply patches from Fedora (Nick Clifton)
-
 patch -Np1 -i "${worktree}/patches/binutils/2.38/binutils-export-demangle.h.patch"
 patch -Np1 -i "${worktree}/patches/binutils/2.38/binutils-no-config-h-check.patch"
 patch -Np1 -i "${worktree}/patches/binutils/2.38/binutils-filename-in-error-messages.patch"

@@ -5,6 +5,6 @@ https://ftp.gnu.org/gnu/mpfr/mpfr-4.2.0.tar.xz
 https://ftp.gnu.org/gnu/gmp/gmp-6.2.1.tar.xz
 https://gcc.gnu.org/pub/gcc/infrastructure/isl-0.24.tar.bz2
 https://ftp.gnu.org/gnu/binutils/binutils-2.38.tar.xz
-https://ftp.gnu.org/gnu/gcc/gcc-11.2.0/gcc-11.2.0.tar.xz
+https://ftp.gnu.org/gnu/gcc/gcc-13.2.0/gcc-13.2.0.tar.xz
 https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.1.23.tar.xz
 http://ftp.gnu.org/gnu/glibc/glibc-2.37.tar.xz

@@ -103,10 +103,7 @@ fi
 
 unset option_list IS_DARKCRUSADE
 
-make -j${jobs} all \
-    MAKEINFO="true" \
-    AS_FOR_TARGET="${target}-as" \
-    LD_FOR_TARGET="${target}-ld"
+make -j${jobs} all MAKEINFO="true" AS_FOR_TARGET="${target}-as" LD_FOR_TARGET="${target}-ld"
 
 make -j${jobs} MAKEINFO="true" install
 

@@ -34,10 +34,9 @@ worktree="$(CDPATH='' cd -P -- "$(dirname -- "$0")" && pwd -P)" || exit $?
 
 ### Functions
 
-usage()
-{
+usage() {
     printf '%s' \
-"Usage: $PROGRAM [OPTIONS] [FILE]...
+        "Usage: $PROGRAM [OPTIONS] [FILE]...
 Builder of custom stages (cross compilers, GNU/Linux distributions).
 
 Where FILE is any shell script (as long as it is executable) from
@@ -68,18 +67,16 @@ Some influential environment variables:
 Available targets from ${worktree}/targets ...
 
 "
-for name in "${worktree}/targets"/*
-do
-    sed -e '2q;d' "$name"
-done
-unset -v name
-echo ""
+    for name in "${worktree}/targets"/*; do
+        sed -e '2q;d' "$name"
+    done
+    unset -v name
+    echo ""
 }
 
-version()
-{
+version() {
     printf '%s' \
-"$PROGRAM 3.33
+        "$PROGRAM 3.33
 Copyright (C) 2014-2022 Matias Andres Fonzo.
 License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
 This is free software: you are free to change and redistribute it.
@@ -87,98 +84,94 @@ There is NO WARRANTY, to the extent permitted by law.
 "
 }
 
-warn()
-{
+warn() {
     printf '%s\n' "$@" 1>&2
 }
 
-chkstatus_or_exit()
-{
+chkstatus_or_exit() {
     status=$?
 
-    if test $status -ne 0
-    then
+    if test $status -ne 0; then
         echo "Return status = $status" 1>&2
-        exit "${1-2}";	# If not given, defaults to 2
+        exit "${1-2}" # If not given, defaults to 2
     fi
 
     unset -v status
 }
 
 # Function to test and extract compressed files
-unpack()
-{
-    for file in "$@"
-    do
+unpack() {
+    for file in "$@"; do
         case $file in
-        *.tar)
-            tar tf "$file" > /dev/null && \
-            tar xpf "$file"
-            chkstatus_or_exit 3
-            ;;
-        *.tar.gz | *.tgz | *.tar.Z )
-            gzip -cd "$file" | tar tf - > /dev/null && \
-            gzip -cd "$file" | tar xpf -
-            chkstatus_or_exit 3
-            ;;
-        *.tar.bz2 | *.tbz2 | *.tbz )
-            bzip2 -cd "$file" | tar tf - > /dev/null && \
-            bzip2 -cd "$file" | tar xpf -
-            chkstatus_or_exit 3
-            ;;
-        *.tar.lz | *.tlz )
-            lzip -cd "$file" | tar tf - > /dev/null && \
-            lzip -cd "$file" | tar xpf -
-            chkstatus_or_exit 3
-            ;;
-        *.tar.xz | *.txz )
-            xz -cd "$file" | tar tf - > /dev/null && \
-            xz -cd "$file" | tar xpf -
-            chkstatus_or_exit 3
-            ;;
-        *.tar.zst | *.tzst )
-            zstd -cd "$file" | tar -tf - > /dev/null && \
-            zstd -cd "$file" | tar -xpf -
-            chkstatus_or_exit 3
-            ;;
-        *.zip | *.ZIP )
-            unzip -t "$file" > /dev/null && \
-            unzip "$file" > /dev/null
-            chkstatus_or_exit 3
-            ;;
-        *.gz)
-            gzip -t "$file" && \
-            gzip -cd "$file" > "$(basename -- "$file" .gz)"
-            chkstatus_or_exit 3
-            ;;
-        *.Z)
-            gzip -t "$file" && \
-            gzip -cd "$file" > "$(basename -- "$file" .Z)"
-            chkstatus_or_exit 3
-            ;;
-        *.bz2)
-            bzip2 -t "$file" && \
-            bzip2 -cd "$file" > "$(basename -- "$file" .bz2)"
-            chkstatus_or_exit 3
-            ;;
-        *.lz)
-            lzip -t "$file" && \
-            lzip -cd "$file" > "$(basename -- "$file" .lz)"
-            chkstatus_or_exit 3
-            ;;
-        *.xz)
-            xz -t "$file" && \
-            xz -cd "$file" > "$(basename -- "$file" .xz)"
-            chkstatus_or_exit 3
-            ;;
-        *.zst)
-            zstd -qt "$file" && \
-            zstd -cd "$file" > "$(basename -- "$file" .zst)"
-            chkstatus_or_exit 3
-            ;;
-        *)
-            warn "${PROGRAM}: cannot unpack ${file}: Unsupported extension"
-            exit 1
+            *.tar)
+                tar tf "$file" >/dev/null \
+                    && tar xpf "$file"
+                chkstatus_or_exit 3
+                ;;
+            *.tar.gz | *.tgz | *.tar.Z)
+                gzip -cd "$file" | tar tf - >/dev/null \
+                    && gzip -cd "$file" | tar xpf -
+                chkstatus_or_exit 3
+                ;;
+            *.tar.bz2 | *.tbz2 | *.tbz)
+                bzip2 -cd "$file" | tar tf - >/dev/null \
+                    && bzip2 -cd "$file" | tar xpf -
+                chkstatus_or_exit 3
+                ;;
+            *.tar.lz | *.tlz)
+                lzip -cd "$file" | tar tf - >/dev/null \
+                    && lzip -cd "$file" | tar xpf -
+                chkstatus_or_exit 3
+                ;;
+            *.tar.xz | *.txz)
+                xz -cd "$file" | tar tf - >/dev/null \
+                    && xz -cd "$file" | tar xpf -
+                chkstatus_or_exit 3
+                ;;
+            *.tar.zst | *.tzst)
+                zstd -cd "$file" | tar -tf - >/dev/null \
+                    && zstd -cd "$file" | tar -xpf -
+                chkstatus_or_exit 3
+                ;;
+            *.zip | *.ZIP)
+                unzip -t "$file" >/dev/null \
+                    && unzip "$file" >/dev/null
+                chkstatus_or_exit 3
+                ;;
+            *.gz)
+                gzip -t "$file" \
+                    && gzip -cd "$file" >"$(basename -- "$file" .gz)"
+                chkstatus_or_exit 3
+                ;;
+            *.Z)
+                gzip -t "$file" \
+                    && gzip -cd "$file" >"$(basename -- "$file" .Z)"
+                chkstatus_or_exit 3
+                ;;
+            *.bz2)
+                bzip2 -t "$file" \
+                    && bzip2 -cd "$file" >"$(basename -- "$file" .bz2)"
+                chkstatus_or_exit 3
+                ;;
+            *.lz)
+                lzip -t "$file" \
+                    && lzip -cd "$file" >"$(basename -- "$file" .lz)"
+                chkstatus_or_exit 3
+                ;;
+            *.xz)
+                xz -t "$file" \
+                    && xz -cd "$file" >"$(basename -- "$file" .xz)"
+                chkstatus_or_exit 3
+                ;;
+            *.zst)
+                zstd -qt "$file" \
+                    && zstd -cd "$file" >"$(basename -- "$file" .zst)"
+                chkstatus_or_exit 3
+                ;;
+            *)
+                warn "${PROGRAM}: cannot unpack ${file}: Unsupported extension"
+                exit 1
+                ;;
         esac
     done
     unset -v file
@@ -193,16 +186,14 @@ unpack()
 # http://gnu.org/savannah-checkouts/gnu/autoconf/manual/autoconf-2.69/html_node/Defining-Variables.html
 # http://www.gnu.org/savannah-checkouts/gnu/autoconf/manual/autoconf-2.69/html_node/Setting-Output-Variables.html
 
-warn_flags()
-{
+warn_flags() {
     warn "" \
-     "WARNING: Environment variable '$1' is set."   \
-     "This will be unset to avoid possible risks."  \
-     ""
+        "WARNING: Environment variable '$1' is set." \
+        "This will be unset to avoid possible risks." \
+        ""
 }
 
 ### Default values
-
 BTCC="${BTCC:=gcc}"
 BTCXX="${BTCXX:=g++}"
 BTCFLAGS="${BTCFLAGS:=-O2}"
@@ -215,51 +206,50 @@ arch="$(uname -m)" || chkstatus_or_exit
 jobs=1
 output="${worktree}/OUTPUT.${PROGRAM}"
 TMPDIR="${TMPDIR:=${output}/sources}"
+VENDOR="${VENDOR:=apex}"
 
 # Compose vendor name adding "-" as suffix
 test -n "$VENDOR" && VENDOR="${VENDOR}-"
 
 ### Parse options
-
-while getopts :ha:j:ko:s:V name
-do
+while getopts :ha:j:ko:s:V name; do
     case $name in
-    h)
-        usage
-        exit 0
-        ;;
-    a)
-        arch="$OPTARG"
-        ;;
-    j)
-        jobs="$OPTARG"
-        ;;
-    k)
-        opt_keep=opt_keep
-        ;;
-    o)
-        output="$OPTARG"
-        ;;
-    s)
-        stage="$OPTARG"
-        ;;
-    V)
-        version
-        exit 0
-        ;;
-    :)
-        warn "Option '-${OPTARG}' requires an argument"
-        usage
-        exit 1
-        ;;
-    \?)
-        warn "Illegal option -- '-${OPTARG}'"
-        usage
-        exit 1
-        ;;
+        h)
+            usage
+            exit 0
+            ;;
+        a)
+            arch="$OPTARG"
+            ;;
+        j)
+            jobs="$OPTARG"
+            ;;
+        k)
+            opt_keep=opt_keep
+            ;;
+        o)
+            output="$OPTARG"
+            ;;
+        s)
+            stage="$OPTARG"
+            ;;
+        V)
+            version
+            exit 0
+            ;;
+        :)
+            warn "Option '-${OPTARG}' requires an argument"
+            usage
+            exit 1
+            ;;
+        \?)
+            warn "Illegal option -- '-${OPTARG}'"
+            usage
+            exit 1
+            ;;
     esac
 done
-shift $(( OPTIND - 1 ))
+shift $((OPTIND - 1))
 unset -f usage version
 
 # Check for environment variables, print warning, unset in any case
@@ -273,14 +263,13 @@ unset CC CXX CFLAGS CXXFLAGS LDFLAGS warn_flags
 
 # Load target architecture-file
 
-if test -f "${worktree}/targets/$arch"
-then
+if test -f "${worktree}/targets/$arch"; then
     echo "${PROGRAM}: Loading target $arch ..."
     . "${worktree}/targets/$arch"
 else
     warn \
-     "${PROGRAM}: Target name not recognized -- '${arch}'" \
-     "See '$0 -h' for more information"
+        "${PROGRAM}: Target name not recognized -- '${arch}'" \
+        "See '$0 -h' for more information"
     exit 1
 fi
 
@@ -291,16 +280,15 @@ fi
 
 host="$(${BTCC} -dumpmachine)" || chkstatus_or_exit
 
-if test "$host" = "$target"
-then
+if test "$host" = "$target"; then
     # Rename VENDOR to 'cross'.  If empty, 'cross-linux' is added
     case "${host%-*-*}" in
-    *-*)
-        host="$(echo "$host" | sed -e 's/-[^-]*/-cross/')"
-        ;;
-    *)
-        host="$(echo "$host" | sed -e 's/-[^-]*/-cross-linux/')"
-        ;;
+        *-*)
+            host="$(echo "$host" | sed -e 's/-[^-]*/-cross/')"
+            ;;
+        *)
+            host="$(echo "$host" | sed -e 's/-[^-]*/-cross-linux/')"
+            ;;
     esac
 fi
 
@@ -312,17 +300,17 @@ rootdir="${output}/stage${stage}"
 sysrootdir="${crossdir}/${target}"
 
 printf '%s\n' \
- "BTCC: $BTCC"                  \
- "BTCXX: $BTCXX"                \
- "BTCFLAGS: $BTCFLAGS"          \
- "BTCXXFLAGS: $BTCXXFLAGS"      \
- "BTLDFLAGS: $BTLDFLAGS"        \
- "Host: $host"                  \
- "Target: $target"              \
- "Output directory: $output"    \
- "Cross  directory: $crossdir"  \
- "Root   directory: $rootdir"   \
- "Sysroot directory: $sysrootdir"
+    "BTCC: $BTCC" \
+    "BTCXX: $BTCXX" \
+    "BTCFLAGS: $BTCFLAGS" \
+    "BTCXXFLAGS: $BTCXXFLAGS" \
+    "BTLDFLAGS: $BTLDFLAGS" \
+    "Host: $host" \
+    "Target: $target" \
+    "Output directory: $output" \
+    "Cross  directory: $crossdir" \
+    "Root   directory: $rootdir" \
+    "Sysroot directory: $sysrootdir"
 
 # Remove write permission for group and other
 umask 022
@@ -337,45 +325,37 @@ PATH="${crossdir}/bin:${PATH}"
 export PATH VENDOR TMPDIR
 
 # Main loop
-for file in ${worktree}/stages/${stage}/${@:-??-*}
-do
+for file in ${worktree}/stages/${stage}/${@:-??-*}; do
     file="${file##*/}"
 
-    if test ! -f "${worktree}/stages/${stage}/$file"
-    then
+    if test ! -f "${worktree}/stages/${stage}/$file"; then
         warn "${PROGRAM}: ${stage}/${file}: No such file or stage number"
         exit 1
     fi
-    if test ! -x "${worktree}/stages/${stage}/$file"
-    then
+    if test ! -x "${worktree}/stages/${stage}/$file"; then
         warn "${PROGRAM}: ${stage}/${file}: File not executable, dodging"
-        continue;
+        continue
     fi
 
     ### Stage pre-settings
 
     # Create sysroot directory, recreating the symlink for the stage 0
-    if test "$stage" = 0
-    then
+    if test "$stage" = 0; then
         mkdir -p -- "${crossdir}/$target" || chkstatus_or_exit
 
-        if test ! -L "${crossdir}/${target}/usr"
-        then
+        if test ! -L "${crossdir}/${target}/usr"; then
             ln -s -f . "${crossdir}/${target}/usr" || chkstatus_or_exit
         fi
     fi
 
     # Create "tools" directory, recreating the symlink for the stage 1
-    if test "$stage" = 1
-    then
-        if test ! -d "${rootdir}/tools"
-        then
+    if test "$stage" = 1; then
+        if test ! -d "${rootdir}/tools"; then
             mkdir -p -- "${rootdir}/tools" || chkstatus_or_exit
         fi
 
         # Check and make required symlink
-        if test ! -L /tools
-        then
+        if test ! -L /tools; then
             ln -s -f "${rootdir}/tools" / || chkstatus_or_exit
         fi
     fi
@@ -399,10 +379,8 @@ do
     trap - EXIT HUP INT QUIT ABRT TERM
 
     # Delete declared directories on the cleanup() function
-    if test "$opt_keep" != opt_keep
-    then
-        if type cleanup 1> /dev/null 2> /dev/null
-        then
+    if test "$opt_keep" != opt_keep; then
+        if type cleanup 1>/dev/null 2>/dev/null; then
             cleanup
             chkstatus_or_exit 2
             unset -f cleanup
@@ -412,4 +390,3 @@ do
     # Back to the current working directory
     cd -- "$worktree" || chkstatus_or_exit
 done
-

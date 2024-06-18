@@ -297,7 +297,7 @@ fi
 
 crossdir="${output}/cross/${target}"
 rootdir="${output}/stage${stage}"
-sysrootdir="${crossdir}/${target}"
+sysrootdir="${crossdir}/sysroot"
 
 printf '%s\n' \
     "BTCC: $BTCC" \
@@ -341,10 +341,10 @@ for file in ${worktree}/stages/${stage}/${@:-??-*}; do
 
     # Create sysroot directory, recreating the symlink for the stage 0
     if test "$stage" = 0; then
-        mkdir -p -- "${crossdir}/$target" || chkstatus_or_exit
+        mkdir -p -- "${sysrootdir}" || chkstatus_or_exit
 
-        if test ! -L "${crossdir}/${target}/usr"; then
-            ln -s -f . "${crossdir}/${target}/usr" || chkstatus_or_exit
+        if test ! -L "${sysrootdir}/usr"; then
+            ln -s -f . "${sysrootdir}/usr" || chkstatus_or_exit
         fi
     fi
 

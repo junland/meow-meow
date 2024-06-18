@@ -55,7 +55,7 @@ ln -s ../isl-${isl_version} isl
 
 # Update detection for hosts based on musl
 
-cp -f "${worktree}/files/config.guess" gmp/configfsf.guess
+cp -f "${worktree}/files/config.guess" gmp/config.guess
 cp -f "${worktree}/files/config.sub" gmp/config.sub
 
 cp -f "${worktree}/files/config.guess" isl/config.guess

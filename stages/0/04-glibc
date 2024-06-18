@@ -16,7 +16,7 @@ echo "install_root=${crossdir}" >>configparms
 
 echo "libc_cv_forced_unwind=yes" > config.cache
 
-BUILD_CC="gcc" CC="${target}-gcc" AR="${target}-ar" RANLIB="$(TARGET)-ranlib" CFLAGS="$BTCFLAGS" LDFLAGS="$BTLDFLAGS -Wl,-rpath,${sysrootdir}/lib" \
+BUILD_CC="gcc" CC="${target}-gcc" AR="${target}-ar" RANLIB="$(target)-ranlib" CFLAGS="$BTCFLAGS" LDFLAGS="$BTLDFLAGS -Wl,-rpath,${sysrootdir}/lib" \
     ../configure \
     --prefix=/usr \
     --host=$host \

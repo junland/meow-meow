@@ -352,7 +352,7 @@ for file in ${worktree}/stages/${stage}/${@:-??-*}; do
 
         mkdir -p -- "${crossdir}/lib" || chkstatus_or_exit
 
-        ln -s "${crossdir}/lib" "${crossdir}/lib64" || chkstatus_or_exit
+        #ln -s "${crossdir}/lib" "${crossdir}/lib64" || chkstatus_or_exit
     fi
 
     # Create "tools" directory, recreating the symlink for the stage 1

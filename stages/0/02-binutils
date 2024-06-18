@@ -44,9 +44,10 @@ cd ../binutils-build
     AR="ar" AS="as" CC="$BTCC" CXX="$BTCXX" \
     CFLAGS="$BTCFLAGS" CXXFLAGS="$BTCXXFLAGS" LDFLAGS="$BTLDFLAGS" \
     --prefix="$crossdir" \
-    --libdir="${crossdir}/lib" \
     --host=$host \
     --target=$target \
+    --libdir="${crossdir}" \
+    --with-sysroot="${sysrootdir}" \
     --enable-deterministic-archives \
     --enable-separate-code \
     --disable-compressed-debug-sections \
@@ -58,11 +59,10 @@ cd ../binutils-build
     --disable-gprofng \
     --disable-gdb \
     --with-mmap \
-    --with-sysroot="${sysrootdir}" \
     $multilib_options
 
-make -j${jobs} V=1 MAKEINFO="true"
-make -j${jobs} V=1 MAKEINFO="true" install
+make -j${jobs}
+make -j${jobs} DESTDIR="${crossdir}" install
 
 cd -- "$TMPDIR"
 

@@ -50,8 +50,8 @@ cp -f "${worktree}/files/config.sub" isl/config.sub
 
 # Build in a separate directory
 rm -rf ../gcc-build
-mkdir ../gcc-build
-cd ../gcc-build
+mkdir ../gcc-build-final
+cd ../gcc-build-final
 
 option_list="
  --prefix="$crossdir" \
@@ -106,7 +106,7 @@ cp -f libssp_nonshared.a "${sysrootdir}/lib/"
 cd -- "$TMPDIR"
 
 cleanup() {
-    rm -rf gcc-${version} gcc-build \
+    rm -rf gcc-${version} gcc-build-final \
         gmp-${gmp_version} mpfr-${mpfr_version} \
         mpc-${mpc_version} isl-${isl_version}
 }

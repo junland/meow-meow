@@ -350,7 +350,9 @@ for file in ${worktree}/stages/${stage}/${@:-??-*}; do
             ln -s -f . "${sysrootdir}/usr" || chkstatus_or_exit
         fi
 
-        ln -s -f lib64 "${crossdir}/lib" || chkstatus_or_exit
+        mkdir -p -- "${crossdir}/lib" || chkstatus_or_exit
+
+        ln -s "${crossdir}/lib" "${crossdir}/lib64" || chkstatus_or_exit
     fi
 
     # Create "tools" directory, recreating the symlink for the stage 1

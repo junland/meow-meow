@@ -297,7 +297,8 @@ fi
 
 crossdir="${output}/cross/${target}"
 rootdir="${output}/stage${stage}"
-sysrootdir="${crossdir}/sysroot"
+sysrootdir="${crossdir}/${target}"
+cleansysrootdir="${sysrootdir}/sysroot"
 
 printf '%s\n' \
     "BTCC: $BTCC" \
@@ -340,12 +341,16 @@ for file in ${worktree}/stages/${stage}/${@:-??-*}; do
     ### Stage pre-settings
 
     # Create sysroot directory, recreating the symlink for the stage 0
-    if test "$stage" = 0; then
+    if test "$stage" = 0
+    then
         mkdir -p -- "${sysrootdir}" || chkstatus_or_exit
 
-        if test ! -L "${sysrootdir}/usr"; then
+        if test ! -L "${sysrootdir}/usr"
+        then
             ln -s -f . "${sysrootdir}/usr" || chkstatus_or_exit
         fi
+
+        ln -s -f lib64 "${crossdir}/lib" || chkstatus_or_exit
     fi
 
     # Create "tools" directory, recreating the symlink for the stage 1

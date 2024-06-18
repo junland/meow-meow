@@ -13,11 +13,12 @@ cd linux-${version}
 patch -p1 <"${worktree}/patches/linux-headers/revert-broken-uapi.patch"
 patch -p1 <"${worktree}/patches/linux-headers/0003-remove-inclusion-of-sysinfo.h-in-kernel.h.patch"
 
-make -j1 mrproper
-make -j1 headers ARCH="$kernel_arch"
-mkdir -p -- "${sysrootdir}/include"
+make -j1 ARCH="$kernel_arch" mrproper
+make -j1 ARCH="$kernel_arch" headers
 
-make -j1 headers_install ARCH="$kernel_arch" INSTALL_HDR_PATH="${sysrootdir}/"
+find usr/include -type f ! -name '*.h' -delete
+
+make -j1 ARCH="$kernel_arch" INSTALL_HDR_PATH="${sysrootdir}" headers_install
 
 cleanup() {
     cd -- "$TMPDIR" && rm -rf linux-${version}

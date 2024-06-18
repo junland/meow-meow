@@ -70,15 +70,13 @@ cd ../gcc-build
     AR="ar" CC="$BTCC" CXX="$BTCXX" \
     CFLAGS="$BTCFLAGS" CXXFLAGS="$BTCXXFLAGS" LDFLAGS="$BTLDFLAGS" \
     --prefix="$crossdir" \
-    --libdir="${crossdir}/lib" \
     --with-sysroot="${sysrootdir}" \
     --build=$host \
     --host=$host \
     --target=$target \
-    --without-headers \
     --enable-clocale=generic \
     --enable-initfini-array \
-    --with-newlib \
+    --enable-languages=c \
     --disable-decimal-float \
     --disable-libgomp \
     --disable-libssp \
@@ -91,11 +89,12 @@ cd ../gcc-build
     --disable-libstdc++-v3 \
     --disable-threads \
     --disable-multilib \
-    --enable-languages=c \
     --disable-shared \
-    --with-glibc-version=2.37 \
+    --without-headers \
     --without-ppl \
     --without-cloog \
+    --with-newlib \
+    --with-glibc-version=2.37 \
     $multilib_options \
     $gcc_options
 

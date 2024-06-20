@@ -35,6 +35,9 @@ patch -Np1 -i "${worktree}/patches/binutils/2.38/binutils-do-not-use-debuginfod.
 # (Thanks to "Linux From Scratch" for this!)
 #sed '6009s/$add_dir//' -i ltmain.sh
 
+# Make symlinks for lib64
+ln -s lib "${crossdir}/lib64"
+
 # Build in a separate directory
 rm -rf ../binutils-build
 mkdir ../binutils-build
@@ -46,7 +49,7 @@ cd ../binutils-build
     --prefix="$crossdir" \
     --host=$host \
     --target=$target \
-    --libdir="${crossdir}" \
+    --libdir="${crossdir}/lib64" \
     --with-sysroot="${sysrootdir}" \
     --enable-deterministic-archives \
     --enable-separate-code \
@@ -61,8 +64,12 @@ cd ../binutils-build
     --with-mmap \
     $multilib_options
 
+make -j${jobs} configure-host
 make -j${jobs}
-make -j${jobs} DESTDIR="${crossdir}" install
+make -j${jobs} install
+
+# Copy bfd-plugins
+cp -rv "${crossdir}/lib/bfd-plugins" "${sysrootdir}/lib"
 
 cd -- "$TMPDIR"
 

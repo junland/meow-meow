@@ -28,18 +28,6 @@ ln -s ../mpfr-${mpfr_version} mpfr
 ln -s ../mpc-${mpc_version} mpc
 ln -s ../isl-${isl_version} isl
 
-# Apply patches for MPFR
-(
-    cd mpfr || exit 1
-
-    for file in "${worktree}"/patches/mpfr/*; do
-        if test -f "$file"; then
-            rm -f PATCHES
-            patch -p1 <"$file"
-        fi
-    done
-)
-
 # Build in a separate directory
 rm -rf ../gcc-build
 mkdir ../gcc-build
@@ -51,8 +39,7 @@ cd ../gcc-build
     CXX="$BTCXX" \
     CFLAGS="$BTCFLAGS" \
     CXXFLAGS="$BTCXXFLAGS" \
-    LDFLAGS="$BTLDFLAGS" \
-    LDFLAGS="$BTLDFLAGS -Wl,-rpath,${crossdir}/lib" \
+    LDFLAGS="$BTLDFLAGS -L${crossdir}/lib -Wl,-rpath,${crossdir}/lib" \
     --prefix="$crossdir" \
     --with-sysroot="${sysrootdir}" \
     --build=$host \
@@ -61,29 +48,30 @@ cd ../gcc-build
     --enable-clocale=generic \
     --enable-initfini-array \
     --enable-languages=c \
+    --enable-tls \
+    --with-gnu-ld \
     --disable-decimal-float \
     --disable-libgomp \
     --disable-libssp \
     --disable-libatomic \
-    --disable-libitm \
     --disable-libsanitizer \
     --disable-libquadmath \
-    --disable-libvtv \
-    --disable-libcilkrts \
-    --disable-libstdc++-v3 \
     --disable-threads \
     --disable-multilib \
+    --enable-__cxa_atexit \
+    --disable-static \
     --disable-shared \
     --without-headers \
-    --without-ppl \
     --without-cloog \
     --with-newlib \
-    --with-glibc-version=2.37 \
     $multilib_options \
     $gcc_options
 
 make -j${jobs} MAKEINFO="true" all-gcc all-target-libgcc
 make -j${jobs} MAKEINFO="true" install-gcc install-target-libgcc
+
+# Copy gcc libraries to sysroot
+cp -rv "${crossdir}/lib/gcc" "${sysrootdir}/lib"
 
 cd ..
 

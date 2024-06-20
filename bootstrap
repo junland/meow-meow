@@ -309,8 +309,8 @@ printf '%s\n' \
     "Host: $host" \
     "Target: $target" \
     "Output directory: $output" \
-    "Cross  directory: $crossdir" \
-    "Root   directory: $rootdir" \
+    "Cross directory: $crossdir" \
+    "Root directory: $rootdir" \
     "Sysroot directory: $sysrootdir"
 
 # Remove write permission for group and other

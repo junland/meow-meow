@@ -50,6 +50,8 @@ cd ../gcc-build
     --enable-languages=c \
     --enable-tls \
     --with-gnu-ld \
+    --disable-nls \
+    --enable-symvers=gnu \
     --disable-decimal-float \
     --disable-libgomp \
     --disable-libssp \

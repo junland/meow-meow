@@ -1,4 +1,4 @@
-# Build script for linux-libre (headers).
+# Build script for linux-kernel (headers).
 # SPDX-License-Identifier: Apache-2.0
 
 version=6.1.23

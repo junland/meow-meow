@@ -41,16 +41,17 @@ cd ../gcc-build-final
     --host=$host \
     --target=$target \
     --with-sysroot="${sysrootdir}" \
+    --with-build-time-tools="${sysroot}/bin" \
     --libdir="${crossdir}/lib" \
     --disable-bootstrap \
     --disable-gnu-indirect-function \
+    --disable-libgomp \
     --disable-libmpx \
     --disable-libsanitizer \
     --disable-libstdcxx-pch \
     --disable-multilib \
     --disable-nls \
     --disable-python \
-    --disable-symvers \
     --enable-checking=release \
     --enable-clocale=generic \
     --enable-fully-dynamic-string \

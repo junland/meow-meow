@@ -26,7 +26,7 @@ cd gcc-${version}
 ln -s ../gmp-${gmp_version} gmp
 ln -s ../mpfr-${mpfr_version} mpfr
 ln -s ../mpc-${mpc_version} mpc
-ln -s ../isl-${isl_version} isl
+#ln -s ../isl-${isl_version} isl
 
 # Build in a separate directory
 rm -rf ../gcc-build
@@ -37,34 +37,29 @@ cd ../gcc-build
     AR="ar" \
     CC="$BTCC" \
     CXX="$BTCXX" \
-    CFLAGS="$BTCFLAGS" \
-    CXXFLAGS="$BTCXXFLAGS" \
-    LDFLAGS="$BTLDFLAGS -L${crossdir}/lib -Wl,-rpath,${crossdir}/lib" \
+    CFLAGS="$BTCFLAGS -I${crossdir}/include" CXXFLAGS="$BTCXXFLAGS -I${crossdir}/include" LDFLAGS="$BTLDFLAGS -L${crossdir}/lib -Wl,-rpath,${crossdir}/lib" \
     --prefix="$crossdir" \
-    --with-sysroot="${sysrootdir}" \
     --build=$host \
     --host=$host \
     --target=$target \
-    --enable-clocale=generic \
-    --enable-initfini-array \
-    --enable-languages=c \
-    --enable-tls \
-    --with-gnu-ld \
-    --disable-nls \
-    --enable-symvers=gnu \
-    --disable-decimal-float \
-    --disable-libgomp \
-    --disable-libssp \
-    --disable-libatomic \
-    --disable-libsanitizer \
-    --disable-libquadmath \
-    --disable-threads \
-    --disable-multilib \
-    --enable-__cxa_atexit \
+    --with-sysroot="${sysrootdir}" \
     --disable-static \
+    --enable-__cxa_atexit \
+    --with-gnu-ld \
+    --disable-libssp \
+    --disable-multilib \
+    --disable-decimal-float \
+    --disable-libquadmath \
+    --enable-tls \
+    --enable-threads \
+    --without-isl \
+    --without-cloog \
+    --enable-languages=c \
     --disable-shared \
     --without-headers \
-    --without-cloog \
+    --disable-threads \
+    --disable-libstdc++-v3 \
+    --disable-libstdcxx \
     --with-newlib \
     $multilib_options \
     $gcc_options

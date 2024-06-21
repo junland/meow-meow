@@ -24,24 +24,22 @@ mkdir ../binutils-build
 cd ../binutils-build
 
 ../binutils-${version}/configure \
-    AR="ar" AS="as" CC="$BTCC" CXX="$BTCXX" \
-    CFLAGS="$BTCFLAGS" CXXFLAGS="$BTCXXFLAGS" LDFLAGS="$BTLDFLAGS" \
+    AR="ar" \
+    AS="as" \
+    CC="$BTCC" \
+    CXX="$BTCXX" \
+    CFLAGS="$BTCFLAGS -I${crossdir}/include" CXXFLAGS="$BTCXXFLAGS-I${crossdir}/include" LDFLAGS="$BTLDFLAGS -L${crossdir}/lib -Wl,-rpath,${crossdir}/lib" \
     --prefix="$crossdir" \
     --host=$host \
     --target=$target \
-    --libdir="${crossdir}/lib64" \
     --with-sysroot="${sysrootdir}" \
-    --enable-deterministic-archives \
-    --enable-separate-code \
-    --disable-compressed-debug-sections \
-    --disable-generate-build-notes \
+    --disable-multilib \
     --disable-werror \
-    --disable-nls \
-    --disable-ppl-version-check \
-    --disable-cloog-version-check \
-    --disable-gprofng \
+    --disable-shared \
+    --enable-static \
+    --enable-poison-system-directories \
+    --disable-sim \
     --disable-gdb \
-    --with-mmap \
     $multilib_options
 
 make -j${jobs} configure-host

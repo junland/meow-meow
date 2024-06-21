@@ -198,7 +198,7 @@ warn_flags() {
 BTCC="${BTCC:=gcc}"
 BTCXX="${BTCXX:=g++}"
 BTCFLAGS="${BTCFLAGS:=-O2}"
-BTCXXFLAGS="${BTCXXFLAGS:=-O2}"
+BTCXXFLAGS="${BTCFLAGS:=-O2}"
 BTLDFLAGS="${BTLDFLAGS:=}"
 opt_keep=opt_keep.off
 stage=0
@@ -298,7 +298,6 @@ fi
 crossdir="${output}/cross/${target}"
 rootdir="${output}/stage${stage}"
 sysrootdir="${crossdir}/${target}"
-cleansysrootdir="${sysrootdir}/sysroot"
 
 printf '%s\n' \
     "BTCC: $BTCC" \
@@ -341,16 +340,24 @@ for file in ${worktree}/stages/${stage}/${@:-??-*}; do
     ### Stage pre-settings
 
     # Create sysroot directory, recreating the symlink for the stage 0
-    if test "$stage" = 0
-    then
+    if test "$stage" = 0; then
+        mkdir -p -- "${crossdir}/lib" || chkstatus_or_exit
+
+        if test ! -L "${crossdir}/usr"; then
+            ln -s -f . "${crossdir}/usr" || chkstatus_or_exit
+        fi
+
         mkdir -p -- "${sysrootdir}" || chkstatus_or_exit
 
-        if test ! -L "${sysrootdir}/usr"
-        then
+        mkdir -p -- "${sysrootdir}/lib" || chkstatus_or_exit
+
+        if test ! -L "${sysrootdir}/usr"; then
             ln -s -f . "${sysrootdir}/usr" || chkstatus_or_exit
         fi
 
-        mkdir -p -- "${crossdir}/lib" || chkstatus_or_exit
+        if test ! -L "${sysrootdir}/lib64"; then
+            ln -s -f lib "${sysrootdir}/lib64" || chkstatus_or_exit
+        fi
 
         #ln -s "${crossdir}/lib" "${crossdir}/lib64" || chkstatus_or_exit
     fi

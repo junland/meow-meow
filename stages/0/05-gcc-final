@@ -26,27 +26,7 @@ cd gcc-${version}
 ln -s ../gmp-${gmp_version} gmp
 ln -s ../mpfr-${mpfr_version} mpfr
 ln -s ../mpc-${mpc_version} mpc
-ln -s ../isl-${isl_version} isl
-
-# Apply patches for MPFR
-(
-    cd mpfr || exit 1
-
-    for file in "${worktree}"/patches/mpfr/*; do
-        if test -f "$file"; then
-            rm -f PATCHES
-            patch -p1 <"$file"
-        fi
-    done
-)
-
-# Update detection for hosts based on musl
-
-cp -f "${worktree}/files/config.guess" gmp/config.guess
-cp -f "${worktree}/files/config.sub" gmp/config.sub
-
-cp -f "${worktree}/files/config.guess" isl/config.guess
-cp -f "${worktree}/files/config.sub" isl/config.sub
+#ln -s ../isl-${isl_version} isl
 
 # Build in a separate directory
 rm -rf ../gcc-build
@@ -74,6 +54,7 @@ option_list="
  --disable-nls \
  --disable-python \
  --with-sysroot="${sysrootdir}" \
+ --without-isl \
  $multilib_options \
  $gcc_options
 "

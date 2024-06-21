@@ -191,6 +191,7 @@ warn_flags() {
         "WARNING: Environment variable '$1' is set." \
         "This will be unset to avoid possible risks." \
         ""
+    sleep 3
 }
 
 ### Default values
@@ -201,9 +202,8 @@ BTCXXFLAGS="${BTCXXFLAGS:=-O2}"
 BTLDFLAGS="${BTLDFLAGS:=}"
 opt_keep=opt_keep.off
 stage=0
-libSuffix=""
 arch="$(uname -m)" || chkstatus_or_exit
-jobs=1
+jobs=4
 output="${worktree}/OUTPUT.${PROGRAM}"
 TMPDIR="${TMPDIR:=${output}/sources}"
 VENDOR="${VENDOR:=apex}"

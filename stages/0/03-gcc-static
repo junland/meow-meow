@@ -43,24 +43,22 @@ cd ../gcc-build
     --host=$host \
     --target=$target \
     --with-sysroot="${sysrootdir}" \
-    --disable-static \
-    --enable-__cxa_atexit \
-    --with-gnu-ld \
-    --disable-libssp \
-    --disable-multilib \
     --disable-decimal-float \
     --disable-libquadmath \
-    --enable-tls \
-    --enable-threads \
-    --without-isl \
-    --without-cloog \
-    --enable-languages=c \
-    --disable-shared \
-    --without-headers \
-    --disable-threads \
-    --disable-libstdc++-v3 \
+    --disable-libssp \
     --disable-libstdcxx \
+    --disable-multilib \
+    --disable-shared \
+    --disable-static \
+    --disable-threads \
+    --enable-__cxa_atexit \
+    --enable-languages=c \
+    --enable-tls \
+    --with-gnu-ld \
     --with-newlib \
+    --without-cloog \
+    --without-headers \
+    --without-isl \
     $multilib_options \
     $gcc_options
 

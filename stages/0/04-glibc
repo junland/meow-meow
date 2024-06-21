@@ -17,32 +17,33 @@ echo "install_root=${crossdir}" >>configparms
 
 echo "libc_cv_forced_unwind=yes" >config.cache
 
-BUILD_CC="gcc" \
+../configure \
+    BUILD_CC="gcc" \
+    BUILD_CXX="g++" \
     CC="${target}-gcc" \
     AR="${target}-ar" \
     RANLIB="${target}-ranlib" \
     CFLAGS="$BTCFLAGS -I${crossdir}/include" CXXFLAGS="$BTCXXFLAGS-I${crossdir}/include" LDFLAGS="$BTLDFLAGS -L${crossdir}/lib -Wl,-rpath,${crossdir}/lib" \
-    ../configure \
     --prefix=/usr \
     --host=$host \
     --build=$build \
     --with-headers="${sysrootdir}/usr/include" \
     --with-binutils="${crossdir}/bin" \
     --libexecdir=/usr/lib \
-    --enable-kernel=5.14 \
-    --disable-nls \
-    --disable-static \
-    --enable-64-bit-bfd \
+    --cache-file=config.cache \
     --disable-multilib \
-    --with-__thread \
-    --enable-multi-arch \
+    --disable-nls \
     --disable-profile \
+    --disable-static \
+    --disable-werror \
+    --enable-64-bit-bfd \
     --enable-addons \
-    --with-fp=yes \
+    --enable-kernel=5.14 \
+    --enable-multi-arch \
     --enable-plugins \
     --enable-threads \
-    --cache-file=config.cache \
-    --disable-werror
+    --with-__thread \
+    --with-fp=yes
 
 make -j${jobs}
 

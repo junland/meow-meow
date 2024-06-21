@@ -33,13 +33,13 @@ cd ../binutils-build
     --host=$host \
     --target=$target \
     --with-sysroot="${sysrootdir}" \
-    --disable-multilib \
-    --disable-werror \
-    --disable-shared \
-    --enable-static \
-    --enable-poison-system-directories \
-    --disable-sim \
     --disable-gdb \
+    --disable-multilib \
+    --disable-shared \
+    --disable-sim \
+    --disable-werror \
+    --enable-poison-system-directories \
+    --enable-static \
     $multilib_options
 
 make -j${jobs} configure-host

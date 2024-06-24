@@ -36,6 +36,7 @@ cd ../gcc-build-final
 ../gcc-${version}/configure \
     AR="ar" \
     CROSS_COMPILE="${target}-" \
+    CXX_FOR_BUILD="${target}-g++" \
     CFLAGS="$BTCFLAGS -I${crossdir}/include" CXXFLAGS="$BTCXXFLAGS-I${crossdir}/include" LDFLAGS="$BTLDFLAGS -L${crossdir}/lib -Wl,-rpath,${crossdir}/lib" \
     --prefix="$crossdir" \
     --build=$host \

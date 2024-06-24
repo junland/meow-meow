@@ -4,6 +4,7 @@
 version=2.37
 
 cd -- "$TMPDIR"
+
 rm -rf glibc-${version}
 unpack "${worktree}/sources/glibc-${version}.tar.xz"
 

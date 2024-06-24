@@ -4,6 +4,7 @@
 version=2.38
 
 cd -- "$TMPDIR"
+
 rm -rf binutils-${version}
 unpack "${worktree}/sources/binutils-${version}.tar.xz"
 

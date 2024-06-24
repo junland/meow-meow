@@ -4,6 +4,7 @@
 version=6.1.23
 
 cd -- "$TMPDIR"
+
 rm -rf linux-${version}
 unpack "${worktree}/sources/linux-${version}.tar.xz"
 

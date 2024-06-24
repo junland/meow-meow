@@ -1,7 +1,7 @@
 # Build script for gcc.
 # SPDX-License-Identifier: Apache-2.0
 
-version=13.2.0
+version=13.3.0
 
 # Prerequisites
 gmp_version=6.2.1
@@ -35,6 +35,7 @@ cd ../gcc-build-final
 
 ../gcc-${version}/configure \
     AR="ar" \
+    CROSS_COMPILE="${target}-" \
     CFLAGS="$BTCFLAGS -I${crossdir}/include" CXXFLAGS="$BTCXXFLAGS-I${crossdir}/include" LDFLAGS="$BTLDFLAGS -L${crossdir}/lib -Wl,-rpath,${crossdir}/lib" \
     --prefix="$crossdir" \
     --build=$host \
@@ -44,23 +45,13 @@ cd ../gcc-build-final
     --with-build-time-tools="${sysroot}/bin" \
     --libdir="${crossdir}/lib" \
     --disable-bootstrap \
-    --disable-gnu-indirect-function \
     --disable-libgomp \
-    --disable-libmpx \
+    --disable-libitm \
     --disable-libsanitizer \
     --disable-libstdcxx-pch \
     --disable-multilib \
     --disable-nls \
-    --disable-python \
-    --enable-checking=release \
-    --enable-clocale=generic \
-    --enable-fully-dynamic-string \
-    --enable-initfini-array \
     --enable-languages=c,c++ \
-    --enable-libssp \
-    --enable-shared \
-    --enable-tls \
-    --without-isl \
     $multilib_options \
     $gcc_options
 

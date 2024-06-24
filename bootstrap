@@ -203,7 +203,7 @@ BTLDFLAGS="${BTLDFLAGS:=}"
 opt_keep=opt_keep.off
 stage=0
 arch="$(uname -m)" || chkstatus_or_exit
-jobs=4
+jobs=6
 output="${worktree}/OUTPUT.${PROGRAM}"
 TMPDIR="${TMPDIR:=${output}/sources}"
 VENDOR="${VENDOR:=apex}"

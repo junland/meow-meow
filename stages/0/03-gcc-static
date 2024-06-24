@@ -34,6 +34,8 @@ mkdir ../gcc-build
 cd ../gcc-build
 
 ../gcc-${version}/configure \
+    libc_cv_forced_unwind=yes \
+    libc_cv_c_cleanup=yes \
     AR="ar" \
     CC="$BTCC" \
     CXX="$BTCXX" \
@@ -44,21 +46,23 @@ cd ../gcc-build
     --target=$target \
     --with-sysroot="${sysrootdir}" \
     --disable-decimal-float \
+    --disable-libatomic \
+    --disable-libgomp \
+    --disable-libitm \
+    --disable-libmpx \
+    --disable-libmudflap \
     --disable-libquadmath \
+    --disable-libsanitizer \
     --disable-libssp \
     --disable-libstdcxx \
+    --disable-libvtv \
     --disable-multilib \
+    --disable-nls \
     --disable-shared \
-    --disable-static \
     --disable-threads \
-    --enable-__cxa_atexit \
-    --enable-languages=c \
-    --enable-tls \
-    --with-gnu-ld \
+    --enable-languages=c,c++ \
     --with-newlib \
-    --without-cloog \
     --without-headers \
-    --without-isl \
     $multilib_options \
     $gcc_options
 

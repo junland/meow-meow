@@ -19,7 +19,7 @@ make -j1 ARCH="$kernel_arch" headers
 
 find usr/include -type f ! -name '*.h' -delete
 
-make -j1 ARCH="$kernel_arch" INSTALL_HDR_PATH="${sysrootdir}" headers_install
+make -j1 ARCH="$kernel_arch" INSTALL_HDR_PATH="${crossdir}" headers_install
 
 cleanup() {
     cd -- "$TMPDIR" && rm -rf linux-${version}

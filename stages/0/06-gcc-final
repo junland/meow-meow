@@ -1,18 +1,19 @@
 # Build script for gcc.
 # SPDX-License-Identifier: Apache-2.0
 
-version=13.3.0
+version=14.1.0
 
 # Prerequisites
-gmp_version=6.2.1
-mpfr_version=4.2.0
+gmp_version=6.3.0
+mpfr_version=4.2.1
 mpc_version=1.3.1
 isl_version=0.24
 
 cd -- "$TMPDIR"
 
 rm -rf gcc-${version} gmp-${gmp_version} \
-    mpfr-${mpfr_version} mpc-${mpc_version} isl-${isl_version}
+    mpfr-${mpfr_version} mpc-${mpc_version} isl-${isl_version} \
+    gcc-build-final
 unpack "${worktree}/sources/gcc-${version}.tar.xz" \
     "${worktree}/sources/gmp-${gmp_version}.tar.xz" \
     "${worktree}/sources/mpfr-${mpfr_version}.tar.xz" \
@@ -34,24 +35,23 @@ mkdir ../gcc-build-final
 cd ../gcc-build-final
 
 ../gcc-${version}/configure \
-    AR="ar" \
-    CROSS_COMPILE="${target}-" \
-    CXX_FOR_BUILD="${target}-g++" \
-    CFLAGS="$BTCFLAGS -I${crossdir}/include" CXXFLAGS="$BTCXXFLAGS-I${crossdir}/include" LDFLAGS="$BTLDFLAGS -L${crossdir}/lib -Wl,-rpath,${crossdir}/lib" \
+    CC="${target}-gcc" \
+    CXX="${target}-g++" \
+    AR="${target}-ar" \
+    RANLIB="${target}-ranlib" \
+    CFLAGS="$BTCFLAGS -I${crossdir}/include" CXXFLAGS="$BTCXXFLAGS -I${crossdir}/include" LDFLAGS="$BTLDFLAGS -L${crossdir}/lib -Wl,-rpath,${crossdir}/lib" \
     --prefix="$crossdir" \
     --build=$host \
     --host=$host \
     --target=$target \
-    --with-sysroot="${sysrootdir}" \
-    --with-build-time-tools="${sysroot}/bin" \
-    --libdir="${crossdir}/lib" \
+    --with-sysroot="${crossdir}" \
+    --with-headers="${crossdir}/usr/include" \
     --disable-bootstrap \
     --disable-libgomp \
-    --disable-libitm \
     --disable-libsanitizer \
     --disable-libstdcxx-pch \
+    --disable-libstdcxx-threads \
     --disable-multilib \
-    --disable-nls \
     --enable-languages=c,c++ \
     $multilib_options \
     $gcc_options

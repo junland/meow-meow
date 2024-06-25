@@ -13,7 +13,7 @@ cd -- "$TMPDIR"
 
 rm -rf gcc-${version} gmp-${gmp_version} \
     mpfr-${mpfr_version} mpc-${mpc_version} isl-${isl_version} \
-    gcc-build
+    gcc-build-libcxx
 unpack "${worktree}/sources/gcc-${version}.tar.xz" \
     "${worktree}/sources/gmp-${gmp_version}.tar.xz" \
     "${worktree}/sources/mpfr-${mpfr_version}.tar.xz" \
@@ -31,57 +31,34 @@ ln -s ../mpc-${mpc_version} mpc
 
 # Build in a separate directory
 rm -rf ../gcc-build
-mkdir ../gcc-build
-cd ../gcc-build
+mkdir ../gcc-build-libcxx
+cd ../gcc-build-libcxx
 
-../gcc-${version}/configure \
-    AR="ar" \
-    CC="$BTCC" \
-    CXX="$BTCXX" \
+../gcc-${version}/libstdc++-v3/configure \
+    CC="${target}-gcc" \
+    AR="${target}-ar" \
+    RANLIB="${target}-ranlib" \
     CFLAGS="$BTCFLAGS -I${crossdir}/include" CXXFLAGS="$BTCXXFLAGS -I${crossdir}/include" LDFLAGS="$BTLDFLAGS -L${crossdir}/lib -Wl,-rpath,${crossdir}/lib" \
     --prefix="$crossdir" \
-    --build=$host \
-    --host=$host \
-    --target=$target \
+    --host=$target \
+    --build=$(../config.guess) \
     --with-sysroot="${crossdir}" \
-    --with-local-prefix="${crossdir}" \
-    --with-native-system-header-dir="${crossdir}/include" \
-    --disable-libatomic \
-    --disable-libgomp \
-    --disable-libquadmath \
-    --disable-libssp \
-    --disable-libstdcxx \
-    --disable-libvtv \
+    --disable-shared \
     --disable-multilib \
     --disable-nls \
-    --disable-shared \
-    --disable-threads \
-    --enable-default-pie \
-    --enable-default-ssp \
-    --enable-languages=c,c++ \
-    --with-newlib \
-    --without-headers \
+    --disable-libstdcxx-pch \
+    --with-gxx-include-dir="${crossdir}/include/c++/${version}" \
     $multilib_options \
     $gcc_options
 
-make -j${jobs}
+make -j${jobs} all AS_FOR_TARGET="${target}-as" LD_FOR_TARGET="${target}-ld"
 
 make -j${jobs} install
 
-# Copy gcc libraries to sysroot
-cp -rv "${crossdir}/lib/gcc" "${sysrootdir}/lib"
-
-cd ..
-
-if [ -d "${crossdir}lib/gcc/${target}/${version}/include" ]; then
-    cat gcc-${version}/gcc/{limitx.h,glimits.h,limity.h} >"${crossdir}lib/gcc/${target}/${version}/include/limits.h"
-else
-    # Report error as this is a critical dirrectory / file.
-    echo "Could not find the include directory for gcc. Aborting."
-fi
+cd -- "$TMPDIR"
 
 cleanup() {
-    cd -- "$TMPDIR" && rm -rf gcc-${version} gcc-build \
+    rm -rf gcc-${version} gcc-build-libcxx \
         gmp-${gmp_version} mpfr-${mpfr_version} \
         mpc-${mpc_version} isl-${isl_version}
 }

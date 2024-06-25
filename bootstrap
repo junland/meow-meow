@@ -297,7 +297,7 @@ fi
 
 crossdir="${output}/cross/${target}"
 rootdir="${output}/stage${stage}"
-sysrootdir="${crossdir}/${target}"
+sysrootdir="${crossdir}"
 
 printf '%s\n' \
     "BTCC: $BTCC" \
@@ -327,6 +327,7 @@ export PATH VENDOR TMPDIR
 # Main loop
 for file in ${worktree}/stages/${stage}/${@:-??-*}; do
     file="${file##*/}"
+    done_file=".stage-${stage}-${file}.done"
 
     if test ! -f "${worktree}/stages/${stage}/$file"; then
         warn "${PROGRAM}: ${stage}/${file}: No such file or stage number"
@@ -374,11 +375,16 @@ for file in ${worktree}/stages/${stage}/${@:-??-*}; do
         fi
     fi
 
+    # Check if the done file exists
+    if test -f "${output}/${done_file}"; then
+        echo "${PROGRAM}: Skipping $file from stages/${stage} ..."
+        continue
+    fi
+
     echo "${PROGRAM}: Processing $file from stages/${stage} ..."
 
     # Set trap before to run the script in order to
     # catch the return status, exit code 2 if fails
-
     trap 'chkstatus_or_exit 2' EXIT HUP INT QUIT ABRT TERM
 
     # Exit immediately on any error
@@ -391,6 +397,9 @@ for file in ${worktree}/stages/${stage}/${@:-??-*}; do
 
     # Reset given signals
     trap - EXIT HUP INT QUIT ABRT TERM
+
+    # Create the done file
+    touch "${output}/${done_file}"
 
     # Delete declared directories on the cleanup() function
     if test "$opt_keep" != opt_keep; then

@@ -1,7 +1,7 @@
 # Build script for glibc.
 # SPDX-License-Identifier: Apache-2.0
 
-version=2.37
+version=2.39
 
 cd -- "$TMPDIR"
 
@@ -14,8 +14,7 @@ cd glibc-${version}
 mkdir build && cd build
 
 echo "rootsbindir=/usr/bin" >configparms
-echo "install_root=${crossdir}" >>configparms
-
+echo "libc_cv_slibdir=/usr/lib" >>configparms
 echo "libc_cv_forced_unwind=yes" >config.cache
 
 ../configure \
@@ -28,27 +27,20 @@ echo "libc_cv_forced_unwind=yes" >config.cache
     --prefix=/usr \
     --host=$host \
     --build=$build \
-    --with-headers="${sysrootdir}/usr/include" \
+    --with-headers="${crossdir}/usr/include" \
     --with-binutils="${crossdir}/bin" \
-    --libexecdir=/usr/lib \
     --cache-file=config.cache \
-    --disable-multilib \
-    --disable-nls \
-    --disable-profile \
-    --disable-static \
-    --disable-werror \
-    --enable-64-bit-bfd \
-    --enable-addons \
-    --enable-kernel=5.14 \
-    --enable-multi-arch \
-    --enable-plugins \
-    --enable-threads \
-    --with-__thread \
-    --with-fp=yes
+    --disable-nscd \
+    --enable-kernel=4.19 \
+    --libexecdir=/usr/lib \
+    $multilib_options
 
 make -j${jobs}
 
-make -j${jobs} install_root="${sysrootdir}" install
+make -j${jobs} install_root="${crossdir}" install
+
+# Remove libtool archive files
+rm -v ${crossdir}/usr/lib/lib{stdc++{,exp,fs},supc++}.la
 
 cleanup() {
     cd -- "$TMPDIR" && rm -rf glibc-${version}

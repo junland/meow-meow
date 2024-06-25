@@ -33,7 +33,7 @@ cd ../binutils-build
     --prefix="$crossdir" \
     --host=$host \
     --target=$target \
-    --with-sysroot="${sysrootdir}" \
+    --with-sysroot="${crossdir}" \
     --disable-gdb \
     --disable-multilib \
     --disable-shared \
@@ -41,6 +41,8 @@ cd ../binutils-build
     --disable-werror \
     --enable-poison-system-directories \
     --enable-static \
+    --enable-default-hash-style=gnu \
+    --enable-gprofng=no \
     $multilib_options
 
 make -j${jobs} configure-host

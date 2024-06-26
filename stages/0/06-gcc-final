@@ -39,7 +39,7 @@ cd ../gcc-build-final
     CXX="${target}-g++" \
     AR="${target}-ar" \
     RANLIB="${target}-ranlib" \
-    CFLAGS="$BTCFLAGS -I${crossdir}/include" CXXFLAGS="$BTCXXFLAGS -I${crossdir}/include" LDFLAGS="$BTLDFLAGS -L${crossdir}/lib -Wl,-rpath,${crossdir}/lib" \
+    CFLAGS="$BTCFLAGS" CXXFLAGS="$BTCXXFLAGS" LDFLAGS="$BTLDFLAGS -L${crossdir}/lib -Wl,-rpath,${crossdir}/lib" \
     --prefix="$crossdir" \
     --build=$host \
     --host=$host \
@@ -59,15 +59,6 @@ cd ../gcc-build-final
 make -j${jobs} all MAKEINFO="true" AS_FOR_TARGET="${target}-as" LD_FOR_TARGET="${target}-ld"
 
 make -j${jobs} MAKEINFO="true" install
-
-# Insert again libssp_nonshared.a overwritten the recent library
-${target}-gcc \
-    -c "${worktree}/archive/gcc/__stack_chk_fail_local.c" \
-    -o __stack_chk_fail_local.o
-
-${target}-ar rc libssp_nonshared.a __stack_chk_fail_local.o
-${target}-ranlib libssp_nonshared.a
-cp -f libssp_nonshared.a "${sysrootdir}/lib/"
 
 cd -- "$TMPDIR"
 

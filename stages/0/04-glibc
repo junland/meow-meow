@@ -23,24 +23,20 @@ echo "libc_cv_forced_unwind=yes" >config.cache
     CC="${target}-gcc" \
     AR="${target}-ar" \
     RANLIB="${target}-ranlib" \
-    CFLAGS="$BTCFLAGS -I${crossdir}/include" CXXFLAGS="$BTCXXFLAGS-I${crossdir}/include" LDFLAGS="$BTLDFLAGS -L${crossdir}/lib -Wl,-rpath,${crossdir}/lib" \
+    CFLAGS="$BTCFLAGS" CXXFLAGS="$BTCXXFLAGS" LDFLAGS="$BTLDFLAGS -L${crossdir}/lib -Wl,-rpath,${crossdir}/lib" \
     --prefix=/usr \
     --host=$host \
-    --build=$build \
-    --with-headers="${crossdir}/usr/include" \
+    --build=$target \
+    --with-headers="${sysrootdir}/include" \
     --with-binutils="${crossdir}/bin" \
     --cache-file=config.cache \
     --disable-nscd \
     --enable-kernel=4.19 \
-    --libexecdir=/usr/lib \
     $multilib_options
 
 make -j${jobs}
 
-make -j${jobs} install_root="${crossdir}" install
-
-# Remove libtool archive files
-rm -v ${crossdir}/usr/lib/lib{stdc++{,exp,fs},supc++}.la
+make -j${jobs} DESTDIR="${crossdir}" install 
 
 cleanup() {
     cd -- "$TMPDIR" && rm -rf glibc-${version}

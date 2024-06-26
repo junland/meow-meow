@@ -38,14 +38,15 @@ cd ../gcc-build
     AR="ar" \
     CC="$BTCC" \
     CXX="$BTCXX" \
-    CFLAGS="$BTCFLAGS -I${crossdir}/include" CXXFLAGS="$BTCXXFLAGS -I${crossdir}/include" LDFLAGS="$BTLDFLAGS -L${crossdir}/lib -Wl,-rpath,${crossdir}/lib" \
+    CFLAGS="$BTCFLAGS" CXXFLAGS="$BTCXXFLAGS" LDFLAGS="$BTLDFLAGS" \
     --prefix="$crossdir" \
     --build=$host \
     --host=$host \
     --target=$target \
-    --with-sysroot="${crossdir}" \
-    --with-local-prefix="${crossdir}" \
-    --with-native-system-header-dir="${crossdir}/include" \
+    --with-sysroot="${sysrootdir}" \
+    --with-mpc="${TMPDIR}/gcc-${version}/mpc" \
+    --with-mpfr="${TMPDIR}/gcc-${version}/mpfr" \
+    --with-gmp="${TMPDIR}/gcc-${version}/gmp" \
     --disable-libatomic \
     --disable-libgomp \
     --disable-libquadmath \
@@ -64,21 +65,16 @@ cd ../gcc-build
     $multilib_options \
     $gcc_options
 
-make -j${jobs}
+make -j${jobs} all-gcc all-target-libgcc
 
-make -j${jobs} install
-
-# Copy gcc libraries to sysroot
-cp -rv "${crossdir}/lib/gcc" "${sysrootdir}/lib"
+make -j${jobs} install install-gcc install-target-libgcc
 
 cd ..
 
-if [ -d "${crossdir}lib/gcc/${target}/${version}/include" ]; then
-    cat gcc-${version}/gcc/{limitx.h,glimits.h,limity.h} >"${crossdir}lib/gcc/${target}/${version}/include/limits.h"
-else
-    # Report error as this is a critical dirrectory / file.
-    echo "Could not find the include directory for gcc. Aborting."
-fi
+cat ${TMPDIR}/gcc-${version}/gcc/limitx.h \
+    ${TMPDIR}/gcc-${version}/gcc/glimits.h \
+    ${TMPDIR}/gcc-${version}/gcc/limity.h \
+    >"${crossdir}/lib/gcc/${target}/${version}/include/limits.h"
 
 cleanup() {
     cd -- "$TMPDIR" && rm -rf gcc-${version} gcc-build \

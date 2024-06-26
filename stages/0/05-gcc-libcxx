@@ -38,7 +38,7 @@ cd ../gcc-build-libcxx
     CC="${target}-gcc" \
     AR="${target}-ar" \
     RANLIB="${target}-ranlib" \
-    CFLAGS="$BTCFLAGS -I${crossdir}/include" CXXFLAGS="$BTCXXFLAGS -I${crossdir}/include" LDFLAGS="$BTLDFLAGS -L${crossdir}/lib -Wl,-rpath,${crossdir}/lib" \
+    CFLAGS="$BTCFLAGS" CXXFLAGS="$BTCXXFLAGS" LDFLAGS="$BTLDFLAGS -L${crossdir}/lib -Wl,-rpath,${crossdir}/lib" \
     --prefix="$crossdir" \
     --host=$target \
     --build=$(../config.guess) \

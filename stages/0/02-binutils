@@ -11,11 +11,6 @@ unpack "${worktree}/sources/binutils-${version}.tar.xz"
 # Build instructions
 cd binutils-${version}
 
-# Binutils ships an outdated copy of libtool in the tarball.  It lacks sysroot support,
-# so the produced binaries will be mistakenly linked to libraries from the host distro.
-# (Thanks to "Linux From Scratch" for this!)
-#sed '6009s/$add_dir//' -i ltmain.sh
-
 # Make symlinks for lib64
 ln -s lib "${crossdir}/lib64"
 
@@ -29,28 +24,21 @@ cd ../binutils-build
     AS="as" \
     CC="$BTCC" \
     CXX="$BTCXX" \
-    CFLAGS="$BTCFLAGS -I${crossdir}/include" CXXFLAGS="$BTCXXFLAGS-I${crossdir}/include" LDFLAGS="$BTLDFLAGS -L${crossdir}/lib -Wl,-rpath,${crossdir}/lib" \
+    CFLAGS="$BTCFLAGS" CXXFLAGS="$BTCXXFLAGS" LDFLAGS="$BTLDFLAGS" \
     --prefix="$crossdir" \
     --host=$host \
     --target=$target \
-    --with-sysroot="${crossdir}" \
-    --disable-gdb \
-    --disable-multilib \
+    --with-sysroot="${sysrootdir}" \
     --disable-shared \
-    --disable-sim \
-    --disable-werror \
-    --enable-poison-system-directories \
-    --enable-static \
-    --enable-default-hash-style=gnu \
-    --enable-gprofng=no \
+    --disable-multilib \
+    --disable-nls \
+    --disable-ppl-version-check \
+    --disable-cloog-version-check \
     $multilib_options
 
 make -j${jobs} configure-host
 make -j${jobs}
 make -j${jobs} install
-
-# Copy bfd-plugins
-cp -rv "${crossdir}/lib/bfd-plugins" "${sysrootdir}/lib"
 
 cd -- "$TMPDIR"
 

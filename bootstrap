@@ -297,7 +297,7 @@ fi
 
 crossdir="${output}/cross/${target}"
 rootdir="${output}/stage${stage}"
-sysrootdir="${crossdir}"
+sysrootdir="${crossdir}/$target"
 
 printf '%s\n' \
     "BTCC: $BTCC" \

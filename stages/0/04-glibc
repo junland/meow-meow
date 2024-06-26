@@ -25,18 +25,20 @@ echo "libc_cv_forced_unwind=yes" >config.cache
     RANLIB="${target}-ranlib" \
     CFLAGS="$BTCFLAGS" CXXFLAGS="$BTCXXFLAGS" LDFLAGS="$BTLDFLAGS -L${crossdir}/lib -Wl,-rpath,${crossdir}/lib" \
     --prefix=/usr \
-    --host=$host \
-    --build=$target \
+    --host=$target \
+    --build=$host \
     --with-headers="${sysrootdir}/include" \
     --with-binutils="${crossdir}/bin" \
     --cache-file=config.cache \
     --disable-nscd \
     --enable-kernel=4.19 \
+    libc_cv_forced_unwind=yes \
+    libc_cv_c_cleanup=yes \
     $multilib_options
 
 make -j${jobs}
 
-make -j${jobs} DESTDIR="${crossdir}" install 
+make -j${jobs} DESTDIR="${crossdir}" install
 
 cleanup() {
     cd -- "$TMPDIR" && rm -rf glibc-${version}

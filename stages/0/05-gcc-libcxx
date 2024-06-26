@@ -38,11 +38,11 @@ cd ../gcc-build-libcxx
     CC="${target}-gcc" \
     AR="${target}-ar" \
     RANLIB="${target}-ranlib" \
-    CFLAGS="$BTCFLAGS" CXXFLAGS="$BTCXXFLAGS" LDFLAGS="$BTLDFLAGS -L${crossdir}/lib -Wl,-rpath,${crossdir}/lib" \
-    --prefix="$crossdir" \
-    --host=$target \
+    CFLAGS="$BTCFLAGS" CXXFLAGS="$BTCXXFLAGS" LDFLAGS="$BTLDFLAGS" \
+    --prefix=/usr \
+    --host=${target} \
     --build=$(../config.guess) \
-    --with-sysroot="${crossdir}" \
+    --with-sysroot="${sysrootdir}" \
     --disable-shared \
     --disable-multilib \
     --disable-nls \

@@ -1,4 +1,4 @@
-#! /bin/sh -
+#!/bin/bash
 # Builder of custom stages (cross compilers, GNU/Linux distributions)
 #
 # Copyright (c) 2014-2022 Matias Fonzo, <selk@dragora.org>.
@@ -387,13 +387,13 @@ for file in ${worktree}/stages/${stage}/${@:-??-*}; do
     # catch the return status, exit code 2 if fails
     trap 'chkstatus_or_exit 2' EXIT HUP INT QUIT ABRT TERM
 
-    # Exit immediately on any error
-    set -e
+    # Activate shell option(s)
+    set -e +h
 
     . "${worktree}/stages/${stage}/$file"
 
     # Deactivate shell option(s)
-    set +e
+    set +e -h
 
     # Reset given signals
     trap - EXIT HUP INT QUIT ABRT TERM

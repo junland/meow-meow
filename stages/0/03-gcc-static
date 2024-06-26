@@ -65,9 +65,9 @@ cd ../gcc-build
     $multilib_options \
     $gcc_options
 
-make -j${jobs} all-gcc all-target-libgcc
+make -j${jobs}
 
-make -j${jobs} install install-gcc install-target-libgcc
+make -j${jobs} install
 
 cd ..
 

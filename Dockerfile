@@ -37,16 +37,26 @@ RUN update-ca-certificates
 # Clean up
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
+# Add builder user
+RUN groupadd builder \
+    && useradd -s /bin/bash -g builder -m -k /dev/null builder \
+    && echo 'builder ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers \
+    && echo 'builder:builder' | chpasswd
+
 # Set work directory
-WORKDIR /root
+WORKDIR /home/builder
 
 # Copy source code
-COPY . /root
+COPY . /home/builder
 
 # Setup scripts
-RUN chmod +x /root/bootstrap
+RUN chmod +x ./bootstrap
 
 # Make sure everything is in Unix format
-RUN dos2unix /root/stages/**/* /root/stages/env.d/* /root/bootstrap /root/targets/* /root/patches/**/* sources/*.txt files/*
+RUN dos2unix ./stages/**/* ./stages/env.d/* ./bootstrap ./targets/* ./patches/**/* sources/*.txt files/*
 
-#RUN cd sources && wget -c -i SOURCELIST.txt || true
+# Make sure everything is the correct permissions
+RUN chown -R builder:builder /home/builder
+
+# Switch to builder user
+USER builder

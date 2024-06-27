@@ -40,14 +40,14 @@ cd ../gcc-build-libcxx
     RANLIB="${target}-ranlib" \
     CFLAGS="$BTCFLAGS" CXXFLAGS="$BTCXXFLAGS" LDFLAGS="$BTLDFLAGS" \
     --prefix=/usr \
-    --host=${target} \
+    --host="${target}" \
     --build=$(../config.guess) \
     --with-sysroot="${sysrootdir}" \
     --disable-shared \
     --disable-multilib \
     --disable-nls \
     --disable-libstdcxx-pch \
-    --with-gxx-include-dir="${crossdir}/include/c++/${version}" \
+    --with-gxx-include-dir="${sysrootdir}/include/c++/${version}" \
     $multilib_options \
     $gcc_options
 

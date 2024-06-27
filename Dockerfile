@@ -2,10 +2,6 @@ FROM ubuntu:24.04 as builder
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-ENV TOOLCHAIN_ARCH=x86-64-v3
-
-ENV TOOLCHAIN_TRIPLET=x86_64-buildroot-linux-gnu
-
 # Install dependencies
 RUN apt-get update && apt-get upgrade -y && apt-get install -y --no-install-recommends \
     apt-transport-https ca-certificates \
@@ -37,9 +33,12 @@ RUN update-ca-certificates
 # Clean up
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
+# Set root password
+RUN echo 'root:root' | chpasswd
+
 # Add builder user
 RUN groupadd builder \
-    && useradd -s /bin/bash -g builder -m -k /dev/null builder \
+    && useradd -s /bin/bash -g builder -m builder \
     && echo 'builder ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers \
     && echo 'builder:builder' | chpasswd
 
@@ -52,8 +51,8 @@ COPY . /home/builder
 # Setup scripts
 RUN chmod +x ./bootstrap
 
-# Make sure everything is in Unix format
-RUN dos2unix ./stages/**/* ./stages/env.d/* ./bootstrap ./targets/* ./patches/**/* sources/*.txt files/*
+# Run find command to make sure everything is in Unix format
+RUN find /home/builder -type f -exec dos2unix {} \;
 
 # Make sure everything is the correct permissions
 RUN chown -R builder:builder /home/builder

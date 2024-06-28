@@ -11,9 +11,9 @@ isl_version=0.24
 
 cd -- "$TMPDIR"
 
-rm -rf gcc-${version} gcc-build-final \
-    gmp-${gmp_version} mpfr-${mpfr_version} \
-    mpc-${mpc_version} isl-${isl_version}
+rm -rf gcc-${version} gmp-${gmp_version} \
+    mpfr-${mpfr_version} mpc-${mpc_version} isl-${isl_version} \
+    gcc-build
 unpack "${worktree}/sources/gcc-${version}.tar.xz" \
     "${worktree}/sources/gmp-${gmp_version}.tar.xz" \
     "${worktree}/sources/mpfr-${mpfr_version}.tar.xz" \
@@ -29,44 +29,53 @@ ln -s ../mpfr-${mpfr_version} mpfr
 ln -s ../mpc-${mpc_version} mpc
 #ln -s ../isl-${isl_version} isl
 
+case $(uname -m) in
+    x86_64)
+        sed -e '/m64=/s/lib64/lib/' \
+            -i.orig gcc/config/i386/t-linux64
+        ;;
+    aarch64)
+        sed -e '/m64=/s/lib64/lib/' \
+            -i.orig gcc/config/aarch64/t-linux64
+        ;;
+esac
+
 # Build in a separate directory
 rm -rf ../gcc-build
-mkdir ../gcc-build-final
-cd ../gcc-build-final
+mkdir ../gcc-build
+cd ../gcc-build
 
-../gcc-${version}/configure \
-    CC="${target}-gcc" \
-    CXX="${target}-g++" \
-    AR="${target}-ar" \
-    RANLIB="${target}-ranlib" \
-    CFLAGS="$BTCFLAGS" CXXFLAGS="$BTCXXFLAGS" LDFLAGS="$BTLDFLAGS -L${sysrootdir}/lib -Wl,-rpath,${sysrootdir}/lib" \
+../gcc-${version}/libstdc++-v3/configure \
+    AR="ar" \
+    CC="$BTCC" \
+    CXX="$BTCXX" \
+    CFLAGS="$BTCFLAGS" CXXFLAGS="$BTCXXFLAGS" LDFLAGS="$BTLDFLAGS" \
     --prefix="$crossdir" \
-    --build=$host \
     --host=$target \
-    --target=$target \
+    --build=$(../config.guess) \
     --with-sysroot="${sysrootdir}" \
     --libdir="$sysrootdir/lib" \
     --includedir="$sysrootdir/include" \
     --with-gxx-include-dir="$sysrootdir/include/c++/${version}" \
     --with-slibdir="$sysrootdir/lib/gcc/${target}/${version}" \
-    --disable-bootstrap \
-    --disable-libgomp \
-    --disable-libsanitizer \
     --disable-libstdcxx-pch \
-    --disable-libstdcxx-threads \
-    --disable-multilib \
-    --enable-languages=c,c++ \
+    --disable-nls \
     $multilib_options \
     $gcc_options
 
-make -j${jobs} all MAKEINFO="true" AS_FOR_TARGET="${target}-as" LD_FOR_TARGET="${target}-ld"
+make -j${jobs}
 
-make -j${jobs} MAKEINFO="true" install
+make -j${jobs} DESTDIR="${sysrootdir}" install
 
-cd -- "$TMPDIR"
+cd ..
+
+cat ${TMPDIR}/gcc-${version}/gcc/limitx.h \
+    ${TMPDIR}/gcc-${version}/gcc/glimits.h \
+    ${TMPDIR}/gcc-${version}/gcc/limity.h \
+    >"${sysrootdir}/lib/gcc/${target}/${version}/include/limits.h"
 
 cleanup() {
-    rm -rf gcc-${version} gcc-build-final \
+    cd -- "$TMPDIR" && rm -rf gcc-${version} gcc-build \
         gmp-${gmp_version} mpfr-${mpfr_version} \
         mpc-${mpc_version} isl-${isl_version}
 }

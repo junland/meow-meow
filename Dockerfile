@@ -52,7 +52,7 @@ WORKDIR /home/builder
 COPY . /home/builder
 
 # Setup scripts
-RUN chmod +x ./bootstrap
+RUN chmod +x ./bootstrap ./stages/**/*
 
 # Run find command to make sure everything is in Unix format
 RUN find /home/builder -type f -exec dos2unix {} \;

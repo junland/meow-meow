@@ -23,7 +23,7 @@ echo "libc_cv_forced_unwind=yes" >config.cache
     CC="${target}-gcc" \
     AR="${target}-ar" \
     RANLIB="${target}-ranlib" \
-    CFLAGS="$BTCFLAGS" CXXFLAGS="$BTCXXFLAGS" LDFLAGS="$BTLDFLAGS -L${crossdir}/lib -Wl,-rpath,${crossdir}/lib" \
+    CFLAGS="$BTCFLAGS" CXXFLAGS="$BTCXXFLAGS" LDFLAGS="$BTLDFLAGS -L${sysrootdir}/lib -Wl,-rpath,${sysrootdir}/lib" \
     --prefix=/usr \
     --host=$target \
     --build=$host \
@@ -38,7 +38,7 @@ echo "libc_cv_forced_unwind=yes" >config.cache
 
 make -j${jobs}
 
-make -j${jobs} DESTDIR="${crossdir}" install
+make -j${jobs} DESTDIR="${sysrootdir}" install
 
 cleanup() {
     cd -- "$TMPDIR" && rm -rf glibc-${version}

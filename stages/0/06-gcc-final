@@ -11,9 +11,9 @@ isl_version=0.24
 
 cd -- "$TMPDIR"
 
-rm -rf gcc-${version} gmp-${gmp_version} \
-    mpfr-${mpfr_version} mpc-${mpc_version} isl-${isl_version} \
-    gcc-build-final
+rm -rf gcc-${version} gcc-build-final \
+    gmp-${gmp_version} mpfr-${mpfr_version} \
+    mpc-${mpc_version} isl-${isl_version}
 unpack "${worktree}/sources/gcc-${version}.tar.xz" \
     "${worktree}/sources/gmp-${gmp_version}.tar.xz" \
     "${worktree}/sources/mpfr-${mpfr_version}.tar.xz" \
@@ -39,13 +39,16 @@ cd ../gcc-build-final
     CXX="${target}-g++" \
     AR="${target}-ar" \
     RANLIB="${target}-ranlib" \
-    CFLAGS="$BTCFLAGS" CXXFLAGS="$BTCXXFLAGS" LDFLAGS="$BTLDFLAGS -L${crossdir}/lib -Wl,-rpath,${crossdir}/lib" \
+    CFLAGS="$BTCFLAGS" CXXFLAGS="$BTCXXFLAGS" LDFLAGS="$BTLDFLAGS -L${sysrootdir}/lib -Wl,-rpath,${sysrootdir}/lib" \
     --prefix="$crossdir" \
     --build=$host \
     --host=$host \
     --target=$target \
-    --with-sysroot="${crossdir}" \
-    --with-headers="${crossdir}/usr/include" \
+    --with-sysroot="${sysrootdir}" \
+    --libdir="$sysrootdir/lib" \
+    --includedir="$sysrootdir/include" \
+    --with-gxx-include-dir="$sysrootdir/include/c++/${version}" \
+    --with-slibdir="$sysrootdir/lib/gcc/${target}/${version}" \
     --disable-bootstrap \
     --disable-libgomp \
     --disable-libsanitizer \

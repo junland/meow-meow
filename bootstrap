@@ -206,7 +206,7 @@ arch="$(uname -m)" || chkstatus_or_exit
 jobs=6
 output="${worktree}/OUTPUT.${PROGRAM}"
 TMPDIR="${TMPDIR:=${output}/sources}"
-VENDOR="${VENDOR:=apex}"
+VENDOR="${VENDOR:=unknown}"
 
 # Compose vendor name adding "-" as suffix
 test -n "$VENDOR" && VENDOR="${VENDOR}-"
@@ -295,6 +295,7 @@ fi
 # Compose variables for the physical output,
 # printing some useful information
 
+hostdir="${output}/host/${host}"
 crossdir="${output}/cross/${target}"
 rootdir="${output}/stage${stage}"
 sysrootdir="${crossdir}/$target"
@@ -378,6 +379,7 @@ for file in ${worktree}/stages/${stage}/${@:-??-*}; do
     # Check if the done file exists
     if test -f "${output}/${done_file}"; then
         echo "${PROGRAM}: Skipping $file from stages/${stage} ..."
+        rm -rf "${TMPDIR}/*" || chkstatus_or_exit
         continue
     fi
 
@@ -390,10 +392,16 @@ for file in ${worktree}/stages/${stage}/${@:-??-*}; do
     # Activate shell option(s)
     set -e +h
 
+    # Clear hash table
+    hash -r >/dev/null 2>&1 || true
+
     . "${worktree}/stages/${stage}/$file"
 
     # Deactivate shell option(s)
     set +e -h
+
+    # Clear hash table
+    hash -r >/dev/null 2>&1 || true
 
     # Reset given signals
     trap - EXIT HUP INT QUIT ABRT TERM

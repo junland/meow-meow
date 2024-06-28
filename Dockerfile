@@ -1,4 +1,4 @@
-FROM ubuntu:24.04 as builder
+FROM ubuntu:24.04
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -41,6 +41,9 @@ RUN groupadd builder \
     && useradd -s /bin/bash -g builder -m builder \
     && echo 'builder ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers \
     && echo 'builder:builder' | chpasswd
+
+# Clear hashing for builder user
+RUN echo "hash -r >/dev/null 2>&1 || true" >> /home/builder/.bashrc
 
 # Set work directory
 WORKDIR /home/builder

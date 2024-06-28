@@ -26,19 +26,31 @@ cd ../binutils-build
     CXX="$BTCXX" \
     CFLAGS="$BTCFLAGS" CXXFLAGS="$BTCXXFLAGS" LDFLAGS="$BTLDFLAGS" \
     --prefix="$crossdir" \
-    --host=$host \
     --target=$target \
+    --host=$build \
+    --build=$build \
     --with-sysroot="${sysrootdir}" \
-    --disable-shared \
-    --disable-multilib \
-    --disable-nls \
-    --disable-ppl-version-check \
-    --disable-cloog-version-check \
+    --disable-info \
+    --disable-man \
+    --disable-werror \
+    --with-gnu-ld \
+    --with-gnu-as \
+    --with-gcc \
     $multilib_options
 
 make -j${jobs} configure-host
 make -j${jobs}
 make -j${jobs} install
+
+cd ${crossdir}/bin
+ln -sf "${target}-ld" "ld"
+ln -sf "${target}-addr2line" "addr2line"
+ln -sf "${target}-c++filt" "c++filt"
+ln -sf "${target}-elfedit" "elfedit"
+ln -sf "${target}-gprof" "gprof"
+ln -sf "${target}-readelf" "readelf"
+ln -sf "${target}-size" "size"
+ln -sf "${target}-strings" "strings"
 
 cd -- "$TMPDIR"
 

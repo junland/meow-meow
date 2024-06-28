@@ -55,21 +55,30 @@ cd ../gcc-build
     --host=$host \
     --target=$target \
     --with-sysroot="${sysrootdir}" \
+    --libdir="$sysrootdir/lib" \
+    --includedir="$sysrootdir/include" \
+    --with-gxx-include-dir="$sysrootdir/include/c++/${version}" \
+    --with-slibdir="$sysrootdir/lib/gcc/${target}/${version}" \
+    --disable-gcov \
     --disable-libatomic \
     --disable-libgomp \
+    --disable-libitm \
+    --disable-libmpx \
+    --disable-libmudflap \
     --disable-libquadmath \
+    --disable-libsanitizer \
     --disable-libssp \
     --disable-libstdcxx \
     --disable-libvtv \
-    --disable-multilib \
+    --disable-lto \
     --disable-nls \
+    --disable-plugin \
     --disable-shared \
     --disable-threads \
-    --enable-default-pie \
-    --enable-default-ssp \
     --enable-languages=c,c++ \
     --with-newlib \
-    --without-headers \
+    --without-cloog \
+    --without-isl \
     $multilib_options \
     $gcc_options
 
@@ -82,7 +91,7 @@ cd ..
 cat ${TMPDIR}/gcc-${version}/gcc/limitx.h \
     ${TMPDIR}/gcc-${version}/gcc/glimits.h \
     ${TMPDIR}/gcc-${version}/gcc/limity.h \
-    >"${crossdir}/lib/gcc/${target}/${version}/include/limits.h"
+    >"${sysrootdir}/lib/gcc/${target}/${version}/include/limits.h"
 
 cleanup() {
     cd -- "$TMPDIR" && rm -rf gcc-${version} gcc-build \

@@ -273,12 +273,10 @@ else
     exit 1
 fi
 
-# Determine the host to use.
-#
-# If the host and the target are the same triplet, it won't work.
-# We are changing the host if it is really needed
-
-host="$(${BTCC} -dumpmachine)" || chkstatus_or_exit
+# Set host variable if MACHTYPE is defined
+if test -n "$MACHTYPE"; then
+    host="$MACHTYPE"
+fi
 
 if test "$host" = "$target"; then
     # Rename VENDOR to 'cross'.  If empty, 'cross-linux' is added

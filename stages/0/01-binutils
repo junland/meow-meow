@@ -27,19 +27,15 @@ cd ../binutils-build
     CFLAGS="$BTCFLAGS" CXXFLAGS="$BTCXXFLAGS" LDFLAGS="$BTLDFLAGS" \
     --prefix="$crossdir" \
     --target=$target \
-    --host=$build \
-    --build=$build \
     --with-sysroot="${sysrootdir}" \
-    --disable-info \
-    --disable-man \
+    --disable-nls \
     --disable-werror \
-    --with-gnu-ld \
-    --with-gnu-as \
-    --with-gcc \
+    --without-zstd \
+    --enable-gprofng=no \
     $multilib_options
 
-make -j${jobs} configure-host
 make -j${jobs}
+
 make -j${jobs} install
 
 cd ${crossdir}/bin

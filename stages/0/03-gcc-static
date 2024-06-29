@@ -1,7 +1,7 @@
 # Build script for gcc.
 # SPDX-License-Identifier: Apache-2.0
 
-version=14.1.0
+version=13.3.0
 
 # Prerequisites
 gmp_version=6.3.0
@@ -59,25 +59,21 @@ cd ../gcc-build
     --includedir="$sysrootdir/include" \
     --with-gxx-include-dir="$sysrootdir/include/c++/${version}" \
     --with-slibdir="$sysrootdir/lib/gcc/${target}/${version}" \
-    --disable-gcov \
+    --with-glibc-version=2.39 \
     --disable-libatomic \
     --disable-libgomp \
-    --disable-libitm \
-    --disable-libmpx \
-    --disable-libmudflap \
     --disable-libquadmath \
-    --disable-libsanitizer \
     --disable-libssp \
     --disable-libstdcxx \
     --disable-libvtv \
-    --disable-lto \
     --disable-nls \
-    --disable-plugin \
     --disable-shared \
     --disable-threads \
+    --enable-default-pie \
+    --enable-default-ssp \
     --enable-languages=c,c++ \
     --with-newlib \
-    --without-cloog \
+    --without-headers \
     --without-isl \
     $multilib_options \
     $gcc_options

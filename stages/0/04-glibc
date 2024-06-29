@@ -11,34 +11,41 @@ unpack "${worktree}/sources/glibc-${version}.tar.xz"
 # Build instructions
 cd glibc-${version}
 
+case $(uname -m) in
+    x86_64)
+        ln -sfv ../lib/ld-linux-x86-64.so.2 $sysrootdir/lib64
+        ln -sfv ../lib/ld-linux-x86-64.so.2 $sysrootdir/lib64/ld-lsb-x86-64.so.3
+        ;;
+esac
+
+patch -p1 <"${worktree}/patches/glibc/glibc-2.39-fhs-1.patch"
+
 mkdir build && cd build
 
-echo "rootsbindir=/usr/bin" >configparms
-echo "libc_cv_slibdir=/usr/lib" >>configparms
-echo "libc_cv_forced_unwind=yes" >config.cache
-
+echo "rootsbindir=/usr/sbin" >configparms
+# LDFLAGS="$BTLDFLAGS -L${sysrootdir}/lib -Wl,-rpath,${sysrootdir}/lib
 ../configure \
-    BUILD_CC="gcc" \
-    BUILD_CXX="g++" \
-    CC="${target}-gcc" \
-    AR="${target}-ar" \
-    RANLIB="${target}-ranlib" \
-    CFLAGS="$BTCFLAGS" CXXFLAGS="$BTCXXFLAGS" LDFLAGS="$BTLDFLAGS -L${sysrootdir}/lib -Wl,-rpath,${sysrootdir}/lib" \
+    CFLAGS="$BTCFLAGS" CXXFLAGS="$BTCXXFLAGS" LDFLAGS="$BTLDFLAGS" \
     --prefix=/usr \
     --host=$target \
-    --build=$host \
+    --build=$(../scripts/config.guess) \
     --with-headers="${sysrootdir}/include" \
     --with-binutils="${crossdir}/bin" \
-    --cache-file=config.cache \
     --disable-nscd \
     --enable-kernel=4.19 \
     libc_cv_forced_unwind=yes \
     libc_cv_c_cleanup=yes \
+    libc_cv_slibdir=/usr/lib \
     $multilib_options
+
+make -j${jobs} install-bootstrap-headers=yes install-headers
 
 make -j${jobs}
 
 make -j${jobs} DESTDIR="${sysrootdir}" install
+
+# Fix hardcoded path in ldd script
+sed '/RTLDLIST=/s@/usr@@g' -i $sysrootdir/usr/bin/ldd
 
 cleanup() {
     cd -- "$TMPDIR" && rm -rf glibc-${version}

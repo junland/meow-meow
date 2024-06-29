@@ -1,7 +1,7 @@
 # Build script for gcc.
 # SPDX-License-Identifier: Apache-2.0
 
-version=14.1.0
+version=13.3.0
 
 # Prerequisites
 gmp_version=6.3.0
@@ -11,9 +11,9 @@ isl_version=0.24
 
 cd -- "$TMPDIR"
 
-rm -rf gcc-${version} gcc-build-final \
-    gmp-${gmp_version} mpfr-${mpfr_version} \
-    mpc-${mpc_version} isl-${isl_version}
+rm -rf gcc-${version} gmp-${gmp_version} \
+    mpfr-${mpfr_version} mpc-${mpc_version} isl-${isl_version} \
+    gcc-build
 unpack "${worktree}/sources/gcc-${version}.tar.xz" \
     "${worktree}/sources/gmp-${gmp_version}.tar.xz" \
     "${worktree}/sources/mpfr-${mpfr_version}.tar.xz" \
@@ -31,37 +31,37 @@ ln -s ../mpc-${mpc_version} mpc
 
 # Build in a separate directory
 rm -rf ../gcc-build
-mkdir ../gcc-build-final
-cd ../gcc-build-final
+mkdir ../gcc-build
+cd ../gcc-build
 
 ../gcc-${version}/configure \
-    CC="${target}-gcc" \
-    CXX="${target}-g++" \
-    AR="${target}-ar" \
-    RANLIB="${target}-ranlib" \
-    CFLAGS="$BTCFLAGS" CXXFLAGS="$BTCXXFLAGS" LDFLAGS="$BTLDFLAGS -L${sysrootdir}/lib -Wl,-rpath,${sysrootdir}/lib" \
-    --prefix="$crossdir" \
+    CFLAGS="$BTCFLAGS" CXXFLAGS="$BTCXXFLAGS" LDFLAGS="$BTLDFLAGS" \
+    --prefix=/usr \
     --build=$host \
-    --host=$target \
+    --host=$host \
     --target=$target \
     --with-sysroot="${sysrootdir}" \
     --libdir="$sysrootdir/lib" \
     --includedir="$sysrootdir/include" \
     --with-gxx-include-dir="$sysrootdir/include/c++/${version}" \
     --with-slibdir="$sysrootdir/lib/gcc/${target}/${version}" \
-    --disable-bootstrap \
+    --disable-libatomic \
     --disable-libgomp \
+    --disable-libquadmath \
     --disable-libsanitizer \
-    --disable-libstdcxx-pch \
-    --disable-libstdcxx-threads \
-    --disable-multilib \
+    --disable-libssp \
+    --disable-libvtv \
+    --disable-nls \
+    --enable-default-pie \
+    --enable-default-ssp \
     --enable-languages=c,c++ \
+    --without-isl \
     $multilib_options \
     $gcc_options
 
-make -j${jobs} all MAKEINFO="true" AS_FOR_TARGET="${target}-as" LD_FOR_TARGET="${target}-ld"
+make -j${jobs}
 
-make -j${jobs} MAKEINFO="true" install
+make -j${jobs} DESTDIR="${crossdir}" install
 
 cd -- "$TMPDIR"
 

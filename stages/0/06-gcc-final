@@ -44,7 +44,6 @@ cd ../gcc-build
     --libdir="$sysrootdir/lib" \
     --includedir="$sysrootdir/include" \
     --with-gxx-include-dir="$sysrootdir/include/c++/${version}" \
-    --with-slibdir="$sysrootdir/lib/gcc/${target}/${version}" \
     --disable-libatomic \
     --disable-libgomp \
     --disable-libquadmath \

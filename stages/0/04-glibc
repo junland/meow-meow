@@ -11,13 +11,6 @@ unpack "${worktree}/sources/glibc-${version}.tar.xz"
 # Build instructions
 cd glibc-${version}
 
-case $(uname -m) in
-    x86_64)
-        ln -sfv ../lib/ld-linux-x86-64.so.2 $sysrootdir/lib64
-        ln -sfv ../lib/ld-linux-x86-64.so.2 $sysrootdir/lib64/ld-lsb-x86-64.so.3
-        ;;
-esac
-
 patch -p1 <"${worktree}/patches/glibc/glibc-2.39-fhs-1.patch"
 
 mkdir build && cd build
@@ -29,6 +22,7 @@ echo "rootsbindir=/usr/sbin" >configparms
     --prefix=/usr \
     --host=$target \
     --build=$(../scripts/config.guess) \
+    --target=$target \
     --with-headers="${sysrootdir}/include" \
     --with-binutils="${crossdir}/bin" \
     --disable-nscd \
@@ -38,14 +32,14 @@ echo "rootsbindir=/usr/sbin" >configparms
     libc_cv_slibdir=/usr/lib \
     $multilib_options
 
-make -j${jobs} install-bootstrap-headers=yes install-headers
+#make -j${jobs} DESTDIR=${sysrootdir} install-bootstrap-headers=yes install-headers
 
 make -j${jobs}
 
-make -j${jobs} DESTDIR="${sysrootdir}" install
+make -j${jobs} DESTDIR=${sysrootdir} install
 
 # Fix hardcoded path in ldd script
-sed '/RTLDLIST=/s@/usr@@g' -i $sysrootdir/usr/bin/ldd
+sed '/RTLDLIST=/s@/usr@@g' -i $sysrootdir/bin/ldd
 
 cleanup() {
     cd -- "$TMPDIR" && rm -rf glibc-${version}

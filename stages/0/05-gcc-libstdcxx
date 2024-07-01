@@ -47,14 +47,10 @@ cd ../gcc-build
 
 ../gcc-${version}/libstdc++-v3/configure \
     CFLAGS="$BTCFLAGS" CXXFLAGS="$BTCXXFLAGS" LDFLAGS="$BTLDFLAGS" \
-    --prefix="$crossdir" \
+    --prefix=/usr \
     --host=$target \
     --build=$(../config.guess) \
-    --with-sysroot="${sysrootdir}" \
-    --libdir="$sysrootdir/lib" \
-    --includedir="$sysrootdir/include" \
-    --with-gxx-include-dir="$sysrootdir/include/c++/${version}" \
-    --with-slibdir="$sysrootdir/lib/gcc/${target}/${version}" \
+    --with-gxx-include-dir="/include/c++/${version}" \
     --disable-libstdcxx-pch \
     --disable-nls \
     $multilib_options \
@@ -70,6 +66,9 @@ cat ${TMPDIR}/gcc-${version}/gcc/limitx.h \
     ${TMPDIR}/gcc-${version}/gcc/glimits.h \
     ${TMPDIR}/gcc-${version}/gcc/limity.h \
     >"${sysrootdir}/lib/gcc/${target}/${version}/include/limits.h"
+
+# Remove libtool files
+rm -rf ${sysrootdir}/lib/lib{stdc++{,exp,fs},supc++}.la
 
 cleanup() {
     cd -- "$TMPDIR" && rm -rf gcc-${version} gcc-build \

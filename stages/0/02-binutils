@@ -22,11 +22,14 @@ cd ../binutils-build
 ../binutils-${version}/configure \
     AR="ar" \
     AS="as" \
-    CC="$BTCC" \
-    CXX="$BTCXX" \
     CFLAGS="$BTCFLAGS" CXXFLAGS="$BTCXXFLAGS" LDFLAGS="$BTLDFLAGS" \
     --prefix="$crossdir" \
+    --program-prefix="${target}-" \
+    --build=$host \
+    --host=$host \
     --target=$target \
+    --with-gnu-as \
+    --with-gnu-ld \
     --with-sysroot="${sysrootdir}" \
     --disable-nls \
     --disable-werror \
@@ -34,19 +37,21 @@ cd ../binutils-build
     --enable-gprofng=no \
     $multilib_options
 
+make -j${jobs} configure-host
+
 make -j${jobs}
 
 make -j${jobs} install
 
-cd ${crossdir}/bin
-ln -sf "${target}-ld" "ld"
-ln -sf "${target}-addr2line" "addr2line"
-ln -sf "${target}-c++filt" "c++filt"
-ln -sf "${target}-elfedit" "elfedit"
-ln -sf "${target}-gprof" "gprof"
-ln -sf "${target}-readelf" "readelf"
-ln -sf "${target}-size" "size"
-ln -sf "${target}-strings" "strings"
+# cd ${crossdir}/bin
+# ln -sf "${target}-ld" "ld"
+# ln -sf "${target}-addr2line" "addr2line"
+# ln -sf "${target}-c++filt" "c++filt"
+# ln -sf "${target}-elfedit" "elfedit"
+# ln -sf "${target}-gprof" "gprof"
+# ln -sf "${target}-readelf" "readelf"
+# ln -sf "${target}-size" "size"
+# ln -sf "${target}-strings" "strings"
 
 cd -- "$TMPDIR"
 

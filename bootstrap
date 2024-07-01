@@ -381,6 +381,10 @@ for file in ${worktree}/stages/${stage}/${@:-??-*}; do
         continue
     fi
 
+    LFS_TARGET="$target"
+    LFS_HOST="$host"
+    LFS_STAGE_1_CROSS_TOOLS="${crossdir}"
+
     echo "${PROGRAM}: Processing $file from stages/${stage} ..."
 
     # Set trap before to run the script in order to

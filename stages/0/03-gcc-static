@@ -46,9 +46,6 @@ mkdir ../gcc-build
 cd ../gcc-build
 
 ../gcc-${version}/configure \
-    AR="ar" \
-    CC="$BTCC" \
-    CXX="$BTCXX" \
     CFLAGS="$BTCFLAGS" CXXFLAGS="$BTCXXFLAGS" LDFLAGS="$BTLDFLAGS" \
     --prefix="$crossdir" \
     --build=$host \

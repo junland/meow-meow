@@ -2,7 +2,10 @@ IMAGE_NAME := "builder:latest"
 TARGET_ARCH := "x86_64"
 
 bootstrap-0: is_container
-	./bootstrap -s0 -a $(TARGET_ARCH) 2>&1 | tee stage0-log.txt
+	./bootstrap -s0 -a $(TARGET_ARCH) 2>&1 | tee _stage0-log.txt
+
+bootstrap-1: is_container
+	./bootstrap -s1 -a $(TARGET_ARCH) 2>&1 | tee _stage1-log.txt
 
 is_container:
 ifeq ($(shell cat /proc/1/cgroup | grep docker),)

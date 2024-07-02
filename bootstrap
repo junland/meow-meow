@@ -271,6 +271,7 @@ if test -n "$MACHTYPE"; then
     host="$MACHTYPE"
 fi
 
+# Adjust 'host' for cross-compilation by renaming or appending to the VENDOR field
 if test "$host" = "$target"; then
     # Rename VENDOR to 'cross'.  If empty, 'cross-linux' is added
     case "${host%-*-*}" in
@@ -285,10 +286,10 @@ fi
 
 # Compose variables for the physical output,
 # printing some useful information
-
 LFS="$output/${target}-sysroot"
 LFS_TOOLS=
 
+# Print some useful information
 printf '%s\n' \
     "BTCC: $BTCC" \
     "BTCXX: $BTCXX" \

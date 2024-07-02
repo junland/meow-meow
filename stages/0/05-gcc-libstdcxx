@@ -1,5 +1,5 @@
-# Build script for gcc.
-# SPDX-License-Identifier: Apache-2.0
+# Build script for libstdcxx (gcc).
+# SPDX-License-Identifier: MIT
 
 version=13.3.0
 
@@ -48,9 +48,9 @@ cd ../gcc-build
 ../gcc-${version}/libstdc++-v3/configure \
     CFLAGS="$BTCFLAGS" CXXFLAGS="$BTCXXFLAGS" LDFLAGS="$BTLDFLAGS" \
     --prefix=/usr \
-    --host=$target \
     --build=$(../config.guess) \
-    --with-gxx-include-dir="/include/c++/${version}" \
+    --host=$target \
+    --with-gxx-include-dir="/tools/include/c++/${version}" \
     --disable-libstdcxx-pch \
     --disable-nls \
     $multilib_options \
@@ -58,17 +58,19 @@ cd ../gcc-build
 
 make -j${jobs}
 
-make -j${jobs} DESTDIR="${sysrootdir}" install
+make -j${jobs} DESTDIR="${LFS}" install
 
 cd ..
 
 cat ${TMPDIR}/gcc-${version}/gcc/limitx.h \
     ${TMPDIR}/gcc-${version}/gcc/glimits.h \
     ${TMPDIR}/gcc-${version}/gcc/limity.h \
-    >"${sysrootdir}/lib/gcc/${target}/${version}/include/limits.h"
+    >"${LFS}/tools/lib/gcc/${target}/${version}/include/limits.h"
 
 # Remove libtool files
-rm -rf ${sysrootdir}/lib/lib{stdc++{,exp,fs},supc++}.la
+rm -rf ${LFS}/lib/lib{stdc++{,exp,fs},supc++}.la
+
+cd -- "$TMPDIR"
 
 cleanup() {
     cd -- "$TMPDIR" && rm -rf gcc-${version} gcc-build \

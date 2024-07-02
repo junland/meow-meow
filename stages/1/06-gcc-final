@@ -40,10 +40,10 @@ cd ../gcc-build
     --build=$host \
     --host=$host \
     --target=$target \
-    --with-sysroot="${sysrootdir}" \
-    --libdir="$sysrootdir/lib" \
-    --includedir="$sysrootdir/include" \
-    --with-gxx-include-dir="$sysrootdir/include/c++/${version}" \
+    --with-sysroot="${LFS}" \
+    --libdir="$LFS/lib" \
+    --includedir="$LFS/include" \
+    --with-gxx-include-dir="$LFS/include/c++/${version}" \
     --disable-libatomic \
     --disable-libgomp \
     --disable-libquadmath \
@@ -60,7 +60,7 @@ cd ../gcc-build
 
 make -j${jobs}
 
-make -j${jobs} DESTDIR="${crossdir}" install
+make -j${jobs} DESTDIR="${LFS}" install
 
 cd -- "$TMPDIR"
 

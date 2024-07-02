@@ -1,5 +1,5 @@
 # Build script for glibc.
-# SPDX-License-Identifier: Apache-2.0
+# SPDX-License-Identifier: MIT
 
 version=2.39
 
@@ -20,11 +20,11 @@ echo "rootsbindir=/usr/sbin" >configparms
 ../configure \
     CFLAGS="$BTCFLAGS" CXXFLAGS="$BTCXXFLAGS" LDFLAGS="$BTLDFLAGS" \
     --prefix=/usr \
-    --host=$target \
     --build=$(../scripts/config.guess) \
+    --host=$target \
     --target=$target \
-    --with-headers="${sysrootdir}/include" \
-    --with-binutils="${crossdir}/bin" \
+    --with-headers="${LFS}/usr/include" \
+    --with-binutils="${LFS}/tools/bin" \
     --disable-nscd \
     --enable-kernel=4.19 \
     libc_cv_forced_unwind=yes \
@@ -36,10 +36,12 @@ echo "rootsbindir=/usr/sbin" >configparms
 
 make -j${jobs}
 
-make -j${jobs} DESTDIR=${sysrootdir} install
+make -j${jobs} DESTDIR=${LFS} install
 
 # Fix hardcoded path in ldd script
-sed '/RTLDLIST=/s@/usr@@g' -i $sysrootdir/bin/ldd
+sed '/RTLDLIST=/s@/usr@@g' -i $LFS/bin/ldd
+
+cd -- "$TMPDIR"
 
 cleanup() {
     cd -- "$TMPDIR" && rm -rf glibc-${version}

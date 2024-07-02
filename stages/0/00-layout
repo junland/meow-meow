@@ -1,0 +1,17 @@
+# Build script for creating a minimal directory layout.
+# SPDX-License-Identifier: MIT
+
+cd -- "$TMPDIR"
+
+echo "Making minimal directory layout on 'rootdir' ..."
+
+mkdir -pv $LFS/{etc,var,usr}
+
+for i in bin lib lib64 sbin; do
+  mkdir -pv $LFS/usr/$i
+  ln -sv usr/$i $LFS/$i
+done
+
+mkdir -pv $LFS/tools
+
+cd -- "$TMPDIR"

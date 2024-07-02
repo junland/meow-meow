@@ -1,5 +1,5 @@
 # Build script for gcc.
-# SPDX-License-Identifier: Apache-2.0
+# SPDX-License-Identifier: MIT
 
 version=13.3.0
 
@@ -47,15 +47,11 @@ cd ../gcc-build
 
 ../gcc-${version}/configure \
     CFLAGS="$BTCFLAGS" CXXFLAGS="$BTCXXFLAGS" LDFLAGS="$BTLDFLAGS" \
-    --prefix="$crossdir" \
+    --prefix="$LFS/tools" \
     --build=$host \
     --host=$host \
     --target=$target \
-    --with-sysroot="${sysrootdir}" \
-    --libdir="$sysrootdir/lib" \
-    --includedir="$sysrootdir/include" \
-    --with-gxx-include-dir="$sysrootdir/include/c++/${version}" \
-    --with-slibdir="$sysrootdir/lib/gcc/${target}/${version}" \
+    --with-sysroot="${LFS}" \
     --with-glibc-version=2.39 \
     --disable-libatomic \
     --disable-libgomp \
@@ -84,7 +80,9 @@ cd ..
 cat ${TMPDIR}/gcc-${version}/gcc/limitx.h \
     ${TMPDIR}/gcc-${version}/gcc/glimits.h \
     ${TMPDIR}/gcc-${version}/gcc/limity.h \
-    >"${sysrootdir}/lib/gcc/${target}/${version}/include/limits.h"
+    >"${LFS}/tools/lib/gcc/${target}/${version}/include/limits.h"
+
+cd -- "$TMPDIR"
 
 cleanup() {
     cd -- "$TMPDIR" && rm -rf gcc-${version} gcc-build \

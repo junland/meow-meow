@@ -1,5 +1,5 @@
 # Build script for linux-kernel (headers).
-# SPDX-License-Identifier: Apache-2.0
+# SPDX-License-Identifier: MIT
 
 version=6.1.23
 
@@ -19,7 +19,9 @@ make -j1 ARCH="$kernel_arch" headers
 
 find usr/include -type f ! -name '*.h' -delete
 
-make -j1 ARCH="$kernel_arch" INSTALL_HDR_PATH="${sysrootdir}" headers_install
+make -j1 ARCH="$kernel_arch" INSTALL_HDR_PATH="${LFS}/usr" headers_install
+
+cd -- "$TMPDIR"
 
 cleanup() {
     cd -- "$TMPDIR" && rm -rf linux-${version}

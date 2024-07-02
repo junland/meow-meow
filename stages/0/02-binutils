@@ -1,5 +1,5 @@
 # Build script for binutils.
-# SPDX-License-Identifier: Apache-2.0
+# SPDX-License-Identifier: MIT
 
 version=2.38
 
@@ -11,26 +11,21 @@ unpack "${worktree}/sources/binutils-${version}.tar.xz"
 # Build instructions
 cd binutils-${version}
 
-# Make symlinks for lib64
-ln -s lib "${crossdir}/lib64"
-
 # Build in a separate directory
 rm -rf ../binutils-build
 mkdir ../binutils-build
 cd ../binutils-build
 
 ../binutils-${version}/configure \
-    AR="ar" \
-    AS="as" \
     CFLAGS="$BTCFLAGS" CXXFLAGS="$BTCXXFLAGS" LDFLAGS="$BTLDFLAGS" \
-    --prefix="$crossdir" \
+    --prefix="$LFS/tools" \
     --program-prefix="${target}-" \
     --build=$host \
     --host=$host \
     --target=$target \
     --with-gnu-as \
     --with-gnu-ld \
-    --with-sysroot="${sysrootdir}" \
+    --with-sysroot="${LFS}" \
     --disable-nls \
     --disable-werror \
     --without-zstd \

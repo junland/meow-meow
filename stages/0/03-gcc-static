@@ -1,5 +1,6 @@
 # Build script for gcc.
-# SPDX-License-Identifier: MIT
+# SPDX-License-Identifier: Apache-2.0
+# SPDX-FileCopyrightText: 2025, John Unland
 
 version=13.3.0
 

@@ -1,4 +1,6 @@
-echo "Making minimal directory layout on 'rootdir' ..."
+# Build script for creating a minimal directory layout.
+# SPDX-License-Identifier: Apache-2.0
+# SPDX-FileCopyrightText: 2025, John Unland
 
 mkdir -pv $rootdir/{etc,var,usr}
 

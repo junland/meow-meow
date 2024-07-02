@@ -25,8 +25,8 @@
 PROGRAM="${0##*/}"
 
 # Override locale settings
-LC_ALL=C
-LANGUAGE=C
+LC_ALL=POSIX
+LANGUAGE=POSIX
 export LC_ALL LANGUAGE
 
 # Get physical working directory (absolute path)
@@ -76,7 +76,8 @@ Available targets from ${worktree}/targets ...
 
 version() {
     printf '%s' \
-        "$PROGRAM 3.33
+        "$PROGRAM 1.00
+Copyright (C) 2024-2025 John Unland.
 Copyright (C) 2014-2022 Matias Andres Fonzo.
 License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
 This is free software: you are free to change and redistribute it.
@@ -143,11 +144,6 @@ unpack() {
                     && gzip -cd "$file" >"$(basename -- "$file" .gz)"
                 chkstatus_or_exit 3
                 ;;
-            *.Z)
-                gzip -t "$file" \
-                    && gzip -cd "$file" >"$(basename -- "$file" .Z)"
-                chkstatus_or_exit 3
-                ;;
             *.bz2)
                 bzip2 -t "$file" \
                     && bzip2 -cd "$file" >"$(basename -- "$file" .bz2)"
@@ -185,7 +181,6 @@ unpack() {
 # http://www.gnu.org/software/make/manual/html_node/Environment.html
 # http://gnu.org/savannah-checkouts/gnu/autoconf/manual/autoconf-2.69/html_node/Defining-Variables.html
 # http://www.gnu.org/savannah-checkouts/gnu/autoconf/manual/autoconf-2.69/html_node/Setting-Output-Variables.html
-
 warn_flags() {
     warn "" \
         "WARNING: Environment variable '$1' is set." \
@@ -203,7 +198,7 @@ BTLDFLAGS="${BTLDFLAGS:=}"
 opt_keep=opt_keep.off
 stage=0
 arch="$(uname -m)" || chkstatus_or_exit
-jobs=6
+jobs=8
 output="${worktree}/OUTPUT.${PROGRAM}"
 TMPDIR="${TMPDIR:=${output}/sources}"
 VENDOR="${VENDOR:=unknown}"
@@ -253,7 +248,6 @@ shift $((OPTIND - 1))
 unset -f usage version
 
 # Check for environment variables, print warning, unset in any case
-
 test -n "$CC" && warn_flags CC
 test -n "$CXX" && warn_flags CXX
 test -n "$CFLAGS" && warn_flags CFLAGS
@@ -262,7 +256,6 @@ test -n "$LDFLAGS" && warn_flags LDFLAGS
 unset CC CXX CFLAGS CXXFLAGS LDFLAGS warn_flags
 
 # Load target architecture-file
-
 if test -f "${worktree}/targets/$arch"; then
     echo "${PROGRAM}: Loading target $arch ..."
     . "${worktree}/targets/$arch"
@@ -293,10 +286,8 @@ fi
 # Compose variables for the physical output,
 # printing some useful information
 
-hostdir="${output}/host/${host}"
-crossdir="${output}/cross/${target}"
-rootdir="${output}/stage${stage}"
-sysrootdir="${crossdir}/$target"
+LFS="$output/${target}-sysroot"
+LFS_TOOLS=
 
 printf '%s\n' \
     "BTCC: $BTCC" \
@@ -307,9 +298,7 @@ printf '%s\n' \
     "Host: $host" \
     "Target: $target" \
     "Output directory: $output" \
-    "Cross directory: $crossdir" \
-    "Root directory: $rootdir" \
-    "Sysroot directory: $sysrootdir"
+    "LFS directory: $LFS"
 
 # Remove write permission for group and other
 umask 022
@@ -319,9 +308,10 @@ mkdir -p -- "$output" "$TMPDIR"
 chkstatus_or_exit
 
 # Set default PATH, propagate variables
-PATH="${crossdir}/bin:${PATH}"
+PATH="${LFS}/tools/bin:${PATH}"
+CONFIG_SITE=$LFS/usr/share/config.site
 
-export PATH VENDOR TMPDIR
+export PATH VENDOR TMPDIR CONFIG_SITE
 
 # Main loop
 for file in ${worktree}/stages/${stage}/${@:-??-*}; do
@@ -341,37 +331,12 @@ for file in ${worktree}/stages/${stage}/${@:-??-*}; do
 
     # Create sysroot directory, recreating the symlink for the stage 0
     if test "$stage" = 0; then
-        mkdir -p -- "${crossdir}/lib" || chkstatus_or_exit
-
-        if test ! -L "${crossdir}/usr"; then
-            ln -s -f . "${crossdir}/usr" || chkstatus_or_exit
-        fi
-
-        mkdir -p -- "${sysrootdir}" || chkstatus_or_exit
-
-        mkdir -p -- "${sysrootdir}/lib" || chkstatus_or_exit
-
-        if test ! -L "${sysrootdir}/usr"; then
-            ln -s -f . "${sysrootdir}/usr" || chkstatus_or_exit
-        fi
-
-        if test ! -L "${sysrootdir}/lib64"; then
-            ln -s -f lib "${sysrootdir}/lib64" || chkstatus_or_exit
-        fi
-
-        #ln -s "${crossdir}/lib" "${crossdir}/lib64" || chkstatus_or_exit
+        echo "Running pre-settings..."
     fi
 
     # Create "tools" directory, recreating the symlink for the stage 1
     if test "$stage" = 1; then
-        if test ! -d "${rootdir}/tools"; then
-            mkdir -p -- "${rootdir}/tools" || chkstatus_or_exit
-        fi
-
-        # Check and make required symlink
-        if test ! -L /tools; then
-            ln -s -f "${rootdir}/tools" / || chkstatus_or_exit
-        fi
+        echo "Running pre-settings..."
     fi
 
     # Check if the done file exists
@@ -380,10 +345,6 @@ for file in ${worktree}/stages/${stage}/${@:-??-*}; do
         rm -rf "${TMPDIR}/*" || chkstatus_or_exit
         continue
     fi
-
-    LFS_TARGET="$target"
-    LFS_HOST="$host"
-    LFS_STAGE_1_CROSS_TOOLS="${crossdir}"
 
     echo "${PROGRAM}: Processing $file from stages/${stage} ..."
 

@@ -103,6 +103,7 @@ chkstatus_or_exit() {
 # Function to test and extract compressed files
 unpack() {
     for file in "$@"; do
+        echo "${PROGRAM}: Unpacking ${file} ..."
         case $file in
             *.tar)
                 tar tf "$file" >/dev/null \

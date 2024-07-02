@@ -4,10 +4,10 @@
 # SPDX-FileCopyrightText: 2014-2022, Matias Andres Fonzo <selk@dragora.org>
 
 # EXIT STATUS
-# 0  = Successful completion
-# 1  = Minor common errors (e.g: help usage, support not available)
-# 2  = Command execution error
-# 3  = Integrity check error for compressed files
+# 0 = Successful completion
+# 1 = Minor common errors (e.g: help usage, support not available)
+# 2 = Command execution error
+# 3 = Integrity check error for compressed files
 
 PROGRAM="${0##*/}"
 

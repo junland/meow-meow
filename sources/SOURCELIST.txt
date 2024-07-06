@@ -37,7 +37,7 @@ https://github.com/libarchive/libarchive/releases/download/v3.7.1/libarchive-3.7
 https://github.com/libexpat/libexpat/releases/download/R_2_4_8/expat-2.4.8.tar.bz2
 https://github.com/libffi/libffi/releases/download/v3.4.4/libffi-3.4.4.tar.gz
 https://github.com/westes/flex/releases/download/v2.6.4/flex-2.6.4.tar.gz
-https://invisible-mirror.net/archives/ncurses/ncurses-6.4.tar.gz
+https://invisible-mirror.net/archives/ncurses/ncurses-6.5.tar.gz
 https://sourceware.org/ftp/elfutils/0.189/elfutils-0.189.tar.bz2
 https://sourceware.org/pub/bzip2/bzip2-1.0.8.tar.gz
 https://tukaani.org/xz/xz-5.4.4.tar.xz

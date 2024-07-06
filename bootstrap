@@ -48,6 +48,7 @@ Some influential environment variables:
   BTCXX       C++ compiler command [${BTCXX}]
   BTCFLAGS    C compiler flags [${BTCFLAGS}]
   BTCXXFLAGS  C++ compiler flags [${BTCXXFLAGS}]
+  BTCPPFLAGS  Preprocessor flags [${BTCPPFLAGS}]
   BTLDFLAGS   Linker flags [${BTLDFLAGS}]
   VENDOR      Vendor name to reflect on the target triplet
 
@@ -182,6 +183,7 @@ BTCC="${BTCC:=gcc}"
 BTCXX="${BTCXX:=g++}"
 BTCFLAGS="${BTCFLAGS:=-O2}"
 BTCXXFLAGS="${BTCFLAGS:=-O2}"
+BTCPPFLAGS="${BTCPPFLAGS:=-P}"
 BTLDFLAGS="${BTLDFLAGS:=}"
 opt_keep=opt_keep.off
 stage=0
@@ -240,8 +242,9 @@ test -n "$CC" && warn_flags CC
 test -n "$CXX" && warn_flags CXX
 test -n "$CFLAGS" && warn_flags CFLAGS
 test -n "$CXXFLAGS" && warn_flags CXXFLAGS
+test -n "$CPPFLAGS" && warn_flags CPPFLAGS
 test -n "$LDFLAGS" && warn_flags LDFLAGS
-unset CC CXX CFLAGS CXXFLAGS LDFLAGS warn_flags
+unset CC CXX CFLAGS CXXFLAGS CPPFLAGS LDFLAGS warn_flags
 
 # Load target architecture-file
 if test -f "${worktree}/targets/$arch"; then
@@ -284,6 +287,7 @@ printf '%s\n' \
     "BTCFLAGS: $BTCFLAGS" \
     "BTCXXFLAGS: $BTCXXFLAGS" \
     "BTLDFLAGS: $BTLDFLAGS" \
+    "CPPFLAGS: $BTCPPFLAGS" \
     "Host: $host" \
     "Target: $target" \
     "Output directory: $output" \

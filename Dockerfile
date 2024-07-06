@@ -2,6 +2,15 @@ FROM ubuntu:24.04
 
 ENV DEBIAN_FRONTEND=noninteractive
 
+ENV TIMEZONE=UTC
+
+ENV LC_ALL=POSIX
+
+ENV LANGUAGE=POSIX
+
+# Set timezone
+RUN ln -snf /usr/share/zoneinfo/$TIMEZONE /etc/localtime && echo $TIMEZONE > /etc/timezone
+
 # Install dependencies
 RUN apt-get update && apt-get upgrade -y && apt-get install -y --no-install-recommends \
     apt-transport-https ca-certificates \

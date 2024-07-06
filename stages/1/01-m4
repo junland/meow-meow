@@ -25,5 +25,5 @@ make DESTDIR="${LFS}" install
 cd -- "$TMPDIR"
 
 cleanup() {
-    cd -- "$TMPDIR" && rm -rf linux-${version}
+    cd -- "$TMPDIR" && rm -rf m4-${version}
 }

@@ -1,6 +1,10 @@
 IMAGE_NAME := "builder:latest"
 TARGET_ARCH := "x86_64"
 
+source:
+	rm -rf sources/*.tar*
+	wget -i sources/SOURCELIST.txt -P sources/
+
 bootstrap-0: is_container
 	./bootstrap -s0 -a $(TARGET_ARCH) 2>&1 | tee _stage0-log.txt
 
@@ -17,6 +21,3 @@ container-image: is_container
 
 container-run: is_container
 	docker run -it --rm $(IMAGE_NAME) /bin/bash
-
-source:
-	wget -i sources/SOURCELIST.txt -P sources/

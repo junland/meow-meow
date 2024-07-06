@@ -16,36 +16,29 @@ cd ncurses-${version}
 # Ensure `gawk` is found first during configuration.
 sed -i s/mawk// configure
 
-# Build `tic` program first.
-mkdir build && pushd build
-
-../configure
-
-make -j${jobs} -C include
-
-make -j${jobs} -C progs tic
-
-popd
-
 # Build the rest of the library.
-./configure --prefix=/usr \
+./configure \
+    CFLAGS="$BTCFLAGS" CXXFLAGS="$BTCXXFLAGS" LDFLAGS="$BTLDFLAGS" CPPFLAGS="$BTCPPFLAGS" \
+    --prefix=/usr \
     --host=$target \
     --build=$(./config.guess) \
     --mandir=/usr/share/man \
-    --with-manpage-format=normal \
     --with-shared \
     --without-normal \
-    --with-cxx-shared \
     --without-debug \
     --without-ada \
     --disable-stripping
 
 make -j${jobs}
 
-make -j${jobs} DESTDIR="${LFS}" TIC_PATH=$(pwd)/build/progs/tic install
+make -j${jobs} DESTDIR="${LFS}" install
 
 # Move the shared libraries to `/lib`.
 ln -sv libncursesw.so ${LFS}/usr/lib/libncurses.so
 
 # Adjust headers
 sed -e 's/^#if.*XOPEN.*$/#if 1/' -i $LFS/usr/include/curses.h
+
+cleanup() {
+    cd -- "$TMPDIR" && rm -rf ncurses-${version}
+}

@@ -1,0 +1,32 @@
+# Build script for bash.
+# SPDX-License-Identifier: Apache-2.0
+# SPDX-FileCopyrightText: 2025, John Unland
+
+version=5.2.15
+
+cd -- "$TMPDIR"
+
+rm -rf bash-${version}
+
+unpack "${worktree}/sources/bash-${version}.tar.gz"
+
+# Build instructions
+cd bash-${version}
+
+./configure \
+    CFLAGS="$BTCFLAGS" CXXFLAGS="$BTCXXFLAGS" LDFLAGS="$BTLDFLAGS" \
+    --prefix=/usr \
+    --host=$target \
+    --build=$host \
+    --without-bash-malloc
+
+make -j${jobs}
+
+make DESTDIR="${LFS}" install
+
+# Make a symbolic link to `bash` if called as `sh`.
+ln -sv bash ${LFS}/bin/sh
+
+cleanup() {
+    cd -- "$TMPDIR" && rm -rf bash-${version}
+}

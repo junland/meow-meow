@@ -2,6 +2,8 @@
 # SPDX-License-Identifier: Apache-2.0
 # SPDX-FileCopyrightText: 2025, John Unland
 
+exit 0
+
 version=13.3.0
 
 # Prerequisites
@@ -37,6 +39,7 @@ cd ../gcc-build
 
 ../gcc-${version}/configure \
     CFLAGS="$BTCFLAGS" CXXFLAGS="$BTCXXFLAGS" LDFLAGS="$BTLDFLAGS" \
+    CC="$target-gcc" CXX="$target-g++" AR="$target-ar" RANLIB="$target-ranlib" \
     --prefix=/usr \
     --build=$host \
     --host=$host \
@@ -56,6 +59,7 @@ cd ../gcc-build
     --enable-default-ssp \
     --enable-languages=c,c++ \
     --without-isl \
+    --disable-bootstrap \
     $multilib_options \
     $gcc_options
 

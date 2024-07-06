@@ -7,7 +7,6 @@ version=6.5
 cd -- "$TMPDIR"
 
 rm -rf ncurses-${version}
-
 unpack "${worktree}/sources/ncurses-${version}.tar.gz"
 
 # Build instructions

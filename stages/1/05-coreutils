@@ -7,7 +7,6 @@ version=9.5
 cd -- "$TMPDIR"
 
 rm -rf coreutils-${version}
-
 unpack "${worktree}/sources/coreutils-${version}.tar.xz"
 
 # Build instructions

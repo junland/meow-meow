@@ -7,7 +7,6 @@ version=1.4.19
 cd -- "$TMPDIR"
 
 rm -rf m4-${version}
-
 unpack "${worktree}/sources/m4-${version}.tar.gz"
 
 # Build instructions

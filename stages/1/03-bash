@@ -7,7 +7,6 @@ version=5.2.15
 cd -- "$TMPDIR"
 
 rm -rf bash-${version}
-
 unpack "${worktree}/sources/bash-${version}.tar.gz"
 
 # Build instructions

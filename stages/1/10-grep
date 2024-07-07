@@ -1,0 +1,26 @@
+# Build script for grep.
+# SPDX-License-Identifier: Apache-2.0
+# SPDX-FileCopyrightText: 2025, John Unland
+
+version=3.11
+
+cd -- "$TMPDIR"
+
+rm -rf grep-$version
+unpack "${worktree}/sources/grep-$version.tar.xz"
+
+cd grep-$version
+
+./configure \
+    CFLAGS="$BTCFLAGS" CXXFLAGS="$BTCXXFLAGS" LDFLAGS="$BTLDFLAGS" \
+    --prefix=/usr \
+    --host=$target \
+    --build=$host
+
+make -j${jobs}
+
+make -j${jobs} DESTDIR="${LFS}" install
+
+cleanup() {
+    cd -- "$TMPDIR" && rm -rf grep-$version
+}

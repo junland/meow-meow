@@ -1,0 +1,26 @@
+# Build script for diffutils.
+# SPDX-License-Identifier: Apache-2.0
+# SPDX-FileCopyrightText: 2025, John Unland
+
+version=3.10
+
+cd -- "$TMPDIR"
+
+rm -rf diffutils-$version
+unpack "${worktree}/sources/diffutils-$version.tar.xz"
+
+cd diffutils-$version
+
+./configure \
+    CFLAGS="$BTCFLAGS" CXXFLAGS="$BTCXXFLAGS" LDFLAGS="$BTLDFLAGS" \
+    --prefix=/usr \
+    --host=$target \
+    --build=$(./build-aux/config.guess)
+
+make -j${jobs}
+
+make -j${jobs} DESTDIR="${LFS}" install
+
+cleanup() {
+    cd -- "$TMPDIR" && rm -rf diffutils-$version
+}

@@ -1,0 +1,27 @@
+# Build script for make.
+# SPDX-License-Identifier: Apache-2.0
+# SPDX-FileCopyrightText: 2025, John Unland
+
+version=4.4.1
+
+cd -- "$TMPDIR"
+
+rm -rf make-$version
+unpack "${worktree}/sources/make-$version.tar.gz"
+
+cd make-$version
+
+./configure \
+    CFLAGS="$BTCFLAGS" CXXFLAGS="$BTCXXFLAGS" LDFLAGS="$BTLDFLAGS" \
+    --prefix=/usr \
+    --host=$target \
+    --build=$host \
+    --without-guile
+
+make -j${jobs}
+
+make -j${jobs} DESTDIR="${LFS}" install
+
+cleanup() {
+    cd -- "$TMPDIR" && rm -rf make-$version
+}

@@ -1,0 +1,27 @@
+# Build script for findutils.
+# SPDX-License-Identifier: Apache-2.0
+# SPDX-FileCopyrightText: 2025, John Unland
+
+version=4.9.0
+
+cd -- "$TMPDIR"
+
+rm -rf findutils-$version
+unpack "${worktree}/sources/findutils-$version.tar.xz"
+
+cd findutils-$version
+
+./configure \
+    CFLAGS="$BTCFLAGS" CXXFLAGS="$BTCXXFLAGS" LDFLAGS="$BTLDFLAGS" \
+    --prefix=/usr \
+    --host=$LFS_TGT \
+    --build=$(build-aux/config.guess) \
+    --localstatedir=/var/lib/locate
+
+make -j${jobs}
+
+make -j${jobs} DESTDIR="${LFS}" install
+
+cleanup() {
+    cd -- "$TMPDIR" && rm -rf findutils-$version
+}

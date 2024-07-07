@@ -1,0 +1,26 @@
+# Build script for sed.
+# SPDX-License-Identifier: Apache-2.0
+# SPDX-FileCopyrightText: 2025, John Unland
+
+version=4.9
+
+cd -- "$TMPDIR"
+
+rm -rf sed-$version
+unpack "${worktree}/sources/sed-$version.tar.xz"
+
+cd sed-$version
+
+./configure \
+    CFLAGS="$BTCFLAGS" CXXFLAGS="$BTCXXFLAGS" LDFLAGS="$BTLDFLAGS" \
+    --prefix=/usr \
+    --host=$target \
+    --build=$host
+
+make -j${jobs}
+
+make -j${jobs} DESTDIR="${LFS}" install
+
+cleanup() {
+    cd -- "$TMPDIR" && rm -rf sed-$version
+}

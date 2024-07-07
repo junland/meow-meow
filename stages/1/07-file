@@ -1,0 +1,43 @@
+# Build script for file.
+# SPDX-License-Identifier: Apache-2.0
+# SPDX-FileCopyrightText: 2025, John Unland
+
+version=5.45
+
+cd -- "$TMPDIR"
+
+rm -rf file-$version
+unpack "${worktree}/sources/file-$version.tar.gz"
+
+cd file-$version
+
+mkdir build
+
+pushd build
+
+../configure \
+    CFLAGS="$BTCFLAGS" CXXFLAGS="$BTCXXFLAGS" LDFLAGS="$BTLDFLAGS" \
+    --disable-bzlib \
+    --disable-libseccomp \
+    --disable-xzlib \
+    --disable-zlib
+
+make -j${jobs}
+
+popd
+
+./configure \
+    CFLAGS="$BTCFLAGS" CXXFLAGS="$BTCXXFLAGS" LDFLAGS="$BTLDFLAGS" \
+    --prefix=/usr \
+    --host=$target \
+    --build=$(./config.guess)
+
+make FILE_COMPILE=$(pwd)/build/src/file -j${jobs}
+
+make DESTDIR=$LFS install
+
+rm -v $LFS/usr/lib/libmagic.la
+
+cleanup() {
+    cd -- "$TMPDIR" && rm -rf file-$version
+}

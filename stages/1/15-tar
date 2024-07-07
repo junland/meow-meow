@@ -1,0 +1,26 @@
+# Build script for tar.
+# SPDX-License-Identifier: Apache-2.0
+# SPDX-FileCopyrightText: 2025, John Unland
+
+version=5.4.6
+
+cd -- "$TMPDIR"
+
+rm -rf tar-$version
+unpack "${worktree}/sources/tar-$version.tar.xz"
+
+cd tar-$version
+
+./configure \
+    CFLAGS="$BTCFLAGS" CXXFLAGS="$BTCXXFLAGS" LDFLAGS="$BTLDFLAGS" \
+    --prefix=/usr \
+    --host=$target \
+    --build=$host
+
+make -j${jobs}
+
+make -j${jobs} DESTDIR="${LFS}" install
+
+cleanup() {
+    cd -- "$TMPDIR" && rm -rf xz-$version
+}

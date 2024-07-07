@@ -1,0 +1,26 @@
+# Build script for patch.
+# SPDX-License-Identifier: Apache-2.0
+# SPDX-FileCopyrightText: 2025, John Unland
+
+version=2.7.6
+
+cd -- "$TMPDIR"
+
+rm -rf patch-$version
+unpack "${worktree}/sources/patch-$version.tar.xz"
+
+cd patch-$version
+
+./configure \
+    CFLAGS="$BTCFLAGS" CXXFLAGS="$BTCXXFLAGS" LDFLAGS="$BTLDFLAGS" \
+    --prefix=/usr \
+    --host=$target \
+    --build=$host
+
+make -j${jobs}
+
+make -j${jobs} DESTDIR="${LFS}" install
+
+cleanup() {
+    cd -- "$TMPDIR" && rm -rf patch-$version
+}

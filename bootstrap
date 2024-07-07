@@ -278,7 +278,8 @@ fi
 # Compose variables for the physical output,
 # printing some useful information
 LFS="$output/${target}-sysroot"
-LFS_TOOLS=
+LFS_TGT="$target"
+LFS_HOST="$host"
 
 # Print some useful information
 printf '%s\n' \

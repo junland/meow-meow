@@ -9,13 +9,13 @@ ENV LC_ALL=POSIX
 ENV LANGUAGE=POSIX
 
 # Set timezone
-RUN ln -snf /usr/share/zoneinfo/$TIMEZONE /etc/localtime && echo $TIMEZONE > /etc/timezone
+RUN ln -snf /usr/share/zoneinfo/$TIMEZONE /etc/localtime && echo $TIMEZONE >/etc/timezone
 
 # Install dependencies
 RUN apt-get update && apt-get upgrade -y && apt-get install -y --no-install-recommends \
     apt-transport-https ca-certificates \
-    autoconf \
-    automake autopoint bc bison expect flex gawk gettext gettext-base \
+    autoconf automake autopoint \
+    bc bison expect flex gawk gettext gettext-base \
     build-essential \
     curl \
     dos2unix \
@@ -33,6 +33,7 @@ RUN apt-get update && apt-get upgrade -y && apt-get install -y --no-install-reco
     nano \
     pkg-config \
     python3 \
+    qemu-user-static \
     rsync \
     texinfo \
     tree \

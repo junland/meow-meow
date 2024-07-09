@@ -23,5 +23,9 @@ sources/*.gz
 sources/*.bz2
 sources/*.lz
 
-# To ignore (possible) decompressed sources at sources/
+# Ignore (possible) decompressed sources at sources/
 sources/*/
+
+# Ignore docker specific files
+.dockerignore
+.dockerenv

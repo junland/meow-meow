@@ -8,6 +8,8 @@ ENV LC_ALL=POSIX
 
 ENV LANGUAGE=POSIX
 
+RUN touch .dockerenv
+
 # Set timezone
 RUN ln -snf /usr/share/zoneinfo/$TIMEZONE /etc/localtime && echo $TIMEZONE >/etc/timezone
 
@@ -68,7 +70,7 @@ WORKDIR /home/builder
 COPY . /home/builder
 
 # Setup scripts
-RUN chmod +x ./bootstrap ./stages/**/*
+RUN chmod +x ./bootstrap ./stages/**/* ./utils/*
 
 # Run find command to make sure everything is in Unix format
 RUN find /home/builder -type f -exec dos2unix {} \;

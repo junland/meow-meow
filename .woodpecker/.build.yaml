@@ -2,6 +2,7 @@ steps:
   - name: build
     image: localhost/lfs-builder:latest
     commands:
+      - sudo chown $USER:$USER -R ./*
       - make source
       - make bootstrap-0
       - make bootstrap-1

@@ -4,7 +4,7 @@ TARGET_ARCH := "x86_64"
 .PHONY: source
 source:
 	rm -rf sources/*.tar*
-	wget -i sources/SOURCELIST.txt -P sources/
+	wget -nv -i sources/SOURCELIST.txt -P sources/
 
 .PHONY: bootstrap-0
 bootstrap-0: is_container

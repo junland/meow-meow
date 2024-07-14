@@ -2,6 +2,6 @@ steps:
   - name: build
     image: localhost/lfs-builder:latest
     commands:
-      - ls -la
-      - echo building
-      - sleep 5
+      - make source
+      - make bootstrap-0
+      - make bootstrap-1

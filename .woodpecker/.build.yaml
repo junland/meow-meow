@@ -1,6 +1,6 @@
 steps:
   - name: build
-    image: builder-lfs:latest
+    image: alpine:latest
     commands:
       - ls -la
       - echo building

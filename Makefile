@@ -8,10 +8,12 @@ source:
 
 .PHONY: bootstrap-0
 bootstrap-0: is_container
+	chmod +x ./bootstrap
 	./bootstrap -s0 -a $(TARGET_ARCH) 2>&1 | tee _stage0-log.txt
 
 .PHONY: bootstrap-1
 bootstrap-1: is_container
+	chmod +x ./bootstrap
 	./bootstrap -s1 -a $(TARGET_ARCH) 2>&1 | tee _stage1-log.txt
 
 # Add a target that will check to make sure that we are running in a container

@@ -1,1 +1,57 @@
-exit 0
+# Build script for binutils.
+# SPDX-License-Identifier: Apache-2.0
+# SPDX-FileCopyrightText: 2025, John Unland
+
+version=2.38
+
+cd -- "$TMPDIR"
+
+rm -rf binutils-${version}
+unpack "${worktree}/sources/binutils-${version}.tar.xz"
+
+# Build instructions
+cd binutils-${version}
+
+# Fix libtool for cross-compiling
+sed '6009s/$add_dir//' -i ltmain.sh
+
+# Build in a separate directory
+rm -rf ../binutils-build
+mkdir ../binutils-build
+cd ../binutils-build
+
+../binutils-${version}/configure \
+    CFLAGS="$BTCFLAGS" CXXFLAGS="$BTCXXFLAGS" LDFLAGS="$BTLDFLAGS" \
+    --prefix=/usr \
+    --build=$(../config.guess) \
+    --host=$target \
+    --disable-nls \
+    --enable-shared \
+    --enable-gprofng=no \
+    --disable-werror \
+    --enable-64-bit-bfd \
+    --enable-new-dtags \
+    --enable-default-hash-style=gnu
+
+make -j${jobs}
+
+make -j${jobs} DESTDIR="${LFS}" install
+
+# Remove the libtool files
+rm -v $LFS/usr/lib/lib{bfd,ctf,ctf-nobfd,opcodes,sframe}.{a,la}
+
+# cd ${crossdir}/bin
+# ln -sf "${target}-ld" "ld"
+# ln -sf "${target}-addr2line" "addr2line"
+# ln -sf "${target}-c++filt" "c++filt"
+# ln -sf "${target}-elfedit" "elfedit"
+# ln -sf "${target}-gprof" "gprof"
+# ln -sf "${target}-readelf" "readelf"
+# ln -sf "${target}-size" "size"
+# ln -sf "${target}-strings" "strings"
+
+cd -- "$TMPDIR"
+
+cleanup() {
+    rm -rf binutils-${version} binutils-build
+}

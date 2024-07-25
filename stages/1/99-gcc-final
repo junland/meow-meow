@@ -35,19 +35,25 @@ ln -s ../mpc-${mpc_version} mpc
 # Build in a separate directory
 rm -rf ../gcc-build
 mkdir ../gcc-build
+
+# Override the building rule of libgcc and libstdc++ headers, to allow building these libraries with POSIX threads
+sed '/thread_header =/s/@.*@/gthr-posix.h/' -i libgcc/Makefile.in libstdc++-v3/include/Makefile.in
+
 cd ../gcc-build
 
 ../gcc-${version}/configure \
     CFLAGS="$BTCFLAGS" CXXFLAGS="$BTCXXFLAGS" LDFLAGS="$BTLDFLAGS" \
     CC="$target-gcc" CXX="$target-g++" AR="$target-ar" RANLIB="$target-ranlib" \
+    LDFLAGS_FOR_TARGET="-L$PWD/$target/libgcc" \
     --prefix=/usr \
-    --build=$host \
-    --host=$host \
+    --build=$(../config.guess) \
+    --host=$target \
     --target=$target \
     --with-sysroot="${LFS}" \
+    --with-build-sysroot="${LFS}" \
     --libdir="$LFS/lib" \
     --includedir="$LFS/include" \
-    --with-gxx-include-dir="$LFS/include/c++/${version}" \
+    --with-gxx-include-dir="/tools/$target/include/c++/${version}" \
     --disable-libatomic \
     --disable-libgomp \
     --disable-libquadmath \
@@ -66,6 +72,9 @@ cd ../gcc-build
 make -j${jobs}
 
 make -j${jobs} DESTDIR="${LFS}" install
+
+# Create utility symlinks
+ln -sv gcc $LFS/usr/bin/cc
 
 cd -- "$TMPDIR"
 

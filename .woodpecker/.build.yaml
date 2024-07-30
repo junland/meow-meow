@@ -1,9 +1,0 @@
-steps:
-  - name: build
-    image: localhost/lfs-builder:latest
-    commands:
-      - sudo chown builder:builder -R ./*
-      - ls -la
-      - make source
-      - make bootstrap-0
-      - make bootstrap-1

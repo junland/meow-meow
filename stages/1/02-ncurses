@@ -36,6 +36,7 @@ popd
     --with-cxx-shared \
     --without-debug \
     --without-ada \
+    --with-termlib \
     --disable-stripping
 
 make -j${jobs}

@@ -34,7 +34,7 @@ umount_chroot() {
     msg "Done unmounting chroot."
 }
 
-if [ $1 == "" ]; then
+if [ -n "$1" ]; then
     fail "No rootfs directory has been specified"
 fi
 
@@ -47,7 +47,7 @@ ROOTFS=$1
 mount_chroot
 
 # If passed a second argument, run with qemu-$2-static
-if [ $2 != "" ]; then
+if [ -n "$2" ]; then
     chroot "$ROOTFS" $QEMU_STATIC_PATH/qemu-$2-static /usr/bin/env -i \
         HOME=/ \
         TERM="$TERM" \

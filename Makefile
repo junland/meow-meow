@@ -6,6 +6,12 @@ source:
 	rm -rf sources/*.tar*
 	wget -nv -i sources/SOURCELIST.txt -P sources/
 
+.PHONY: setup
+setup:
+        chmod +x stages/**/*
+        chmod +x utils/*
+        chmod +x bootstrap
+
 .PHONY: bootstrap-0
 bootstrap-0: is_container
 	chmod +x ./bootstrap

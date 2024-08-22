@@ -408,7 +408,6 @@ for file in ${worktree}/stages/${stage}/${@:-??-*}; do
             MAKEFLAGS="-j${jobs}" \
             PS1='(chroot)$ ' \
             PATH=/bin:/usr/bin:/sbin:/usr/sbin \
-            unpack=$(declare -f unpack) \
             /bin/bash < "${worktree}/stages/${stage}/$file" || demount
     else
         # Run the scripts as usual

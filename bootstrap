@@ -162,6 +162,26 @@ unpack() {
     unset -v file
 }
 
+# unmount the chroot environment
+demount() {
+    warn "Demounting chroot environment ..."
+    # Define the required mount points
+    mount_points=(
+        "$LFS/proc"
+        "$LFS/dev/pts"
+        "$LFS/dev"
+        "$LFS/sys"
+        "$LFS/run"
+    )
+
+    # Make sure we dont have any left over mounts
+    for point in "${mount_points[@]}"; do
+        if mountpoint -q "$point"; then
+            umount -v "$point"
+        fi
+    done
+}
+
 # Print a warning for good practices.
 #
 # Recommended practices is to set variables
@@ -349,21 +369,7 @@ for file in ${worktree}/stages/${stage}/${@:-??-*}; do
         # Setup permissions for the chroot environment
         chown -R root:root "$LFS"
 
-        # Define the required mount points
-        mount_points=(
-            "$LFS/proc"
-            "$LFS/dev/pts"
-            "$LFS/dev"
-            "$LFS/sys"
-            "$LFS/run"
-        )
-
-        # Make sure we dont have any left over mounts
-        for point in "${mount_points[@]}"; do
-            if mountpoint -q "$point"; then
-                umount -v "$point"
-            fi
-        done
+        demount || chkstatus_or_exit
 
         # Mount the required filesystems for chroot
         mount -v --bind /dev "$LFS/dev"
@@ -403,7 +409,7 @@ for file in ${worktree}/stages/${stage}/${@:-??-*}; do
             PS1='(chroot)$ ' \
             PATH=/bin:/usr/bin:/sbin:/usr/sbin \
             unpack=$(declare -f unpack) \
-            /bin/bash < "${worktree}/stages/${stage}/$file"
+            /bin/bash < "${worktree}/stages/${stage}/$file" || demount
     else
         # Run the scripts as usual
         . "${worktree}/stages/${stage}/$file"

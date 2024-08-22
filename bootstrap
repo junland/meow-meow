@@ -323,14 +323,54 @@ for file in ${worktree}/stages/${stage}/${@:-??-*}; do
 
     ### Stage pre-settings
 
-    # Create sysroot directory, recreating the symlink for the stage 0
+    # Create pre-settings for stage 0
     if test "$stage" = 0; then
         echo "Running pre-settings..."
     fi
 
-    # Create "tools" directory, recreating the symlink for the stage 1
+    # Create pre-settings for stage 1
     if test "$stage" = 1; then
         echo "Running pre-settings..."
+    fi
+
+    # Create pre-settings for stage 2
+    if test "$stage" = 2; then
+        echo "Running pre-settings..."
+
+        # Verify that to run this stage we must be root.
+        if test "$(id -u)" -ne 0; then
+            warn "${PROGRAM}: You must be root to run this stage"
+            exit 1
+        fi
+
+        # Create needed directories if not already created
+        mkdir -pv $LFS/{dev,proc,sys,run}
+
+        # Setup permissions for the chroot environment
+        chown -R root:root "$LFS"
+
+        # Define the required mount points
+        mount_points=(
+            "$LFS/proc"
+            "$LFS/dev/pts"
+            "$LFS/dev"
+            "$LFS/sys"
+            "$LFS/run"
+        )
+
+        # Make sure we dont have any left over mounts
+        for point in "${mount_points[@]}"; do
+            if mountpoint -q "$point"; then
+                umount -v "$point"
+            fi
+        done
+
+        # Mount the required filesystems for chroot
+        mount -v --bind /dev "$LFS/dev"
+        mount -vt devpts devpts "$LFS/dev/pts" -o gid=5,mode=620
+        mount -vt proc proc "$LFS/proc"
+        mount -vt sysfs sysfs "$LFS/sys"
+        mount -vt tmpfs tmpfs "$LFS/run"
     fi
 
     # Check if the done file exists
@@ -352,7 +392,22 @@ for file in ${worktree}/stages/${stage}/${@:-??-*}; do
     # Clear hash table
     hash -r >/dev/null 2>&1 || true
 
-    . "${worktree}/stages/${stage}/$file"
+    # If we are running stage 2, we need to run the scripts in a chroot
+    if test "$stage" = 2; then
+        # Pass in the stage2 scripts into bash with the chroot command
+        chroot "$LFS" /usr/bin/env -i \
+            HOME=/ \
+            TERM="$TERM" \
+            LC_ALL=POSIX \
+            MAKEFLAGS="-j${jobs}" \
+            PS1='(chroot)$ ' \
+            PATH=/bin:/usr/bin:/sbin:/usr/sbin \
+            unpack=$(declare -f unpack) \
+            /bin/bash < "${worktree}/stages/${stage}/$file"
+    else
+        # Run the scripts as usual
+        . "${worktree}/stages/${stage}/$file"
+    fi
 
     # Deactivate shell option(s)
     set +e -h

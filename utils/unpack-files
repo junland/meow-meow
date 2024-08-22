@@ -1,0 +1,103 @@
+#!/bin/bash
+# SPDX-License-Identifier: GPL-3.0-or-later
+# SPDX-FileCopyrightText: 2025, John Unland
+# SPDX-FileCopyrightText: 2014-2022, Matias Andres Fonzo <selk@dragora.org>
+
+PROGRAM="unpack-files"
+
+chkstatus_or_exit() {
+    status=$?
+
+    if test $status -ne 0; then
+        echo "Return status = $status" 1>&2
+        exit "${1-2}" # If not given, defaults to 2
+    fi
+
+    unset -v status
+}
+
+# Check to see if any arguments were passed
+if test $# -eq 0; then
+    echo "${PROGRAM}: No files to unpack" 1>&2
+    exit 1
+fi
+
+# Check to see if files exist
+for file in "$@"; do
+    if test ! -e "$file"; then
+        echo "${PROGRAM}: ${file}: No such file" 1>&2
+        exit 1
+    fi
+done
+
+# Unpack files
+for file in "$@"; do
+    echo "${PROGRAM}: Unpacking ${file} ..."
+    case $file in
+        *.tar)
+            tar tf "$file" >/dev/null \
+                && tar xpf "$file"
+            chkstatus_or_exit 3
+            ;;
+        *.tar.gz | *.tgz | *.tar.Z)
+            gzip -cd "$file" | tar tf - >/dev/null \
+                && gzip -cd "$file" | tar xpf -
+            chkstatus_or_exit 3
+            ;;
+        *.tar.bz2 | *.tbz2 | *.tbz)
+            bzip2 -cd "$file" | tar tf - >/dev/null \
+                && bzip2 -cd "$file" | tar xpf -
+            chkstatus_or_exit 3
+            ;;
+        *.tar.lz | *.tlz)
+            lzip -cd "$file" | tar tf - >/dev/null \
+                && lzip -cd "$file" | tar xpf -
+            chkstatus_or_exit 3
+            ;;
+        *.tar.xz | *.txz)
+            xz -cd "$file" | tar tf - >/dev/null \
+                && xz -cd "$file" | tar xpf -
+            chkstatus_or_exit 3
+            ;;
+        *.tar.zst | *.tzst)
+            zstd -cd "$file" | tar -tf - >/dev/null \
+                && zstd -cd "$file" | tar -xpf -
+            chkstatus_or_exit 3
+            ;;
+        *.zip | *.ZIP)
+            unzip -t "$file" >/dev/null \
+                && unzip "$file" >/dev/null
+            chkstatus_or_exit 3
+            ;;
+        *.gz)
+            gzip -t "$file" \
+                && gzip -cd "$file" >"$(basename -- "$file" .gz)"
+            chkstatus_or_exit 3
+            ;;
+        *.bz2)
+            bzip2 -t "$file" \
+                && bzip2 -cd "$file" >"$(basename -- "$file" .bz2)"
+            chkstatus_or_exit 3
+            ;;
+        *.lz)
+            lzip -t "$file" \
+                && lzip -cd "$file" >"$(basename -- "$file" .lz)"
+            chkstatus_or_exit 3
+            ;;
+        *.xz)
+            xz -t "$file" \
+                && xz -cd "$file" >"$(basename -- "$file" .xz)"
+            chkstatus_or_exit 3
+            ;;
+        *.zst)
+            zstd -qt "$file" \
+                && zstd -cd "$file" >"$(basename -- "$file" .zst)"
+            chkstatus_or_exit 3
+            ;;
+        *)
+            echo "${PROGRAM}: cannot unpack ${file}: Unsupported extension"
+            exit 1
+            ;;
+    esac
+done
+unset -v file

@@ -1,4 +1,6 @@
 #!/bin/bash
+# SPDX-License-Identifier: GPL-3.0-or-later
+# SPDX-FileCopyrightText: 2025, John Unland
 
 trap umount_chroot HUP INT QUIT TERM SIGHUP SIGINT SIGQUIT SIGILL SIGABRT SIGKILL SIGTRAP SIGTERM SIGSTOP SIGSEGV
 

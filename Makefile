@@ -9,9 +9,9 @@ source:
 
 .PHONY: setup
 setup:
-        chmod +x stages/**/*
-        chmod +x utils/*
-        chmod +x bootstrap
+	chmod +x stages/**/*
+	chmod +x utils/*
+	chmod +x bootstrap
 
 .PHONY: bootstrap-0
 bootstrap-0: is_container setup

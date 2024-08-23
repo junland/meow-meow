@@ -109,6 +109,11 @@ demount() {
     done
 }
 
+# Just a function alias to unpack files
+unpack() {
+    ${worktree_utils}/unpack-files "$@" || chkstatus_or_exit
+}
+
 # Print a warning for good practices.
 #
 # Recommended practices is to set variables
@@ -147,11 +152,6 @@ test -n "$VENDOR" && VENDOR="${VENDOR}-"
 if test ! -x "${worktree_utils}/unpack-files"; then
     warn "${PROGRAM}: Required script 'unpack-files' not found"
     exit 1
-else # Load the script as a alias
-    alias unpack="${worktree_utils}/unpack-files"
-    alias unpack-files="${worktree_utils}/unpack-files"
-    alias unpack_files="${worktree_utils}/unpack-files"
-    export -f unpack unpack-files unpack_files
 fi
 
 ### Parse options

@@ -351,8 +351,14 @@ for file in ${worktree}/stages/${stage}/${@:-??-*}; do
             PATH=/bin:/usr/bin:/sbin:/usr/sbin \
             /bin/bash < "${worktree}/stages/${stage}/$file" || demount
     else
-        # Run the scripts as usual
-        . "${worktree}/stages/${stage}/$file"
+       # Set pipefail to catch errors in the pipe
+        set -o pipefail
+
+        # Run the scripts as usual and log the output to a file
+        . "${worktree}/stages/${stage}/$file" | tee "${output}/${file}.log"
+
+        # Disable pipefail
+        set +o pipefail
     fi
 
     # Deactivate shell option(s)

@@ -66,8 +66,4 @@ users:x:999:
 nogroup:x:65534:
 EOF
 
-touch $LFS/var/log/{btmp,lastlog,faillog,wtmp}
-chgrp -v utmp $LFS/var/log/lastlog
-chmod -v 664  $LFS/var/log/lastlog
-
 cd -- "$TMPDIR"

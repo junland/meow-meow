@@ -301,11 +301,17 @@ for file in ${worktree}/stages/${stage}/${@:-??-*}; do
             exit 1
         fi
 
+        # Create needed directories if not already created
+        mkdir -pv "$LFS"/{dev,proc,sys,run,var/local/build/sources}
+
         # Load the unpack-files script into the chroot environment
         cp -v "${worktree_utils}/unpack-files" "$LFS/bin"
 
-        # Create needed directories if not already created
-        mkdir -pv "$LFS"/{dev,proc,sys,run}
+        # Set the unpack-files script as executable
+        chmod -v 755 "$LFS/bin/unpack-files"
+
+        # Copy sources to the chroot environment
+        cp -rv "${worktree}/sources" "$LFS/var/local/build"
 
         # Setup permissions for the chroot environment
         chown -R root:root "$LFS"
@@ -349,6 +355,8 @@ for file in ${worktree}/stages/${stage}/${@:-??-*}; do
             MAKEFLAGS="-j${jobs}" \
             PS1='(chroot)$ ' \
             PATH=/bin:/usr/bin:/sbin:/usr/sbin \
+            worktree="/var/local/build" \
+            sources_dir="/var/local/build/sources" \
             /bin/bash < "${worktree}/stages/${stage}/$file" || demount
     else
        # Set pipefail to catch errors in the pipe

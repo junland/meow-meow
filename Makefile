@@ -24,7 +24,7 @@ bootstrap-1: is_container setup
 
 .PHONY: bootstrap-2
 bootstrap-2: is_container setup
-	$(BOOTSTRAP_SH) -s2 -a $(TARGET_ARCH) 2>&1 | tee _stage1-log.txt
+	$(BOOTSTRAP_SH) -s2 -a $(TARGET_ARCH) 2>&1 | tee _stage2-log.txt
 
 # Add a target that will check to make sure that we are running in a container
 .PHONY: is_container

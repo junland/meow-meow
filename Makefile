@@ -2,6 +2,8 @@ IMAGE_NAME := "builder:latest"
 TARGET_ARCH := "x86_64"
 BOOTSTRAP_SH := "$(shell pwd)/bootstrap"
 SHELL := /bin/bash
+SUDO := /bin/sudo
+
 
 .PHONY: source
 source:
@@ -24,7 +26,7 @@ bootstrap-1: is_container setup
 
 .PHONY: bootstrap-2
 bootstrap-2: is_container setup
-	$(BOOTSTRAP_SH) -s2 -a $(TARGET_ARCH) 2>&1 | tee _stage2-log.txt
+	$(SUDO) $(BOOTSTRAP_SH) -s2 -a $(TARGET_ARCH) 2>&1 | tee _stage2-log.txt
 
 # Add a target that will check to make sure that we are running in a container
 .PHONY: is_container

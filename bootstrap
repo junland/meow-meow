@@ -104,6 +104,7 @@ demount() {
     # Make sure we dont have any left over mounts
     for point in "${mount_points[@]}"; do
         if mountpoint -q "$point"; then
+            echo "Unmounting $point ..."
             umount -v "$point"
         fi
     done
@@ -305,10 +306,7 @@ for file in ${worktree}/stages/${stage}/${@:-??-*}; do
         mkdir -pv "$LFS"/{dev,proc,sys,run,var/local/build/sources}
 
         # Load the unpack-files script into the chroot environment
-        cp -v "${worktree_utils}/unpack-files" "$LFS/bin"
-
-        # Set the unpack-files script as executable
-        chmod -v 755 "$LFS/bin/unpack-files"
+        install -v -m 755 "${worktree_utils}/unpack-files" "$LFS/usr/bin"
 
         # Copy sources to the chroot environment
         cp -rv "${worktree}/sources" "$LFS/var/local/build"
@@ -329,7 +327,7 @@ for file in ${worktree}/stages/${stage}/${@:-??-*}; do
     # Check if the done file exists
     if test -f "${output}/${done_file}"; then
         echo "${PROGRAM}: Skipping $file from stages/${stage} ..."
-        rm -rf "${TMPDIR}/*" || chkstatus_or_exit
+        rm -rf "${TMPDIR}"/* || chkstatus_or_exit
         continue
     fi
 
@@ -379,6 +377,8 @@ for file in ${worktree}/stages/${stage}/${@:-??-*}; do
     trap - EXIT HUP INT QUIT ABRT TERM
 
     # Create the done file
+    echo "${PROGRAM}: Done processing $file from stages/${stage} ..."
+    echo "${PROGRAM}: Marking with done file: ${done_file}"
     touch "${output}/${done_file}"
 
     # Delete declared directories on the cleanup() function

@@ -4,9 +4,9 @@
 
 touch $LFS/var/log/{btmp,lastlog,faillog,wtmp}
 chgrp -v utmp $LFS/var/log/lastlog
-chmod -v 664  $LFS/var/log/lastlog
+chmod -v 664 $LFS/var/log/lastlog
 
-ln -sv /proc/self/mounts /etc/mtab
+ln -sfv /proc/self/mounts /etc/mtab
 ln -sfv /run /var/run
 ln -sfv /run/lock /var/lock
-ln -sv /proc/self/mounts /etc/mtab
+ln -sfv /proc/self/mounts /etc/mtab

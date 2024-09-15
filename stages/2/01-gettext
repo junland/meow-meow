@@ -1,0 +1,26 @@
+# Build script for gettext.
+# SPDX-License-Identifier: Apache-2.0
+# SPDX-FileCopyrightText: 2025, John Unland
+
+version=0.22
+
+cd -- "$TMPDIR"
+
+rm -rf gettext-$version
+
+unpack "${worktree}/sources/gettext-$version.tar.xz"
+
+cd gettext-$version
+
+./configure \
+    CFLAGS="$BTCFLAGS" CXXFLAGS="$BTCXXFLAGS" LDFLAGS="$BTLDFLAGS" \
+    --prefix=/usr \
+    --disable-shared
+
+make -j${jobs}
+
+cp -v gettext-tools/src/{msgfmt,msgmerge,xgettext} /usr/bin
+
+cleanup() {
+    cd -- "$TMPDIR" && rm -rf gettext-$version
+}

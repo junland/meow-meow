@@ -308,6 +308,9 @@ for file in ${worktree}/stages/${stage}/${@:-??-*}; do
         # Load the unpack-files script into the chroot environment
         install -v -m 755 "${worktree_utils}/unpack-files" "$LFS/usr/bin"
 
+        # Create a link to unpack-files as unpack
+        ln -sv unpack-files "$LFS/usr/bin/unpack"
+
         # Copy sources to the chroot environment
         cp -rv "${worktree}/sources" "$LFS/var/local/build"
 
@@ -353,6 +356,14 @@ for file in ${worktree}/stages/${stage}/${@:-??-*}; do
             MAKEFLAGS="-j${jobs}" \
             PS1='(chroot)$ ' \
             PATH=/bin:/usr/bin:/sbin:/usr/sbin \
+            BTCFLAGS="$BTCFLAGS" \
+            BTCXXFLAGS="$BTCXXFLAGS" \
+            BTCPPFLAGS="$BTCPPFLAGS" \
+            BTLDFLAGS="$BTLDFLAGS" \
+            BTCC="$BTCC" \
+            BTCXX="$BTCXX" \
+            target="$target" \
+            arch="$arch" \
             worktree="/var/local/build" \
             sources_dir="/var/local/build/sources" \
             /bin/bash < "${worktree}/stages/${stage}/$file" || demount

@@ -89,6 +89,18 @@ chkstatus_or_exit() {
     unset -v status
 }
 
+chkstatus_or_exit_demount() {
+    status=$?
+
+    if test $status -ne 0; then
+        echo "Return status = $status" 1>&2
+        demount
+        exit "${1-2}" # If not given, defaults to 2
+    fi
+
+    unset -v status
+}
+
 # unmount the chroot environment
 demount() {
     warn "Demounting chroot environment ..."
@@ -105,7 +117,7 @@ demount() {
     for point in "${mount_points[@]}"; do
         if mountpoint -q "$point"; then
             echo "Unmounting $point ..."
-            umount -v "$point"
+            umount "$point"
         fi
     done
 }
@@ -366,7 +378,8 @@ for file in ${worktree}/stages/${stage}/${@:-??-*}; do
             arch="$arch" \
             worktree="/var/local/build" \
             sources_dir="/var/local/build/sources" \
-            /bin/bash < "${worktree}/stages/${stage}/$file" || demount
+            /bin/bash < "${worktree}/stages/${stage}/$file" || chkstatus_or_exit_demount
+
     else
        # Set pipefail to catch errors in the pipe
         set -o pipefail

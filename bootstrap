@@ -378,8 +378,19 @@ for file in ${worktree}/stages/${stage}/${@:-??-*}; do
             arch="$arch" \
             worktree="/var/local/build" \
             sources_dir="/var/local/build/sources" \
-            /bin/bash < "${worktree}/stages/${stage}/$file" || chkstatus_or_exit_demount
+            /bin/bash < "${worktree}/stages/${stage}/$file" 
 
+        # Get the return status of the chroot command
+        CHROOT_STATUS=$?
+
+        # Unmount the chroot environment
+        demount
+
+        # Exit if the chroot command failed
+        if test $CHROOT_STATUS -ne 0; then
+            echo "${PROGRAM}: Chroot command failed with status $CHROOT_STATUS"
+            exit 2
+        fi
     else
        # Set pipefail to catch errors in the pipe
         set -o pipefail

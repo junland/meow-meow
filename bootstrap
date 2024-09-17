@@ -385,6 +385,9 @@ for file in ${worktree}/stages/${stage}/${@:-??-*}; do
         # Get the return status of the chroot command
         CHROOT_STATUS=$?
 
+        # Make sure we are in the worktree directory
+        cd -- "$worktree" || chkstatus_or_exit
+
         # Unmount the chroot environment
         demount
 

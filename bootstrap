@@ -111,7 +111,7 @@ demount() {
     for point in "${mount_points[@]}"; do
         if mountpoint -q "$point"; then
             echo "Unmounting $point ..."
-            umount "$point"
+            umount -v "$point"
         else
             echo "$point is not mounted."
         fi

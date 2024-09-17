@@ -1,7 +1,7 @@
 IMAGE_NAME := "builder:latest"
 TARGET_ARCH := "x86_64"
 BOOTSTRAP_SH := "$(shell pwd)/bootstrap"
-SHELL := /bin/bash
+SHELL := /bin/bash -o pipefail
 SUDO := /bin/sudo
 JOBS := $(shell nproc)
 

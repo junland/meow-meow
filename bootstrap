@@ -82,19 +82,12 @@ chkstatus_or_exit() {
     status=$?
 
     if test $status -ne 0; then
+        # Run the demount function if the stage is set to 2
+        if test "$stage" = 2; then
+            demount
+        fi
+
         echo "Return status = $status" 1>&2
-        exit "${1-2}" # If not given, defaults to 2
-    fi
-
-    unset -v status
-}
-
-chkstatus_or_exit_demount() {
-    status=$?
-
-    if test $status -ne 0; then
-        echo "Return status = $status" 1>&2
-        demount
         exit "${1-2}" # If not given, defaults to 2
     fi
 
@@ -118,6 +111,8 @@ demount() {
         if mountpoint -q "$point"; then
             echo "Unmounting $point ..."
             umount "$point"
+        else
+            echo "$point is not mounted."
         fi
     done
 }

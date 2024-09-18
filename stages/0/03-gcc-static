@@ -54,7 +54,6 @@ cd ../gcc-build
     --host=$host \
     --target=$target \
     --with-sysroot="${LFS}" \
-    --with-glibc-version=2.39 \
     --disable-libatomic \
     --disable-libgomp \
     --disable-libquadmath \
@@ -67,6 +66,7 @@ cd ../gcc-build
     --enable-default-pie \
     --enable-default-ssp \
     --enable-languages=c,c++ \
+    --with-glibc-version=2.39 \
     --with-newlib \
     --without-headers \
     --without-isl \

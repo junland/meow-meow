@@ -173,7 +173,7 @@ arch="$(uname -m)" || chkstatus_or_exit
 jobs=8
 output="${worktree}/OUTPUT.${PROGRAM}"
 TMPDIR="${TMPDIR:=${output}/sources}"
-VENDOR="${VENDOR:=unknown}"
+VENDOR="${VENDOR:=lfs}"
 
 # Compose vendor name adding "-" as suffix
 test -n "$VENDOR" && VENDOR="${VENDOR}-"

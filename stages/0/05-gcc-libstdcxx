@@ -53,11 +53,12 @@ cd ../gcc-build
     --prefix=/usr \
     --build=$(../config.guess) \
     --host=$target \
+    --target=$target \
     --with-gxx-include-dir="/tools/$target/include/c++/${version}" \
-    --disable-shared \
-    --disable-nls \
-    --disable-libstdcxx-threads \
     --disable-libstdcxx-pch \
+    --disable-libstdcxx-threads \
+    --disable-nls \
+    --disable-shared \
     $multilib_options \
     $gcc_options
 

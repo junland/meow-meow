@@ -24,9 +24,9 @@ cd ../binutils-build
     --build=$host \
     --host=$host \
     --target=$target \
+    --with-sysroot="${LFS}" \
     --with-gnu-as \
     --with-gnu-ld \
-    --with-sysroot="${LFS}" \
     --disable-nls \
     --disable-werror \
     --without-zstd \

@@ -82,9 +82,9 @@ chkstatus_or_exit() {
     status=$?
 
     if test $status -ne 0; then
-        # Run the demount function if the stage is set to 2
+        # Run the demount_chroot function if the stage is set to 2
         if test "$stage" = 2; then
-            demount
+            demount_chroot
         fi
 
         echo "Return status = $status" 1>&2
@@ -94,29 +94,50 @@ chkstatus_or_exit() {
     unset -v status
 }
 
-# unmount the chroot environment
-demount() {
+mount_chroot() {
+    # Mount the required filesystems for chroot
+    warn "Mounting chroot environment ..."
+
+    mount -v --bind /dev "$LFS/dev"
+    mount -vt devpts devpts -o gid=5,mode=0620 "$LFS/dev/pts" 
+    mount -vt proc proc "$LFS/proc"
+    mount -vt sysfs sysfs "$LFS/sys"
+    mount -vt tmpfs tmpfs "$LFS/run"
+
+    if [ -h $LFS/dev/shm ]; then
+      install -v -d -m 1777 $LFS$(realpath /dev/shm)
+    else
+      mount -vt tmpfs -o nosuid,nodev tmpfs $LFS/dev/shm
+    fi
+}
+
+demount_chroot() {
     warn "Demounting chroot environment ..."
     # Define the required mount points
     mount_points=(
-        "$LFS/proc"
         "$LFS/dev/pts"
         "$LFS/dev/shm"
         "$LFS/dev"
-        "$LFS/sys"
         "$LFS/run"
+        "$LFS/proc"
+        "$LFS/sys"
     )
 
     # Make sure we dont have any left over mounts
     for point in "${mount_points[@]}"; do
         if mountpoint -q "$point"; then
             echo "Unmounting $point ..."
-            umount -v "$point"
+            if ! umount "$point"; then
+                warn "Failed to unmount $point doing a lazy unmount ..."
+                umount -l "$point"
+            fi
         else
             echo "$point is not mounted."
         fi
     done
 }
+
+
 
 # Just a function alias to unpack files
 unpack() {
@@ -325,20 +346,9 @@ for file in ${worktree}/stages/${stage}/${@:-??-*}; do
         # Setup permissions for the chroot environment
         chown -R root:root "$LFS"
 
-        demount || chkstatus_or_exit
+        demount_chroot || chkstatus_or_exit
 
-        # Mount the required filesystems for chroot
-        mount -v --bind /dev "$LFS/dev"
-        mount -vt devpts devpts -o gid=5,mode=0620 "$LFS/dev/pts" 
-        mount -vt proc proc "$LFS/proc"
-        mount -vt sysfs sysfs "$LFS/sys"
-        mount -vt tmpfs tmpfs "$LFS/run"
-
-        if [ -h $LFS/dev/shm ]; then
-          install -v -d -m 1777 $LFS$(realpath /dev/shm)
-        else
-          mount -vt tmpfs -o nosuid,nodev tmpfs $LFS/dev/shm
-        fi
+        mount_chroot || chkstatus_or_exit
     fi
 
     # Check if the done file exists
@@ -389,7 +399,7 @@ for file in ${worktree}/stages/${stage}/${@:-??-*}; do
         cd -- "$worktree" || chkstatus_or_exit
 
         # Unmount the chroot environment
-        demount
+        demount_chroot
 
         # Exit if the chroot command failed
         if test $CHROOT_STATUS -ne 0; then

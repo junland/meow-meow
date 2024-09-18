@@ -1,0 +1,7 @@
+# Build script for preparing the chroot environment.
+# SPDX-License-Identifier: Apache-2.0
+# SPDX-FileCopyrightText: 2025, John Unland
+
+cd -- "$TMPDIR"
+
+mkdir -pv $LFS/{dev,proc,sys,run}

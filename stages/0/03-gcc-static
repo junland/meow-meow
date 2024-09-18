@@ -12,9 +12,8 @@ isl_version=0.24
 
 cd -- "$TMPDIR"
 
-rm -rf gcc-${version} gmp-${gmp_version} \
-    mpfr-${mpfr_version} mpc-${mpc_version} isl-${isl_version} \
-    gcc-build
+cleanup
+
 unpack "${worktree}/sources/gcc-${version}.tar.xz" \
     "${worktree}/sources/gmp-${gmp_version}.tar.xz" \
     "${worktree}/sources/mpfr-${mpfr_version}.tar.xz" \

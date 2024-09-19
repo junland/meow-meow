@@ -104,6 +104,9 @@ mount_chroot() {
     mount -vt sysfs sysfs "$LFS/sys"
     mount -vt tmpfs tmpfs "$LFS/run"
 
+    # Mount sources directory
+    mount -v --bind "$LFS/var/local/build/sources" "$LFS/var/local/build"
+
     if [ -h $LFS/dev/shm ]; then
       install -v -d -m 1777 $LFS$(realpath /dev/shm)
     else
@@ -114,7 +117,7 @@ mount_chroot() {
 demount_chroot() {
     warn "Demounting chroot environment ..."
     # Define the required mount points
-    mount_points="$LFS/dev/pts $LFS/dev/shm $LFS/dev $LFS/run $LFS/proc $LFS/sys"
+    mount_points=("$LFS/dev/pts" "$LFS/dev/shm" "$LFS/dev" "$LFS/run" "$LFS/proc" "$LFS/sys" "$LFS/var/local/build")
 
     # Make sure we dont have any left over mounts
     for point in "${mount_points[@]}"; do
@@ -325,14 +328,14 @@ for file in ${worktree}/stages/${stage}/${@:-??-*}; do
         # Create needed directories if not already created
         mkdir -pv "$LFS"/{dev,proc,sys,run,var/local/build/sources}
 
-        # Load the unpack-files script into the chroot environment
-        install -v -m 755 "${worktree_utils}/unpack-files" "$LFS/usr/bin"
-
-        # Create a link to unpack-files as unpack
-        ln -sv unpack-files "$LFS/usr/bin/unpack"
+        # Check if unpack-files script is available to the chroot environment
+        if ! test -f "$LFS/usr/bin/unpack-files"; then
+            install -v -m 755 "${worktree_utils}/unpack-files" "$LFS/usr/bin"
+            ln -sv unpack-files "$LFS/usr/bin/unpack"
+        fi
 
         # Copy sources to the chroot environment
-        cp -rv "${worktree}/sources" "$LFS/var/local/build"
+        #cp -rv "${worktree}/sources" "$LFS/var/local/build"
 
         # Setup permissions for the chroot environment
         chown -R root:root "$LFS"

@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: Apache-2.0
 # SPDX-FileCopyrightText: 2025, John Unland
 
-version=2.42
+version=2.43.1
 
 cd -- "$TMPDIR"
 
@@ -30,6 +30,7 @@ cd ../binutils-build
     --disable-nls \
     --disable-werror \
     --without-zstd \
+    --enable-new-dtags \
     --enable-gprofng=no \
     $multilib_options
 

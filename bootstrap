@@ -114,14 +114,7 @@ mount_chroot() {
 demount_chroot() {
     warn "Demounting chroot environment ..."
     # Define the required mount points
-    mount_points=(
-        "$LFS/dev/pts"
-        "$LFS/dev/shm"
-        "$LFS/dev"
-        "$LFS/run"
-        "$LFS/proc"
-        "$LFS/sys"
-    )
+    mount_points="$LFS/dev/pts $LFS/dev/shm $LFS/dev $LFS/run $LFS/proc $LFS/sys"
 
     # Make sure we dont have any left over mounts
     for point in "${mount_points[@]}"; do
@@ -136,8 +129,6 @@ demount_chroot() {
         fi
     done
 }
-
-
 
 # Just a function alias to unpack files
 unpack() {

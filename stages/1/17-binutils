@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: Apache-2.0
 # SPDX-FileCopyrightText: 2025, John Unland
 
-version=2.42
+version=2.43.1
 
 cd -- "$TMPDIR"
 
@@ -31,7 +31,8 @@ cd ../binutils-build
     --disable-werror \
     --enable-64-bit-bfd \
     --enable-new-dtags \
-    --enable-default-hash-style=gnu
+    --enable-default-hash-style=gnu \
+    $multilib_options
 
 make -j${jobs}
 

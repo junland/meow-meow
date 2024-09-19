@@ -20,7 +20,6 @@ cd ../binutils-build
 ../binutils-${version}/configure \
     CFLAGS="$BTCFLAGS" CXXFLAGS="$BTCXXFLAGS" LDFLAGS="$BTLDFLAGS" \
     --prefix="$LFS/tools" \
-    --program-prefix="${target}-" \
     --build=$host \
     --host=$host \
     --target=$target \

@@ -104,9 +104,6 @@ mount_chroot() {
     mount -vt sysfs sysfs "$LFS/sys"
     mount -vt tmpfs tmpfs "$LFS/run"
 
-    # Mount sources directory
-    mount -v --bind "$LFS/var/local/build/sources" "$LFS/var/local/build"
-
     if [ -h $LFS/dev/shm ]; then
       install -v -d -m 1777 $LFS$(realpath /dev/shm)
     else
@@ -117,7 +114,7 @@ mount_chroot() {
 demount_chroot() {
     warn "Demounting chroot environment ..."
     # Define the required mount points
-    mount_points=("$LFS/dev/pts" "$LFS/dev/shm" "$LFS/dev" "$LFS/run" "$LFS/proc" "$LFS/sys" "$LFS/var/local/build")
+    mount_points=("$LFS/dev/pts" "$LFS/dev/shm" "$LFS/dev" "$LFS/run" "$LFS/proc" "$LFS/sys")
 
     # Make sure we dont have any left over mounts
     for point in "${mount_points[@]}"; do

@@ -331,10 +331,8 @@ for file in ${worktree}/stages/${stage}/${@:-??-*}; do
             ln -sv unpack-files "$LFS/usr/bin/unpack"
         fi
 
-        # Make sure every file in sources are in the chroot environment
-        for file in "${worktree}/sources"/*; do
-            install -v -m 644 "$file" "$LFS/var/local/build/sources"
-        done
+        # Copy sources to the chroot environment
+        cp -rv "${worktree}/sources" "$LFS/var/local/build"
 
         # Setup permissions for the chroot environment
         chown -R root:root "$LFS"

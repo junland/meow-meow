@@ -14,5 +14,3 @@ for i in bin lib lib64 sbin; do
 done
 
 mkdir -pv $LFS/tools
-
-cd -- "$TMPDIR"

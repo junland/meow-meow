@@ -43,9 +43,9 @@ case $(uname -m) in
 esac
 
 # Build in a separate directory
-rm -rf ../gcc-build
-mkdir ../gcc-build
-cd ../gcc-build
+rm -rf "$TMPDIR"/gcc-build
+mkdir "$TMPDIR"/gcc-build
+cd "$TMPDIR"/gcc-build
 
 ../gcc-${version}/libstdc++-v3/configure \
     CFLAGS="$BTCFLAGS" CXXFLAGS="$BTCXXFLAGS" LDFLAGS="$BTLDFLAGS" \
@@ -66,8 +66,6 @@ make -j${jobs}
 
 make -j${jobs} DESTDIR="${LFS}" install
 
-cd ..
-
 cat ${TMPDIR}/gcc-${version}/gcc/limitx.h \
     ${TMPDIR}/gcc-${version}/gcc/glimits.h \
     ${TMPDIR}/gcc-${version}/gcc/limity.h \
@@ -75,8 +73,6 @@ cat ${TMPDIR}/gcc-${version}/gcc/limitx.h \
 
 # Remove libtool files
 rm -rf ${LFS}/lib/lib{stdc++{,exp,fs},supc++}.la
-
-cd -- "$TMPDIR"
 
 cleanup() {
     cd -- "$TMPDIR" && rm -rf gcc-${version} gcc-build \

@@ -46,9 +46,9 @@ esac
 sed '/thread_header =/s/@.*@/gthr-posix.h/' -i libgcc/Makefile.in libstdc++-v3/include/Makefile.in
 
 # Build in a separate directory
-rm -rf ../gcc-build
-mkdir ../gcc-build
-cd ../gcc-build
+rm -rf "$TMPDIR"/gcc-build
+mkdir "$TMPDIR"/gcc-build
+cd "$TMPDIR"/gcc-build
 
 ../gcc-${version}/configure \
     CFLAGS="$BTCFLAGS" CXXFLAGS="$BTCXXFLAGS" LDFLAGS="$BTLDFLAGS" \
@@ -84,8 +84,6 @@ make -j${jobs} DESTDIR="${LFS}" install
 
 # Create utility symlinks
 ln -sv gcc $LFS/usr/bin/cc
-
-cd -- "$TMPDIR"
 
 cleanup() {
     cd -- "$TMPDIR" && rm -rf gcc-${version} gcc-build \

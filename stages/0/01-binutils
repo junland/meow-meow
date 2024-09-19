@@ -13,9 +13,9 @@ unpack "${worktree}/sources/binutils-${version}.tar.xz"
 cd binutils-${version}
 
 # Build in a separate directory
-rm -rf ../binutils-build
-mkdir ../binutils-build
-cd ../binutils-build
+rm -rf "$TMPDIR"/binutils-build
+mkdir "$TMPDIR"/binutils-build
+cd "$TMPDIR"/binutils-build
 
 ../binutils-${version}/configure \
     CFLAGS="$BTCFLAGS" CXXFLAGS="$BTCXXFLAGS" LDFLAGS="$BTLDFLAGS" \
@@ -49,8 +49,6 @@ make -j${jobs} install
 # ln -sf "${target}-size" "size"
 # ln -sf "${target}-strings" "strings"
 
-cd -- "$TMPDIR"
-
 cleanup() {
-    rm -rf binutils-${version} binutils-build
+    cd -- "$TMPDIR" && rm -rf binutils-${version} binutils-build
 }

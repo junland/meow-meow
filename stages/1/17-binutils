@@ -16,9 +16,9 @@ cd binutils-${version}
 sed '6009s/$add_dir//' -i ltmain.sh
 
 # Build in a separate directory
-rm -rf ../binutils-build
-mkdir ../binutils-build
-cd ../binutils-build
+rm -rf "$TMPDIR"/binutils-build
+mkdir "$TMPDIR"/binutils-build
+cd "$TMPDIR"/binutils-build
 
 ../binutils-${version}/configure \
     CFLAGS="$BTCFLAGS" CXXFLAGS="$BTCXXFLAGS" LDFLAGS="$BTLDFLAGS" \
@@ -51,8 +51,6 @@ rm -v $LFS/usr/lib/lib{bfd,ctf,ctf-nobfd,opcodes,sframe}.{a,la}
 # ln -sf "${target}-size" "size"
 # ln -sf "${target}-strings" "strings"
 
-cd -- "$TMPDIR"
-
 cleanup() {
-    rm -rf binutils-${version} binutils-build
+    cd -- "$TMPDIR" && rm -rf binutils-${version} binutils-build
 }

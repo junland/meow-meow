@@ -43,9 +43,9 @@ case $(uname -m) in
 esac
 
 # Build in a separate directory
-rm -rf ../gcc-build
-mkdir ../gcc-build
-cd ../gcc-build
+rm -rf "$TMPDIR"/gcc-build
+mkdir "$TMPDIR"/gcc-build
+cd "$TMPDIR"/gcc-build
 
 ../gcc-${version}/configure \
     CFLAGS="$BTCFLAGS" CXXFLAGS="$BTCXXFLAGS" LDFLAGS="$BTLDFLAGS" \
@@ -77,14 +77,10 @@ make -j${jobs}
 
 make -j${jobs} install
 
-cd ..
-
 cat ${TMPDIR}/gcc-${version}/gcc/limitx.h \
     ${TMPDIR}/gcc-${version}/gcc/glimits.h \
-    ${TMPDIR}/gcc-${version}/gcc/limity.h \
+${TMPDIR}/gcc-${version}/gcc/limity.h \
     >"${LFS}/tools/lib/gcc/${target}/${version}/include/limits.h"
-
-cd -- "$TMPDIR"
 
 cleanup() {
     cd -- "$TMPDIR" && rm -rf gcc-${version} gcc-build \

@@ -22,7 +22,7 @@ cd coreutils-${version}
 
 make -j${jobs}
 
-make DESTDIR="${LFS}" install
+make -j${jobs} DESTDIR="${LFS}" install
 
 # Move programs to final expected locations.
 mv -v $LFS/usr/bin/chroot $LFS/usr/sbin

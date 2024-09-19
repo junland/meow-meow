@@ -32,9 +32,9 @@ popd
     --host=$target \
     --build=$(./config.guess)
 
-make FILE_COMPILE=$(pwd)/build/src/file -j${jobs}
+make -j${jobs} FILE_COMPILE=$(pwd)/build/src/file
 
-make DESTDIR=$LFS install
+make -j${jobs} DESTDIR=$LFS install
 
 rm -v $LFS/usr/lib/libmagic.la
 

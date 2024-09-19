@@ -21,7 +21,7 @@ cd bash-${version}
 
 make -j${jobs}
 
-make DESTDIR="${LFS}" install
+make -j${jobs} DESTDIR="${LFS}" install
 
 # Make a symbolic link to `bash` if called as `sh`.
 ln -sv bash ${LFS}/bin/sh

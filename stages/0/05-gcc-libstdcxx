@@ -51,7 +51,7 @@ cd "$TMPDIR"/gcc-build
     CFLAGS="$BTCFLAGS" CXXFLAGS="$BTCXXFLAGS" LDFLAGS="$BTLDFLAGS" \
     CC="$target-gcc" CXX="$target-g++" AR="$target-ar" RANLIB="$target-ranlib" \
     --prefix=/usr \
-    --build=$(../config.guess) \
+    --build=$(../gcc-${version}/config.guess) \
     --host=$target \
     --target=$target \
     --with-gxx-include-dir="/tools/$target/include/c++/${version}" \

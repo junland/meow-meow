@@ -42,8 +42,6 @@ echo "rootsbindir=/usr/sbin" >configparms
     --with-binutils="${LFS}/tools/bin" \
     --disable-nscd \
     --enable-kernel=4.19 \
-    libc_cv_forced_unwind=yes \
-    libc_cv_c_cleanup=yes \
     libc_cv_slibdir=/usr/lib \
     $multilib_options
 

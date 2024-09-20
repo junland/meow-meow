@@ -14,3 +14,5 @@ for i in bin sbin lib lib64; do
 done
 
 mkdir -pv $LFS/tools
+
+ln -sv lib $LFS/tools/lib64

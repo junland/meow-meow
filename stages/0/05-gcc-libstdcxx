@@ -31,28 +31,14 @@ ln -s ../mpfr-${mpfr_version} mpfr
 ln -s ../mpc-${mpc_version} mpc
 #ln -s ../isl-${isl_version} isl
 
-case $(uname -m) in
-    x86_64)
-        sed -e '/m64=/s/lib64/lib/' \
-            -i.orig gcc/config/i386/t-linux64
-        ;;
-    aarch64)
-        sed -e '/m64=/s/lib64/lib/' \
-            -i.orig gcc/config/aarch64/t-linux64
-        ;;
-esac
-
 # Build in a separate directory
-rm -rf "$TMPDIR"/gcc-build
-mkdir "$TMPDIR"/gcc-build
-cd "$TMPDIR"/gcc-build
+rm -rf gcc-build && mkdir gcc-build && cd gcc-build
 
-../gcc-${version}/libstdc++-v3/configure \
+../libstdc++-v3/configure \
     CFLAGS="$BTCFLAGS" CXXFLAGS="$BTCXXFLAGS" LDFLAGS="$BTLDFLAGS" \
     --prefix=/usr \
-    --build=$(../gcc-${version}/config.guess) \
+    --build=$(../config.guess) \
     --host=$target \
-    --target=$target \
     --with-gxx-include-dir="/tools/$target/include/c++/${version}" \
     --disable-libstdcxx-pch \
     --disable-nls \

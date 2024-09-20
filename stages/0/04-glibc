@@ -67,6 +67,9 @@ rm -v a.out
 
 echo "Done testing the waters."
 
+# Find crt files
+find ${LFS} -name crti*
+
 cleanup() {
     cd -- "$TMPDIR" && rm -rf glibc-${version}
 }

@@ -38,7 +38,6 @@ echo "rootsbindir=/usr/sbin" >configparms
     --prefix=/usr \
     --build=$(../scripts/config.guess) \
     --host=$target \
-    --target=$target \
     --with-headers="${LFS}/usr/include" \
     --with-binutils="${LFS}/tools/bin" \
     --disable-nscd \
@@ -54,6 +53,8 @@ make -j${jobs}
 
 make -j${jobs} DESTDIR=${LFS} install
 
+echo "Testing the waters..."
+
 # Fix hardcoded path in ldd script
 sed '/RTLDLIST=/s@/usr@@g' -i $LFS/bin/ldd
 
@@ -63,6 +64,8 @@ echo 'int main(){}' | $LFS_TGT-gcc -xc -
 readelf -l a.out | grep ld-linux
 
 rm -v a.out
+
+echo "Done testing the waters."
 
 cleanup() {
     cd -- "$TMPDIR" && rm -rf glibc-${version}

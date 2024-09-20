@@ -6,6 +6,12 @@ version=0.22
 
 cd -- "$TMPDIR"
 
+echo "-------"
+
+ld --verbose | grep SEARCH_DIR
+
+echo "-------"
+
 rm -rf gettext-$version
 
 unpack "${worktree}/sources/gettext-$version.tar.xz"

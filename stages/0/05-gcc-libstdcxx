@@ -49,7 +49,6 @@ cd "$TMPDIR"/gcc-build
 
 ../gcc-${version}/libstdc++-v3/configure \
     CFLAGS="$BTCFLAGS" CXXFLAGS="$BTCXXFLAGS" LDFLAGS="$BTLDFLAGS" \
-    CC="$target-gcc" CXX="$target-g++" AR="$target-ar" RANLIB="$target-ranlib" \
     --prefix=/usr \
     --build=$(../gcc-${version}/config.guess) \
     --host=$target \
@@ -58,7 +57,6 @@ cd "$TMPDIR"/gcc-build
     --disable-libstdcxx-pch \
     --disable-libstdcxx-threads \
     --disable-nls \
-    --disable-shared \
     $multilib_options \
     $gcc_options
 

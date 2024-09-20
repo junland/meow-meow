@@ -383,6 +383,7 @@ for file in ${worktree}/stages/${stage}/${@:-??-*}; do
             arch="$arch" \
             worktree="/var/local/build" \
             sources_dir="/var/local/build/sources" \
+            TMPDIR="/var/local/build/sources" \
             /bin/bash -e < "${worktree}/stages/${stage}/$file" 
 
         # Get the return status of the chroot command

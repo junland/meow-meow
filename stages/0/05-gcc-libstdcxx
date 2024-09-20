@@ -40,6 +40,7 @@ rm -rf gcc-build && mkdir gcc-build && cd gcc-build
     --build=$(../config.guess) \
     --host=$target \
     --with-gxx-include-dir="/tools/$target/include/c++/${version}" \
+    --enable-libstdcxx \
     --disable-libstdcxx-pch \
     --disable-nls \
     $multilib_options

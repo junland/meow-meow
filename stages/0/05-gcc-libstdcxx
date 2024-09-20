@@ -55,7 +55,6 @@ cd "$TMPDIR"/gcc-build
     --target=$target \
     --with-gxx-include-dir="/tools/$target/include/c++/${version}" \
     --disable-libstdcxx-pch \
-    --disable-libstdcxx-threads \
     --disable-nls \
     $multilib_options
 

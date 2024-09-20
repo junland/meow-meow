@@ -57,9 +57,7 @@ cd "$TMPDIR"/gcc-build
     --disable-libstdcxx-pch \
     --disable-libstdcxx-threads \
     --disable-nls \
-    $multilib_options \
-    $gcc_options
-
+    $multilib_options
 make -j${jobs}
 
 make -j${jobs} DESTDIR="${LFS}" install

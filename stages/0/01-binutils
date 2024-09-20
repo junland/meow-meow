@@ -24,6 +24,7 @@ cd "$TMPDIR"/binutils-build
     --host=$host \
     --target=$target \
     --with-sysroot="${LFS}" \
+    --with-lib-path="${LFS}/tools/${target}/lib" \
     --with-gnu-as \
     --with-gnu-ld \
     --disable-nls \

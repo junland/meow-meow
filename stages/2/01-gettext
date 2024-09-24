@@ -19,7 +19,7 @@ unpack "${worktree}/sources/gettext-$version.tar.xz"
 cd gettext-$version
 
 ./configure \
-    CFLAGS="$BTCFLAGS" CXXFLAGS="$BTCXXFLAGS" LDFLAGS="$BTLDFLAGS" \
+    CFLAGS="$BTCFLAGS" CXXFLAGS="$BTCXXFLAGS" LDFLAGS="$BTLDFLAGS --verbose" \
     --disable-shared
 
 make -j${jobs}

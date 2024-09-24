@@ -23,14 +23,11 @@ cd "$TMPDIR"/binutils-build
     --host=$host \
     --target=$target \
     --with-sysroot="${LFS}" \
-    --with-lib-path="${LFS}/tools/${target}/lib" \
-    --with-gnu-as \
-    --with-gnu-ld \
     --disable-nls \
     --disable-werror \
-    --enable-new-dtags \
+    --enable-default-hash-style=gnu \
     --enable-gprofng=no \
-    --enable-default-hash-style \
+    --enable-new-dtags \
     $multilib_options
 
 make -j${jobs} configure-host

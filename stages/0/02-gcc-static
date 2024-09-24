@@ -65,7 +65,7 @@ cd "$TMPDIR"/gcc-build
     --enable-default-pie \
     --enable-default-ssp \
     --enable-languages=c,c++ \
-    --with-glibc-version=2.39 \
+    --with-glibc-version=2.40 \
     --with-newlib \
     --without-headers \
     --without-isl \

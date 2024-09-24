@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: Apache-2.0
 # SPDX-FileCopyrightText: 2025, John Unland
 
-version=0.22
+version=0.22.5
 
 cd -- "$TMPDIR"
 
@@ -20,7 +20,6 @@ cd gettext-$version
 
 ./configure \
     CFLAGS="$BTCFLAGS" CXXFLAGS="$BTCXXFLAGS" LDFLAGS="$BTLDFLAGS" \
-    --prefix=/usr \
     --disable-shared
 
 make -j${jobs}

@@ -78,7 +78,7 @@ make -j${jobs} install
 
 cat ${TMPDIR}/gcc-${version}/gcc/limitx.h \
     ${TMPDIR}/gcc-${version}/gcc/glimits.h \
-${TMPDIR}/gcc-${version}/gcc/limity.h \
+    ${TMPDIR}/gcc-${version}/gcc/limity.h \
     >"${LFS}/tools/lib/gcc/${target}/${version}/include/limits.h"
 
 cleanup() {

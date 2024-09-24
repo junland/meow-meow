@@ -28,9 +28,9 @@ cd "$TMPDIR"/binutils-build
     --with-gnu-ld \
     --disable-nls \
     --disable-werror \
-    --without-zstd \
     --enable-new-dtags \
     --enable-gprofng=no \
+    --enable-default-hash-style \
     $multilib_options
 
 make -j${jobs} configure-host

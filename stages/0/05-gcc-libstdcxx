@@ -39,7 +39,6 @@ rm -rf gcc-build && mkdir gcc-build && cd gcc-build
     --build=$(../config.guess) \
     --host=$target \
     --with-gxx-include-dir="/tools/$target/include/c++/${version}" \
-    --enable-libstdcxx \
     --disable-libstdcxx-pch \
     --disable-nls \
     $multilib_options
@@ -55,6 +54,7 @@ cat ${TMPDIR}/gcc-${version}/gcc/limitx.h \
 
 # Remove libtool files
 rm -rf ${LFS}/lib/lib{stdc++{,exp,fs},supc++}.la
+rm -rf ${LFS}/usr/lib/lib{stdc++{,exp,fs},supc++}.la
 
 cleanup() {
     cd -- "$TMPDIR" && rm -rf gcc-${version} gcc-build \

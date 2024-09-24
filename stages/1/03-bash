@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: Apache-2.0
 # SPDX-FileCopyrightText: 2025, John Unland
 
-version=5.2.21
+version=5.2.32
 
 cd -- "$TMPDIR"
 
@@ -17,7 +17,8 @@ cd bash-${version}
     --prefix=/usr \
     --host=$target \
     --build=$(sh support/config.guess) \
-    --without-bash-malloc
+    --without-bash-malloc \
+    bash_cv_wcwidth_broken=no
 
 make -j${jobs}
 

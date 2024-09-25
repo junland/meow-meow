@@ -18,9 +18,15 @@ cd Python-$version
     --enable-shared \
     --without-ensurepip
 
+echo "Done configuring Python-$version"
+
 make -j${jobs}
 
+echo "Done building Python-$version"
+
 make -j${jobs} install
+
+echo "Done installing Python-$version"
 
 cleanup() {
     cd -- "$TMPDIR" && rm -rf Python-$version

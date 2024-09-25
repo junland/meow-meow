@@ -18,6 +18,7 @@ mkdir "$TMPDIR"/binutils-build
 cd "$TMPDIR"/binutils-build
 
 ../binutils-${version}/configure \
+    CFLAGS="$BTCFLAGS" CXXFLAGS="$BTCXXFLAGS" LDFLAGS="$BTLDFLAGS" \
     --prefix="$LFS/tools" \
     --build=$host \
     --host=$host \

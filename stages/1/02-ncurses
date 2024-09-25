@@ -25,7 +25,7 @@ popd
 
 # Build the rest of the library.
 ./configure \
-    CFLAGS="$BTCFLAGS" CXXFLAGS="$BTCXXFLAGS" LDFLAGS="$BTLDFLAGS" CPPFLAGS="$BTCPPFLAGS" \
+    CFLAGS="$BTCFLAGS" CXXFLAGS="$BTCXXFLAGS" LDFLAGS="$BTLDFLAGS" \
     --prefix=/usr \
     --host=$target \
     --build=$(./config.guess) \

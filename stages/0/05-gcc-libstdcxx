@@ -35,6 +35,7 @@ ln -s ../mpc-${mpc_version} mpc
 rm -rf gcc-build && mkdir gcc-build && cd gcc-build
 
 ../libstdc++-v3/configure \
+    CFLAGS="$BTCFLAGS" CXXFLAGS="$BTCXXFLAGS" LDFLAGS="$BTLDFLAGS" \
     --prefix=/usr \
     --build=$(../config.guess) \
     --host=$target \

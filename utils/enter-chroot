@@ -46,7 +46,7 @@ mount_chroot() {
 umount_chroot() {
     msg "Unmounting chroot..."
     # Define the required mount points
-    mount_points=("$LFS/dev/pts" "$LFS/dev/shm" "$LFS/dev" "$LFS/run" "$LFS/proc" "$LFS/sys")
+    mount_points=("$ROOTFS/dev/pts" "$ROOTFS/dev/shm" "$ROOTFS/dev" "$ROOTFS/run" "$ROOTFS/proc" "$ROOTFS/sys")
 
     # Make sure we dont have any left over mounts
     for point in "${mount_points[@]}"; do

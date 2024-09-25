@@ -2,7 +2,10 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # SPDX-FileCopyrightText: 2025, John Unland
 
-trap umount_chroot HUP INT QUIT TERM SIGHUP SIGINT SIGQUIT SIGILL SIGABRT SIGKILL SIGTRAP SIGTERM SIGSTOP SIGSEGV
+trap umount_chroot \
+    HUP INT QUIT TERM \
+    SIGHUP SIGINT SIGQUIT SIGILL \
+    SIGABRT SIGTRAP SIGTERM SIGSEGV
 
 msg() {
     printf '[\033[32m INFO\033[m ] %s\n' "$@"
@@ -13,30 +16,53 @@ fail() {
     exit 1
 }
 
+warn() {
+    printf '[\033[33m WARN\033[m ] %s\n' "$@"
+}
+
 # Set the QEMU_STATIC_PATH environment variable to the path of the qemu-static binary
 QEMU_STATIC_PATH=${QEMU_STATIC_PATH:-"/usr/bin/"}
+
+# Jobs
+CPU_JOBS=$(nproc)
 
 mount_chroot() {
     msg "Mounting chroot..."
     mount -v --bind /dev $ROOTFS/dev
-    mount -vt devpts devpts $ROOTFS/dev/pts -o gid=5,mode=620
+    mount -vt devpts devpts -o gid=5,mode=0620 $ROOTFS/dev/pts
     mount -vt proc proc $ROOTFS/proc
     mount -vt sysfs sysfs $ROOTFS/sys
     mount -vt tmpfs tmpfs $ROOTFS/run
+
+    if [ -h $ROOTFS/dev/shm ]; then
+      install -v -d -m 1777 $ROOTFS$(realpath /dev/shm)
+    else
+      mount -vt tmpfs -o nosuid,nodev tmpfs $ROOTFS/dev/shm
+    fi
+
     msg "Done mounting chroot."
 }
 
 umount_chroot() {
     msg "Unmounting chroot..."
-    umount -v $ROOTFS/dev/pts
-    umount -v $ROOTFS/dev
-    umount -v $ROOTFS/run
-    umount -v $ROOTFS/proc
-    umount -v $ROOTFS/sys
-    msg "Done unmounting chroot."
+    # Define the required mount points
+    mount_points=("$LFS/dev/pts" "$LFS/dev/shm" "$LFS/dev" "$LFS/run" "$LFS/proc" "$LFS/sys")
+
+    # Make sure we dont have any left over mounts
+    for point in "${mount_points[@]}"; do
+        if mountpoint -q "$point"; then
+            echo "Unmounting $point ..."
+            if ! umount "$point"; then
+                warn "Failed to unmount $point doing a lazy unmount ..."
+                umount -l "$point"
+            fi
+        else
+            echo "$point is not mounted."
+        fi
+    done
 }
 
-if [ -n "$1" ]; then
+if [ -z "$1" ]; then
     fail "No rootfs directory has been specified"
 fi
 
@@ -54,8 +80,9 @@ if [ -n "$2" ]; then
         HOME=/ \
         TERM="$TERM" \
         LC_ALL=POSIX \
-        MAKEFLAGS="-j2" \
-        PS1='(chroot)$ ' \
+        MAKEFLAGS="-j${CPU_JOBS}" \
+        PS1='(chroot-qemu) \u:\w\$ '
+        TESTSUITEFLAGS="-j${CPU_JOBS}" \
         PATH=/bin:/usr/bin:/sbin:/usr/sbin /bin/bash --login
 fi
 
@@ -63,8 +90,9 @@ chroot "$ROOTFS" /usr/bin/env -i \
     HOME=/ \
     TERM="$TERM" \
     LC_ALL=POSIX \
-    MAKEFLAGS="-j2" \
-    PS1='(chroot)$ ' \
+    MAKEFLAGS="-j${CPU_JOBS}" \
+    PS1='(chroot-native) \u:\w\$ ' \
+    TESTSUITEFLAGS="-j${CPU_JOBS}" \
     PATH=/bin:/usr/bin:/sbin:/usr/sbin /bin/bash --login
 
 umount_chroot

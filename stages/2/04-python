@@ -1,0 +1,27 @@
+# Build script for python.
+# SPDX-License-Identifier: Apache-2.0
+# SPDX-FileCopyrightText: 2025, John Unland
+
+version=3.12.6
+
+cd -- "$TMPDIR"
+
+rm -rf Python-$version
+
+unpack "${worktree}/sources/Python-$version.tar.xz"
+
+cd Python-$version
+
+./configure \
+    CFLAGS="$BTCFLAGS" CXXFLAGS="$BTCXXFLAGS" LDFLAGS="$BTLDFLAGS" \
+    --prefix=/usr \
+    --enable-shared \
+    --without-ensurepip
+
+make -j${jobs}
+
+make -j${jobs} install
+
+cleanup() {
+    cd -- "$TMPDIR" && rm -rf Python-$version
+}

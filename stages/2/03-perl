@@ -1,0 +1,32 @@
+# Build script for perl.
+# SPDX-License-Identifier: Apache-2.0
+# SPDX-FileCopyrightText: 2025, John Unland
+
+version=5.40.0
+
+cd -- "$TMPDIR"
+
+rm -rf perl-$version
+
+unpack "${worktree}/sources/perl-$version.tar.xz"
+
+cd perl-$version
+
+sh Configure -des \
+    -D prefix=/usr \
+    -D vendorprefix=/usr \
+    -D useshrplib \
+    -D privlib=/usr/lib/perl5/$version/core_perl \
+    -D archlib=/usr/lib/perl5/$version/core_perl \
+    -D sitelib=/usr/lib/perl5/$version/site_perl \
+    -D sitearch=/usr/lib/perl5/$version/site_perl \
+    -D vendorlib=/usr/lib/perl5/$version/vendor_perl \
+    -D vendorarch=/usr/lib/perl5/$version/vendor_perl
+
+make -j${jobs}
+
+make -j${jobs} install
+
+cleanup() {
+    cd -- "$TMPDIR" && rm -rf perl-$version
+}

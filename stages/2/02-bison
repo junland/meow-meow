@@ -1,0 +1,26 @@
+# Build script for bison.
+# SPDX-License-Identifier: Apache-2.0
+# SPDX-FileCopyrightText: 2025, John Unland
+
+version=3.8.2
+
+cd -- "$TMPDIR"
+
+rm -rf bison-$version
+
+unpack "${worktree}/sources/bison-$version.tar.xz"
+
+cd bison-$version
+
+./configure \
+    CFLAGS="$BTCFLAGS" CXXFLAGS="$BTCXXFLAGS" LDFLAGS="$BTLDFLAGS" \
+    --prefix=/usr \
+    --docdir=/usr/share/doc/bison-$version
+
+make -j${jobs}
+
+make -j${jobs} install
+
+cleanup() {
+    cd -- "$TMPDIR" && rm -rf bison-$version
+}

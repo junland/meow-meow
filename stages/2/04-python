@@ -24,7 +24,7 @@ make -j${jobs}
 
 echo "Done building Python-$version"
 
-make -j${jobs} install
+make install
 
 echo "Done installing Python-$version"
 

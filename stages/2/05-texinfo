@@ -1,0 +1,25 @@
+# Build script for texinfo  .
+# SPDX-License-Identifier: Apache-2.0
+# SPDX-FileCopyrightText: 2025, John Unland
+
+version=7.1
+
+cd -- "$TMPDIR"
+
+rm -rf texinfo-$version
+
+unpack "${worktree}/sources/texinfo-$version.tar.xz"
+
+cd texinfo-$version
+
+./configure \
+    CFLAGS="$BTCFLAGS" CXXFLAGS="$BTCXXFLAGS" LDFLAGS="$BTLDFLAGS" \
+    --prefix=/usr \
+
+make -j${jobs}
+
+make -j1 install
+
+cleanup() {
+    cd -- "$TMPDIR" && rm -rf texinfo-$version
+}

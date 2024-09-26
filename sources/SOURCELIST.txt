@@ -29,7 +29,7 @@ https://ftp.gnu.org/gnu/patch/patch-2.7.6.tar.xz
 https://ftp.gnu.org/gnu/readline/readline-8.2.tar.gz
 https://ftp.gnu.org/gnu/sed/sed-4.9.tar.xz
 https://ftp.gnu.org/gnu/tar/tar-1.35.tar.xz
-https://ftp.gnu.org/gnu/texinfo/texinfo-7.0.3.tar.xz
+https://ftp.gnu.org/gnu/texinfo/texinfo-7.1.tar.xz
 https://gcc.gnu.org/pub/bzip2/bzip2-1.0.8.tar.gz
 https://gcc.gnu.org/pub/elfutils/0.189/elfutils-0.189.tar.bz2
 https://gcc.gnu.org/pub/gcc/infrastructure/isl-0.24.tar.bz2

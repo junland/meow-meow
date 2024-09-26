@@ -13,7 +13,6 @@ unpack "${worktree}/sources/Python-$version.tar.xz"
 cd Python-$version
 
 ./configure \
-    CFLAGS="$BTCFLAGS" CXXFLAGS="$BTCXXFLAGS" LDFLAGS="$BTLDFLAGS" \
     --prefix=/usr \
     --enable-shared \
     --without-ensurepip

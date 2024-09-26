@@ -23,7 +23,7 @@ make -j${jobs}
 
 echo "Done building Python-$version"
 
-make -j1 install
+make -j${jobs} install
 
 echo "Done installing Python-$version"
 

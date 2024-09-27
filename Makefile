@@ -29,6 +29,10 @@ bootstrap-1: is_container setup
 bootstrap-2: is_container setup
 	$(SUDO) $(BOOTSTRAP_SH) -s2 -a $(TARGET_ARCH) -j $(JOBS) 2>&1 | tee _stage2-log.txt
 
+.PHONY: bootstrap-3
+bootstrap-3: is_container setup
+	$(SUDO) $(BOOTSTRAP_SH) -s3 -a $(TARGET_ARCH) -j $(JOBS) 2>&1 | tee _stage3-log.txt
+
 # Add a target that will check to make sure that we are running in a container
 .PHONY: is_container
 is_container:

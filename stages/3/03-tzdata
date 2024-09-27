@@ -1,0 +1,32 @@
+# Build script for tzdata.
+# SPDX-License-Identifier: Apache-2.0
+# SPDX-FileCopyrightText: 2025, John Unland
+
+version=2024a
+
+cd -- "$TMPDIR"
+
+rm -rf tzdata-${version}
+
+unpack "${worktree}/sources/tzdata${version}.tar.gz"
+
+ZONEINFO=/usr/share/zoneinfo
+mkdir -pv $ZONEINFO/{posix,right}
+
+TIME_ZONE="etcetera southamerica northamerica europe africa antarctica asia australasia backward"
+
+for tz in $TIME_ZONE; do
+    zic -L /dev/null -d $ZONEINFO ${tz}
+    zic -L /dev/null -d $ZONEINFO/posix ${tz}
+    zic -L leapseconds -d $ZONEINFO/right ${tz}
+done
+
+cp -v zone.tab zone1970.tab iso3166.tab $ZONEINFO
+
+zic -d $ZONEINFO -p America/New_York
+
+unset ZONEINFO
+
+cleanup() {
+    cd -- "$TMPDIR" && rm -rf tzdata-${version}
+}

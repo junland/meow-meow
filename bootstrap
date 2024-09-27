@@ -312,8 +312,8 @@ for file in ${worktree}/stages/${stage}/${@:-??-*}; do
         echo "Running pre-settings..."
     fi
 
-    # Create pre-settings for stage 2
-    if test "$stage" = 2; then
+    # Create pre-settings for stage 2 and 3
+    if test "$stage" = 2 || test "$stage" = 3; then
         echo "Running pre-settings..."
 
         # Verify that to run this stage we must be root.
@@ -323,7 +323,7 @@ for file in ${worktree}/stages/${stage}/${@:-??-*}; do
         fi
 
         # Create needed directories if not already created
-        mkdir -pv "$LFS"/{dev,proc,sys,run,var/local/build/sources}
+        mkdir -pv "$LFS"/{dev,proc,sys,run,var/local/build/sources,var/local/build/patches}
 
         # Check if unpack-files script is available to the chroot environment
         if ! test -f "$LFS/usr/bin/unpack-files"; then
@@ -331,8 +331,19 @@ for file in ${worktree}/stages/${stage}/${@:-??-*}; do
             ln -sv unpack-files "$LFS/usr/bin/unpack"
         fi
 
-        # Copy sources to the chroot environment
-        cp -rv "${worktree}/sources" "$LFS/var/local/build"
+        # Get every file in the sources directory and copy them to the chroot environment if they are not already there
+        for file in "${worktree}"/sources/*; do
+            if ! test -f "$LFS/var/local/build/sources/${file##*/}"; then
+                cp -v "$file" "$LFS/var/local/build/sources"
+            fi
+        done
+
+        # Get every file in the patches directory and copy them to the chroot environment if they are not already there
+        for file in "${worktree}"/patches/*; do
+            if ! test -f "$LFS/var/local/build/patches/${file##*/}"; then
+                cp -v "$file" "$LFS/var/local/build/patches"
+            fi
+        done
 
         # Setup permissions for the chroot environment
         chown -R root:root "$LFS"

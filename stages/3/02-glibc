@@ -1,0 +1,74 @@
+# Build script for glibc.
+# SPDX-License-Identifier: Apache-2.0
+# SPDX-FileCopyrightText: 2025, John Unland
+
+version=2.40
+
+cd -- "$TMPDIR"
+
+rm -rf glibc-${version}
+unpack "${worktree}/sources/glibc-${version}.tar.xz"
+
+# Build instructions
+cd glibc-${version}
+
+patch -p1 <"${worktree}/patches/glibc-${version}-fhs-1.patch"
+
+mkdir build && cd build
+
+echo "rootsbindir=/usr/sbin" >configparms
+../configure \
+    CFLAGS="$BTCFLAGS" CXXFLAGS="$BTCXXFLAGS" LDFLAGS="$BTLDFLAGS" \
+    --prefix=/usr \
+    --disable-nscd \
+    --disable-werror \
+    --enable-kernel=4.19 \
+    --enable-stack-protector=strong \
+    libc_cv_slibdir=/usr/lib
+
+make -j${jobs}
+
+cat > /etc/ld.so.conf << "EOF"
+# Begin /etc/ld.so.conf
+/usr/local/lib
+/opt/lib
+
+# End /etc/ld.so.conf
+EOF
+
+# Fix makefile test
+sed '/test-installation/s@$(PERL)@echo not running@' -i ../Makefile
+
+echo "Running test suite..."
+
+make check
+
+make install
+
+sed '/RTLDLIST=/s@/usr@@g' -i /usr/bin/ldd
+
+make localedata/install-locales
+
+localedef -i C -f UTF-8 C.UTF-8
+
+cat > /etc/nsswitch.conf << "EOF"
+# Begin /etc/nsswitch.conf
+
+passwd: files
+group: files
+shadow: files
+
+hosts: files dns
+networks: files
+
+protocols: files
+services: files
+ethers: files
+rpc: files
+
+# End /etc/nsswitch.conf
+EOF
+
+cleanup() {
+    cd -- "$TMPDIR" && rm -rf glibc-${version}
+}

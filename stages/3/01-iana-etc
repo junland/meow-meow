@@ -1,0 +1,19 @@
+# Build script for iana-etc.
+# SPDX-License-Identifier: Apache-2.0
+# SPDX-FileCopyrightText: 2025, John Unland
+
+version=20240806
+
+cd -- "$TMPDIR"
+
+rm -rf iana-etc-$version
+
+unpack "${worktree}/sources/iana-etc-$version.tar.gz"
+
+cd iana-etc-$version
+
+cp -v services protocols /etc
+
+cleanup() {
+    cd -- "$TMPDIR" && rm -rf iana-etc-$version
+}

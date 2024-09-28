@@ -155,7 +155,7 @@ warn_flags() {
 BTCC="${BTCC:=gcc}"
 BTCXX="${BTCXX:=g++}"
 BTCFLAGS="${BTCFLAGS:=-O2}"
-BTCXXFLAGS="${BTCFLAGS:=-O2}"
+BTCXXFLAGS="${BTCXXFLAGS:=-O2}"
 BTCPPFLAGS="${BTCPPFLAGS:=-P}"
 BTLDFLAGS="${BTLDFLAGS:=}"
 opt_keep=opt_keep.off
@@ -223,7 +223,8 @@ test -n "$CFLAGS" && warn_flags CFLAGS
 test -n "$CXXFLAGS" && warn_flags CXXFLAGS
 test -n "$CPPFLAGS" && warn_flags CPPFLAGS
 test -n "$LDFLAGS" && warn_flags LDFLAGS
-unset CC CXX CFLAGS CXXFLAGS CPPFLAGS LDFLAGS warn_flags
+unset CC CXX CFLAGS CXXFLAGS CPPFLAGS LDFLAGS
+unset -f warn_flags
 
 # Load target architecture-file
 if test -f "${worktree}/targets/$arch"; then
@@ -287,16 +288,16 @@ CONFIG_SITE=$LFS/usr/share/config.site
 export PATH VENDOR TMPDIR CONFIG_SITE
 
 # Main loop
-for file in ${worktree}/stages/${stage}/${@:-??-*}; do
-    file="${file##*/}"
-    done_file=".stage-${stage}-${file}.done"
+for step_file in ${worktree}/stages/${stage}/${@:-??-*}; do
+    step_file="${step_file##*/}"
+    done_file=".stage-${stage}-${step_file}.done"
 
-    if test ! -f "${worktree}/stages/${stage}/$file"; then
-        warn "${PROGRAM}: ${stage}/${file}: No such file or stage number"
+    if test ! -f "${worktree}/stages/${stage}/$step_file"; then
+        warn "${PROGRAM}: ${stage}/${step_file}: No such file or stage number"
         exit 1
     fi
-    if test ! -x "${worktree}/stages/${stage}/$file"; then
-        warn "${PROGRAM}: ${stage}/${file}: File not executable, dodging"
+    if test ! -x "${worktree}/stages/${stage}/$step_file"; then
+        warn "${PROGRAM}: ${stage}/${step_file}: File not executable, dodging"
         continue
     fi
 
@@ -332,16 +333,16 @@ for file in ${worktree}/stages/${stage}/${@:-??-*}; do
         fi
 
         # Get every file in the sources directory and copy them to the chroot environment if they are not already there
-        for file in "${worktree}"/sources/*; do
-            if ! test -f "$LFS/var/local/build/sources/${file##*/}"; then
-                cp -v "$file" "$LFS/var/local/build/sources"
+        for src_file in "${worktree}"/sources/*; do
+            if ! test -f "$LFS/var/local/build/sources/${src_file##*/}"; then
+                cp -v "$src_file" "$LFS/var/local/build/sources"
             fi
         done
 
         # Get every file in the patches directory and copy them to the chroot environment if they are not already there
-        for file in "${worktree}"/patches/*; do
-            if ! test -f "$LFS/var/local/build/patches/${file##*/}"; then
-                cp -v "$file" "$LFS/var/local/build/patches"
+        for patch_file in "${worktree}"/patches/*; do
+            if ! test -f "$LFS/var/local/build/patches/${patch_file##*/}"; then
+                cp -v "$patch_file" "$LFS/var/local/build/patches"
             fi
         done
 
@@ -379,7 +380,6 @@ for file in ${worktree}/stages/${stage}/${@:-??-*}; do
             HOME="/var/local/build" \
             TERM="$TERM" \
             LC_ALL=POSIX \
-            MAKEFLAGS="-j${jobs}" \
             PS1='(chroot)$ ' \
             PATH=/bin:/usr/bin:/sbin:/usr/sbin \
             MAKEFLAGS="-j$(nproc)" \
@@ -395,7 +395,7 @@ for file in ${worktree}/stages/${stage}/${@:-??-*}; do
             worktree="/var/local/build" \
             sources_dir="/var/local/build/sources" \
             TMPDIR="/var/local/build/sources" \
-            /bin/bash -e < "${worktree}/stages/${stage}/$file" 
+            /bin/bash -e < "${worktree}/stages/${stage}/$step_file" 
 
         # Get the return status of the chroot command
         CHROOT_STATUS=$?
@@ -416,7 +416,7 @@ for file in ${worktree}/stages/${stage}/${@:-??-*}; do
         set -o pipefail
 
         # Run the scripts as usual and log the output to a file
-        . "${worktree}/stages/${stage}/$file" | tee "${output}/${file}.log"
+        . "${worktree}/stages/${stage}/$step_file" | tee "${output}/${step_file}.log"
 
         # Disable pipefail
         set +o pipefail
@@ -432,7 +432,7 @@ for file in ${worktree}/stages/${stage}/${@:-??-*}; do
     trap - EXIT HUP INT QUIT ABRT TERM
 
     # Create the done file
-    echo "${PROGRAM}: Done processing $file from stages/${stage} ..."
+    echo "${PROGRAM}: Done processing $step_file from stages/${stage} ..."
     echo "${PROGRAM}: Marking with done file: ${done_file}"
     touch "${output}/${done_file}"
 

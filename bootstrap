@@ -373,8 +373,8 @@ for step_file in ${worktree}/stages/${stage}/${@:-??-*}; do
     # Clear hash table
     hash -r >/dev/null 2>&1 || true
 
-    # If we are running stage 2, we need to run the scripts in a chroot
-    if test "$stage" = 2; then
+    # If we are running stage 2 or 3 we need to run the scripts in a chroot environment
+    if test "$stage" = 2 || test "$stage" = 3; then
         # Pass in the stage2 scripts into bash with the chroot command
         chroot "$LFS" /usr/bin/env -i \
             HOME="/var/local/build" \

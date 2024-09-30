@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: Apache-2.0
 # SPDX-FileCopyrightText: 2025, John Unland
 
-version=6.1.23
+version=6.10.5
 
 cd -- "$TMPDIR"
 
@@ -12,8 +12,8 @@ unpack "${worktree}/sources/linux-${version}.tar.xz"
 # Build instructions
 cd linux-${version}
 
-patch -p1 <"${worktree}/patches/linux-headers-remove-sysinfo-header.patch"
-patch -p1 <"${worktree}/patches/linux-headers-revert-broken-uapi.patch"
+# patch -p1 <"${worktree}/patches/linux-headers-remove-sysinfo-header.patch"
+# patch -p1 <"${worktree}/patches/linux-headers-revert-broken-uapi.patch"
 
 make -j1 ARCH="$kernel_arch" mrproper
 make -j1 ARCH="$kernel_arch" headers

@@ -429,7 +429,7 @@ index 0000000..c06ef11
 +
 +/* is_basic(c) tests whether the single-byte character c is
 +   - in the ISO C "basic character set" or is one of '@', '$', and '`'
-+     which ISO C 23 Â§ 5.2.1.1.(1) guarantees to be single-byte and in
++     which ISO C 23 § 5.2.1.1.(1) guarantees to be single-byte and in
 +     practice are safe to treat as basic in the execution character set,
 +     or
 +   - in the POSIX "portable character set", which
@@ -4347,19 +4347,19 @@ index 0000000..dd6007c
 +.       .       .       .
 +a	b	c	d
 +.       .       .       .
-+Ã¤	Ã¶	Ã¼	ÃŸ
++ä	ö	ü	ß
 +.       .       .       .
 +EOF
-+env printf '   Ã¤Ã¶Ã¼\t.    Ã¶Ã¼Ã¤.   \tÃ¤ xx\n' >> in || framework_failure_
++env printf '   äöü\t.    öüä.   \tä xx\n' >> in || framework_failure_
 +
 +cat <<\EOF > exp || framework_failure_
 +1234567812345678123456781
 +.       .       .       .
 +a       b       c       d
 +.       .       .       .
-+Ã¤       Ã¶       Ã¼       ÃŸ
++ä       ö       ü       ß
 +.       .       .       .
-+   Ã¤Ã¶Ã¼  .    Ã¶Ã¼Ã¤.       Ã¤ xx
++   äöü  .    öüä.       ä xx
 +EOF
 +
 +expand < in > out || fail=1
@@ -4371,9 +4371,9 @@ index 0000000..dd6007c
 +.       .       .       .
 +a       b       c       d
 +.       .       .       .
-+Ã¤       Ã¶       Ã¼       ÃŸ
++ä       ö       ü       ß
 +.       .       .       .
-+   Ã¤Ã¶Ã¼  .    Ã¶Ã¼Ã¤.       Ã¤ xx
++   äöü  .    öüä.       ä xx
 +EOF
 +
 +expand ./in ./in > out || fail=1
@@ -4410,21 +4410,21 @@ index 0000000..dd6007c
 +env printf '12345678
 +\t\xFF|
 +\xFF\t|
-+\t\xFFÃ¤|
-+Ã¤\xFF\t|
-+\tÃ¤\xFF|
-+\xFF\tÃ¤|
-+Ã¤bcdef\xFF\t|
++\t\xFFä|
++ä\xFF\t|
++\tä\xFF|
++\xFF\tä|
++äbcdef\xFF\t|
 +' > in || framework_failure_
 +
 +env printf '12345678
 +        \xFF|
 +\xFF       |
-+        \xFFÃ¤|
-+Ã¤\xFF      |
-+        Ã¤\xFF|
-+\xFF       Ã¤|
-+Ã¤bcdef\xFF |
++        \xFFä|
++ä\xFF      |
++        ä\xFF|
++\xFF       ä|
++äbcdef\xFF |
 +' > exp || framework_failure_
 +
 +expand < in > out || fail=1
@@ -4438,19 +4438,19 @@ index 0000000..dd6007c
 +.       .       .       .
 +a	b	c	d
 +.       .       .       .
-+Ã¤	Ã¶	Ã¼	ÃŸ
++ä	ö	ü	ß
 +.       .       .       .
 +EOF
-+env printf '   Ã¤Ã¶Ã¼\t.    Ã¶Ã¼Ã¤.   \tÃ¤ xx\n' >> in || framework_failure_
++env printf '   äöü\t.    öüä.   \tä xx\n' >> in || framework_failure_
 +
 +printf "\xEF\xBB\xBF" > exp; cat <<\EOF >> exp || framework_failure_
 +1234567812345678123456781
 +.       .       .       .
 +a       b       c       d
 +.       .       .       .
-+Ã¤       Ã¶       Ã¼       ÃŸ
++ä       ö       ü       ß
 +.       .       .       .
-+   Ã¤Ã¶Ã¼  .    Ã¶Ã¼Ã¤.       Ã¤ xx
++   äöü  .    öüä.       ä xx
 +EOF
 +
 +
@@ -4469,10 +4469,10 @@ index 0000000..dd6007c
 +.       .       .       .
 +a	b	c	d
 +.       .       .       .
-+Ã¤	Ã¶	Ã¼	ÃŸ
++ä	ö	ü	ß
 +.       .       .       .
 +EOF
-+env printf '   Ã¤Ã¶Ã¼\t.    Ã¶Ã¼Ã¤.   \tÃ¤ xx\n' >> in1 || framework_failure_
++env printf '   äöü\t.    öüä.   \tä xx\n' >> in1 || framework_failure_
 +
 +
 +printf '\xEF\xBB\xBF' > exp; cat <<\EOF >> exp || framework_failure_
@@ -4480,16 +4480,16 @@ index 0000000..dd6007c
 +.       .       .       .
 +a       b       c       d
 +.       .       .       .
-+Ã¤       Ã¶       Ã¼       ÃŸ
++ä       ö       ü       ß
 +.       .       .       .
-+   Ã¤Ã¶Ã¼  .    Ã¶Ã¼Ã¤.       Ã¤ xx
++   äöü  .    öüä.       ä xx
 +1234567812345678123456781
 +.       .       .       .
 +a       b       c       d
 +.       .       .       .
-+Ã¤       Ã¶       Ã¼       ÃŸ
++ä       ö       ü       ß
 +.       .       .       .
-+   Ã¤Ã¶Ã¼  .    Ã¶Ã¼Ã¤.       Ã¤ xx
++   äöü  .    öüä.       ä xx
 +EOF
 +
 +expand in1 in1 > out || fail=1
@@ -4527,11 +4527,11 @@ index 0000000..26c95de
 +# https://bugzilla.suse.com/show_bug.cgi?id=928749
 +cat <<EOF > exp
 +.
-+É‘
++ɑ
 +EOF
 +cat <<EOF | sort -f > out || fail=1
 +.
-+É‘
++ɑ
 +EOF
 +compare exp out || { fail=1; cat out; }
 +
@@ -4590,7 +4590,7 @@ index 11f3fc4..d609a2c 100755
  
  
     # Test errors
-+   # FIXME: The following tests contain â€˜quotingâ€™ specific to LC_MESSAGES
++   # FIXME: The following tests contain ‘quoting’ specific to LC_MESSAGES
 +   # So we force LC_MESSAGES=C to make them pass.
     ['e1', '--tabs="a"', {IN=>''}, {OUT=>''}, {EXIT=>1},
      {ERR => "$prog: tab size contains invalid character(s): 'a'\n"}],
@@ -4724,34 +4724,34 @@ index 0000000..11836ba
 +
 +
 +cat <<EOF > exp
-+Bananaï¼ 5
-+Appleï¼ 10
-+Citrusï¼ 20
-+Cherryï¼ 30
++Banana＠5
++Apple＠10
++Citrus＠20
++Cherry＠30
 +EOF
 +
-+cat <<EOF | sort -t ï¼  -k2 -n > out || fail=1
-+Appleï¼ 10
-+Bananaï¼ 5
-+Citrusï¼ 20
-+Cherryï¼ 30
++cat <<EOF | sort -t ＠ -k2 -n > out || fail=1
++Apple＠10
++Banana＠5
++Citrus＠20
++Cherry＠30
 +EOF
 +
 +compare exp out || { fail=1; cat out; }
 +
 +
 +cat <<EOF > exp
-+Citrusï¼ ï¼¡ï¼¡20ï¼ ï¼ 5
-+Cherryï¼ ï¼¡ï¼¡30ï¼ ï¼ 10
-+Appleï¼ ï¼¡ï¼¡10ï¼ ï¼ 20
-+Bananaï¼ ï¼¡ï¼¡5ï¼ ï¼ 30
++Citrus＠ＡＡ20＠＠5
++Cherry＠ＡＡ30＠＠10
++Apple＠ＡＡ10＠＠20
++Banana＠ＡＡ5＠＠30
 +EOF
 +
-+cat <<EOF | sort -t ï¼  -k4 -n > out || fail=1
-+Appleï¼ ï¼¡ï¼¡10ï¼ ï¼ 20
-+Bananaï¼ ï¼¡ï¼¡5ï¼ ï¼ 30
-+Citrusï¼ ï¼¡ï¼¡20ï¼ ï¼ 5
-+Cherryï¼ ï¼¡ï¼¡30ï¼ ï¼ 10
++cat <<EOF | sort -t ＠ -k4 -n > out || fail=1
++Apple＠ＡＡ10＠＠20
++Banana＠ＡＡ5＠＠30
++Citrus＠ＡＡ20＠＠5
++Cherry＠ＡＡ30＠＠10
 +EOF
 +
 +compare exp out || { fail=1; cat out; }
@@ -5045,9 +5045,9 @@ index 0000000..8a82d74
 +.       .       .       .
 +a       b       c       d
 +.       .       .       .
-+Ã¤       Ã¶       Ã¼       ÃŸ
++ä       ö       ü       ß
 +.       .       .       .
-+   Ã¤Ã¶Ã¼  .    Ã¶Ã¼Ã¤.       Ã¤ xx
++   äöü  .    öüä.       ä xx
 +EOF
 +
 +cat > exp <<\EOF
@@ -5055,9 +5055,9 @@ index 0000000..8a82d74
 +.	.	.	.
 +a	b	c	d
 +.	.	.	.
-+Ã¤	Ã¶	Ã¼	ÃŸ
++ä	ö	ü	ß
 +.	.	.	.
-+   Ã¤Ã¶Ã¼	.    Ã¶Ã¼Ã¤.	Ã¤ xx
++   äöü	.    öüä.	ä xx
 +EOF
 +
 +unexpand -a < in > out || fail=1
@@ -5070,9 +5070,9 @@ index 0000000..8a82d74
 +.	.	.	.
 +a	b	c	d
 +.	.	.	.
-+Ã¤	Ã¶	Ã¼	ÃŸ
++ä	ö	ü	ß
 +.	.	.	.
-+   Ã¤Ã¶Ã¼	.    Ã¶Ã¼Ã¤.	Ã¤ xx
++   äöü	.    öüä.	ä xx
 +EOF
 +
 +
@@ -5101,8 +5101,8 @@ index 0000000..8a82d74
 +compare exp out > /dev/null 2>&1 || fail=1
 +
 +#test input where a blank of width > 1 is not being substituted
-+in="$(LC_ALL=en_US.UTF-8 printf ' \u3000  Ã¶       Ã¼       ÃŸ')"
-+exp=' ã€€  Ã¶	     Ã¼	     ÃŸ'
++in="$(LC_ALL=en_US.UTF-8 printf ' \u3000  ö       ü       ß')"
++exp=' 　  ö	     ü	     ß'
 +
 +unexpand -a < in > out || fail=1
 +compare exp out > /dev/null 2>&1 || fail=1
@@ -5111,21 +5111,21 @@ index 0000000..8a82d74
 +env printf '12345678
 +        \xFF|
 +\xFF       |
-+        \xFFÃ¤|
-+Ã¤\xFF      |
-+        Ã¤\xFF|
-+\xFF       Ã¤|
-+Ã¤bcdef\xFF |
++        \xFFä|
++ä\xFF      |
++        ä\xFF|
++\xFF       ä|
++äbcdef\xFF |
 +' > in || framework_failure_
 +
 +env printf '12345678
 +\t\xFF|
 +\xFF\t|
-+\t\xFFÃ¤|
-+Ã¤\xFF\t|
-+\tÃ¤\xFF|
-+\xFF\tÃ¤|
-+Ã¤bcdef\xFF\t|
++\t\xFFä|
++ä\xFF\t|
++\tä\xFF|
++\xFF\tä|
++äbcdef\xFF\t|
 +' > exp || framework_failure_
 +
 +unexpand -a < in > out || fail=1
@@ -5137,20 +5137,20 @@ index 0000000..8a82d74
 +.       .       .       .
 +a       b       c       d
 +.       .       .       .
-+Ã¤       Ã¶       Ã¼       ÃŸ
++ä       ö       ü       ß
 +.       .       .       .
-+   Ã¤Ã¶Ã¼  .    Ã¶Ã¼Ã¤.       Ã¤ xx
++   äöü  .    öüä.       ä xx
 +EOF
-+env printf '   Ã¤Ã¶Ã¼\t.    Ã¶Ã¼Ã¤.   \tÃ¤ xx\n' >> in || framework_failure_
++env printf '   äöü\t.    öüä.   \tä xx\n' >> in || framework_failure_
 +
 +printf "\xEF\xBB\xBF" > exp; cat <<\EOF >> exp || framework_failure_
 +1234567812345678123456781
 +.	.	.	.
 +a	b	c	d
 +.	.	.	.
-+Ã¤	Ã¶	Ã¼	ÃŸ
++ä	ö	ü	ß
 +.	.	.	.
-+   Ã¤Ã¶Ã¼	.    Ã¶Ã¼Ã¤.	Ã¤ xx
++   äöü	.    öüä.	ä xx
 +EOF
 +
 +unexpand < in > out || fail=1
@@ -5168,16 +5168,16 @@ index 0000000..8a82d74
 +.	.	.	.
 +a	b	c	d
 +.	.	.	.
-+Ã¤	Ã¶	Ã¼	ÃŸ
++ä	ö	ü	ß
 +.	.	.	.
-+   Ã¤Ã¶Ã¼	.    Ã¶Ã¼Ã¤.	Ã¤ xx
++   äöü	.    öüä.	ä xx
 +1234567812345678123456781
 +.	.	.	.
 +a	b	c	d
 +.	.	.	.
-+Ã¤	Ã¶	Ã¼	ÃŸ
++ä	ö	ü	ß
 +.	.	.	.
-+   Ã¤Ã¶Ã¼	.    Ã¶Ã¼Ã¤.	Ã¤ xx
++   äöü	.    öüä.	ä xx
 +EOF
 +
 +

@@ -33,11 +33,19 @@ cat > /etc/ld.so.conf << "EOF"
 /usr/local/lib
 /opt/lib
 
+# Include the directory containing libraries
+include /etc/ld.so.conf.d/*.conf
 # End /etc/ld.so.conf
 EOF
 
+mkdir -pv /etc/ld.so.conf.d
+
 # Fix makefile test
 sed '/test-installation/s@$(PERL)@echo not running@' -i ../Makefile
+
+# Copy nsd.conf file and create cache directory
+cp -v ../nscd/nscd.conf /etc/nscd.conf
+mkdir -pv /var/cache/nscd
 
 echo "Running test suite..."
 

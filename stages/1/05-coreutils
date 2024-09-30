@@ -22,7 +22,7 @@ patch -p1 <"${worktree}/patches/coreutils-${version}-i18n-2.patch"
     --enable-install-program=hostname \
     --enable-no-install-program=kill,uptime
 
-make -j${jobs}
+make -j1
 
 make -j${jobs} DESTDIR="${LFS}" install
 

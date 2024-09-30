@@ -18,7 +18,7 @@ patch -p1 <"${worktree}/patches/coreutils-${version}-i18n-2.patch"
     CFLAGS="$BTCFLAGS" CXXFLAGS="$BTCXXFLAGS" LDFLAGS="$BTLDFLAGS" \
     --prefix=/usr \
     --host=$target \
-    --build=$host \
+    --build=$(build-aux/config.guess) \
     --enable-install-program=hostname \
     --enable-no-install-program=kill,uptime
 

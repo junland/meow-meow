@@ -41,7 +41,7 @@ sed '/test-installation/s@$(PERL)@echo not running@' -i ../Makefile
 
 echo "Running test suite..."
 
-make check
+make -j1 check
 
 make install
 

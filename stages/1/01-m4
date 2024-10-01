@@ -16,7 +16,7 @@ cd m4-${version}
     CFLAGS="$BTCFLAGS" CXXFLAGS="$BTCXXFLAGS" LDFLAGS="$BTLDFLAGS" \
     --prefix=/usr \
     --host=$target \
-    --build=$host
+    --build=$(build-aux/config.guess)
 
 make -j${jobs}
 

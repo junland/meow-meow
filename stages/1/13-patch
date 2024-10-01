@@ -12,7 +12,6 @@ unpack "${worktree}/sources/patch-$version.tar.xz"
 cd patch-$version
 
 ./configure \
-    CFLAGS="$BTCFLAGS" CXXFLAGS="$BTCXXFLAGS" LDFLAGS="$BTLDFLAGS" \
     --prefix=/usr \
     --host=$target \
     --build=$host

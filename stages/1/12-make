@@ -12,7 +12,6 @@ unpack "${worktree}/sources/make-$version.tar.gz"
 cd make-$version
 
 ./configure \
-    CFLAGS="$BTCFLAGS" CXXFLAGS="$BTCXXFLAGS" LDFLAGS="$BTLDFLAGS" \
     --prefix=/usr \
     --host=$target \
     --build=$host \

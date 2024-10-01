@@ -15,7 +15,7 @@ cd util-linux-$version
 mkdir -pv /var/lib/hwclock
 
 ./configure \
-    CFLAGS="$BTCFLAGS" CXXFLAGS="$BTCXXFLAGS" LDFLAGS="$BTLDFLAGS" \
+    
     ADJTIME_PATH=/var/lib/hwclock/adjtime \
     --libdir=/usr/lib \
     --runstatedir=/run \

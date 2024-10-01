@@ -21,7 +21,6 @@ mkdir "$TMPDIR"/binutils-build
 cd "$TMPDIR"/binutils-build
 
 ../binutils-${version}/configure \
-    CFLAGS="$BTCFLAGS" CXXFLAGS="$BTCXXFLAGS" LDFLAGS="$BTLDFLAGS" \
     --prefix=/usr \
     --build=$(../config.guess) \
     --host=$target \

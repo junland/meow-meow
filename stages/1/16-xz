@@ -12,7 +12,6 @@ unpack "${worktree}/sources/xz-$version.tar.xz"
 cd xz-$version
 
 ./configure \
-    CFLAGS="$BTCFLAGS" CXXFLAGS="$BTCXXFLAGS" LDFLAGS="$BTLDFLAGS" \
     --prefix=/usr \
     --host=$target \
     --build=$host \

@@ -15,7 +15,6 @@ cd gawk-$version
 sed -i 's/extras//' Makefile.in
 
 ./configure \
-    CFLAGS="$BTCFLAGS" CXXFLAGS="$BTCXXFLAGS" LDFLAGS="$BTLDFLAGS" \
     --prefix=/usr \
     --host=$target \
     --build=$host

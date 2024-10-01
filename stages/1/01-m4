@@ -13,7 +13,6 @@ unpack "${worktree}/sources/m4-${version}.tar.gz"
 cd m4-${version}
 
 ./configure \
-    CFLAGS="$BTCFLAGS" CXXFLAGS="$BTCXXFLAGS" LDFLAGS="$BTLDFLAGS" \
     --prefix=/usr \
     --host=$target \
     --build=$(build-aux/config.guess)

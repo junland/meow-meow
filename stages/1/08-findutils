@@ -12,7 +12,6 @@ unpack "${worktree}/sources/findutils-$version.tar.xz"
 cd findutils-$version
 
 ./configure \
-    CFLAGS="$BTCFLAGS" CXXFLAGS="$BTCXXFLAGS" LDFLAGS="$BTLDFLAGS" \
     --prefix=/usr \
     --host=$LFS_TGT \
     --build=$(build-aux/config.guess) \

@@ -12,7 +12,6 @@ unpack "${worktree}/sources/grep-$version.tar.xz"
 cd grep-$version
 
 ./configure \
-    CFLAGS="$BTCFLAGS" CXXFLAGS="$BTCXXFLAGS" LDFLAGS="$BTLDFLAGS" \
     --prefix=/usr \
     --host=$target \
     --build=$host

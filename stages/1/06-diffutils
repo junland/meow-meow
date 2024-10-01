@@ -12,7 +12,6 @@ unpack "${worktree}/sources/diffutils-$version.tar.xz"
 cd diffutils-$version
 
 ./configure \
-    CFLAGS="$BTCFLAGS" CXXFLAGS="$BTCXXFLAGS" LDFLAGS="$BTLDFLAGS" \
     --prefix=/usr \
     --host=$target \
     --build=$(./build-aux/config.guess)

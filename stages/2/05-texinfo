@@ -13,7 +13,7 @@ unpack "${worktree}/sources/texinfo-$version.tar.xz"
 cd texinfo-$version
 
 ./configure \
-    CFLAGS="$BTCFLAGS" CXXFLAGS="$BTCXXFLAGS" LDFLAGS="$BTLDFLAGS" \
+    
     --prefix=/usr \
 
 make -j${jobs}

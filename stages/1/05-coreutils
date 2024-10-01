@@ -19,7 +19,6 @@ wget https://www.linuxfromscratch.org/patches/lfs/development/coreutils-9.5-i18n
 patch -Np1 -i coreutils-9.5-i18n-2.patch
 
 ./configure \
-    CFLAGS="$BTCFLAGS" CXXFLAGS="$BTCXXFLAGS" LDFLAGS="$BTLDFLAGS" \
     --prefix=/usr \
     --host=$target \
     --build=$(build-aux/config.guess) \

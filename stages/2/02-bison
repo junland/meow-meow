@@ -13,7 +13,7 @@ unpack "${worktree}/sources/bison-$version.tar.xz"
 cd bison-$version
 
 ./configure \
-    CFLAGS="$BTCFLAGS" CXXFLAGS="$BTCXXFLAGS" LDFLAGS="$BTLDFLAGS" \
+    
     --prefix=/usr \
     --docdir=/usr/share/doc/bison-$version
 

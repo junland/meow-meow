@@ -18,7 +18,6 @@ mkdir build && cd build
 
 echo "rootsbindir=/usr/sbin" >configparms
 ../configure \
-    CFLAGS="$BTCFLAGS" CXXFLAGS="$BTCXXFLAGS" LDFLAGS="$BTLDFLAGS" \
     --prefix=/usr \
     --disable-nscd \
     --disable-werror \

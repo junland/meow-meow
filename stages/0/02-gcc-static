@@ -48,7 +48,6 @@ mkdir "$TMPDIR"/gcc-build
 cd "$TMPDIR"/gcc-build
 
 ../gcc-${version}/configure \
-    CFLAGS="$BTCFLAGS" CXXFLAGS="$BTCXXFLAGS" LDFLAGS="$BTLDFLAGS" \
     --prefix="$LFS/tools" \
     --build=$host \
     --host=$host \

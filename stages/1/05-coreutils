@@ -12,7 +12,11 @@ unpack "${worktree}/sources/coreutils-${version}.tar.xz"
 # Build instructions
 cd coreutils-${version}
 
-patch -p1 <"${worktree}/patches/coreutils-${version}-i18n-2.patch"
+# patch -p1 <"${worktree}/patches/coreutils-${version}-i18n-2.patch"
+
+wget https://www.linuxfromscratch.org/patches/lfs/development/coreutils-9.5-i18n-2.patch
+
+patch -Np1 -i coreutils-9.5-i18n-2.patch
 
 ./configure \
     CFLAGS="$BTCFLAGS" CXXFLAGS="$BTCXXFLAGS" LDFLAGS="$BTLDFLAGS" \

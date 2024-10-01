@@ -26,7 +26,6 @@ make -j${jobs}
 popd
 
 ./configure \
-    
     --prefix=/usr \
     --host=$target \
     --build=$(./config.guess)

@@ -380,6 +380,7 @@ for step_file in ${worktree}/stages/${stage}/${@:-??-*}; do
             HOME="/var/local/build" \
             TERM="$TERM" \
             LC_ALL=POSIX \
+            LANGUAGE=POSIX \
             PS1='(chroot)$ ' \
             PATH=/bin:/usr/bin:/sbin:/usr/sbin \
             MAKEFLAGS="-j$(nproc)" \

@@ -48,7 +48,12 @@ mkdir -pv /var/cache/nscd
 
 echo "Running test suite..."
 
-make -j1 check
+make -j1 check || true
+
+# Find summary file and cat it
+find . -name "*.sum" -exec cat {} \;
+
+exit 69
 
 make install
 

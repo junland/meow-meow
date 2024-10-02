@@ -12,9 +12,7 @@ unpack "${worktree}/sources/texinfo-$version.tar.xz"
 
 cd texinfo-$version
 
-./configure \
-    
-    --prefix=/usr \
+./configure --prefix=/usr 
 
 make -j${jobs}
 

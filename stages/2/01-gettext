@@ -13,7 +13,6 @@ unpack "${worktree}/sources/gettext-$version.tar.xz"
 cd gettext-$version
 
 ./configure \
-    
     --disable-shared
 
 make -j${jobs}

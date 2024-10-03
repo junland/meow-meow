@@ -34,6 +34,7 @@ cat > /etc/ld.so.conf << "EOF"
 
 # Include the directory containing libraries
 include /etc/ld.so.conf.d/*.conf
+
 # End /etc/ld.so.conf
 EOF
 

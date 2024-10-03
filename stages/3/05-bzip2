@@ -21,13 +21,23 @@ sed -i 's@\(ln -s -f \)$(PREFIX)/bin/@\1@' Makefile
 # Ensure man pages are installed in the correct location.
 sed -i 's@$(PREFIX)/man@$(PREFIX)/share/man@' Makefile
 
+echo "Marker 1"
+
 make -f Makefile-libbz2_so -j${jobs}
+
+echo "Marker 2"
 
 make clean -j${jobs}
 
+echo "Marker 3"
+
 make -j${jobs}
 
+echo "Marker 4"
+
 make PREFIX=/usr install
+
+echo "Marker 5"
 
 cp -av libbz2.so.* /usr/lib
 

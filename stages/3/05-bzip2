@@ -12,6 +12,9 @@ unpack "${worktree}/sources/bzip2-$version.tar.gz"
 
 cd bzip2-$version
 
+# Apply patch to install the documentation in the correct location.
+patch -Np1 -i <"${worktree}/patches/bzip2-$version-install-docs.patch"
+
 # Ensure relative symlinks are created.
 sed -i 's@\(ln -s -f \)$(PREFIX)/bin/@\1@' Makefile
 
@@ -39,5 +42,5 @@ done
 rm -fv /usr/lib/libbz2.a
 
 cleanup() {
-    cd -- "$TMPDIR" && rm -rf bzip2-$version
+  cd -- "$TMPDIR" && rm -rf bzip2-$version
 }

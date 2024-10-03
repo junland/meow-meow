@@ -12,7 +12,7 @@ unpack "${worktree}/sources/glibc-${version}.tar.xz"
 # Build instructions
 cd glibc-${version}
 
-patch -p1 -i <"${worktree}/patches/glibc-${version}-fhs-1.patch"
+patch -p1 <"${worktree}/patches/glibc-${version}-fhs-1.patch"
 
 # Create symlinks
 case $(uname -m) in

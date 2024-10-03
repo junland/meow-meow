@@ -42,15 +42,12 @@ mkdir -pv /etc/ld.so.conf.d
 # Fix makefile test
 sed '/test-installation/s@$(PERL)@echo not running@' -i ../Makefile
 
+# Remove io/tst-lchmod tests
+sed -i "/\btst-lchmod /d" ../io/Makefile
+
 # Copy nsd.conf file and create cache directory
 cp -v ../nscd/nscd.conf /etc/nscd.conf
 mkdir -pv /var/cache/nscd
-
-echo "Running test suite..."
-
-# Remove io/tst-lchmod tests
-echo "Removing io/tst-lchmod test file..."
-rm -vr ../io/tst-lchmod*
 
 echo "Running test suite..."
 

@@ -1,0 +1,43 @@
+# Build script for bzip2.
+# SPDX-License-Identifier: Apache-2.0
+# SPDX-FileCopyrightText: 2025, John Unland
+
+version=1.0.8
+
+cd -- "$TMPDIR"
+
+rm -rf bzip2-$version
+
+unpack "${worktree}/sources/bzip2-$version.tar.gz"
+
+cd bzip2-$version
+
+# Ensure relative symlinks are created.
+sed -i 's@\(ln -s -f \)$(PREFIX)/bin/@\1@' Makefile
+
+# Ensure man pages are installed in the correct location.
+sed -i 's@$(PREFIX)/man@$(PREFIX)/share/man@' Makefile
+
+make -f Makefile-libbz2_so -j${jobs}
+
+make clean -j${jobs}
+
+make -j${jobs}
+
+make PREFIX=/usr install
+
+cp -av libbz2.so.* /usr/lib
+
+ln -sv libbz2.so.1.0.8 /usr/lib/libbz2.so
+
+cp -v bzip2-shared /usr/bin/bzip2
+
+for i in /usr/bin/{bzcat,bunzip2}; do
+  ln -sfv bzip2 $i
+done
+
+rm -fv /usr/lib/libbz2.a
+
+cleanup() {
+    cd -- "$TMPDIR" && rm -rf bzip2-$version
+}

@@ -356,12 +356,12 @@ for step_file in ${worktree}/stages/${stage}/${@:-??-*}; do
 
     # Check if the done file exists
     if test -f "${output}/${done_file}"; then
-        echo "${PROGRAM}: Skipping $file from stages/${stage} ..."
+        echo "${PROGRAM}: Skipping $step_file from stages/${stage} ..."
         rm -rf "${TMPDIR}"/* || chkstatus_or_exit
         continue
     fi
 
-    echo "${PROGRAM}: Processing $file from stages/${stage} ..."
+    echo "${PROGRAM}: Processing $step_file from stages/${stage} ..."
 
     # Set trap before to run the script in order to
     # catch the return status, exit code 2 if fails

@@ -44,10 +44,10 @@ mkdir -pv /etc/ld.so.conf.d
 cp -v ../nscd/nscd.conf /etc/nscd.conf
 mkdir -pv /var/cache/nscd
 
-if [ "${RUN_TESTS}" = "true" ]; then
-    # Fix makefile test
-    sed '/test-installation/s@$(PERL)@echo not running@' -i ../Makefile
+# Fix makefile test
+sed '/test-installation/s@$(PERL)@echo not running@' -i ../Makefile
 
+if [ "${RUN_TESTS}" = "true" ]; then
     # Remove io/tst-lchmod tests
     sed -i "/\btst-lchmod /d" ../io/Makefile
 

@@ -40,21 +40,23 @@ EOF
 
 mkdir -pv /etc/ld.so.conf.d
 
-# Fix makefile test
-sed '/test-installation/s@$(PERL)@echo not running@' -i ../Makefile
-
-# Remove io/tst-lchmod tests
-sed -i "/\btst-lchmod /d" ../io/Makefile
-
 # Copy nsd.conf file and create cache directory
 cp -v ../nscd/nscd.conf /etc/nscd.conf
 mkdir -pv /var/cache/nscd
 
-echo "Running test suite..."
+if [ "${RUN_TESTS}" = "true" ]; then
+    # Fix makefile test
+    sed '/test-installation/s@$(PERL)@echo not running@' -i ../Makefile
 
-make -j4 check
+    # Remove io/tst-lchmod tests
+    sed -i "/\btst-lchmod /d" ../io/Makefile
 
-echo "Test suite completed."
+    echo "Running test suite..."
+
+    make -j4 check
+
+    echo "Test suite completed."
+fi
 
 make install
 

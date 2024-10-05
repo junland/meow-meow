@@ -54,6 +54,6 @@ done
 
 rm -fv /usr/lib/libbz2.a
 
-cleanup() {
-  cd -- "$TMPDIR" && rm -rf bzip2-$version
-}
+if [ "$CLEANUP" == true ]; then
+    cd -- "$TMPDIR" && rm -rf bzip2-$version
+fi

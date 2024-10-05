@@ -1,0 +1,26 @@
+# Build script for zstd.
+# SPDX-License-Identifier: Apache-2.0
+# SPDX-FileCopyrightText: 2025, John Unland
+
+version=1.5.6
+
+cd -- "$TMPDIR"
+
+rm -rf zstd-$version
+
+unpack "${worktree}/sources/zstd-$version.tar.gz"
+
+cd zstd-$version
+
+make -j${jobs} prefix=/usr
+
+make -j${jobs} check
+
+make -j${jobs} install prefix=/usr
+
+# Remove the static library.
+rm -f /usr/lib/libzstd.a
+
+if [ "$CLEANUP" == true ]; then
+    cd -- "$TMPDIR" && rm -rf zstd-$version
+fi

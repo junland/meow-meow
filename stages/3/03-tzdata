@@ -27,6 +27,6 @@ zic -d $ZONEINFO -p America/New_York
 
 unset ZONEINFO
 
-cleanup() {
+if [ "$CLEANUP" == true ]; then
     cd -- "$TMPDIR" && rm -rf tzdata-${version}
-}
+fi

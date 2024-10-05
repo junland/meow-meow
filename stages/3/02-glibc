@@ -84,6 +84,6 @@ rpc: files
 # End /etc/nsswitch.conf
 EOF
 
-cleanup() {
+if [ "${CLEANUP}" = "true" ]; then
     cd -- "$TMPDIR" && rm -rf glibc-${version}
-}
+fi

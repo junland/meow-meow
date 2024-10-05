@@ -1,0 +1,32 @@
+# Build script for readline.
+# SPDX-License-Identifier: Apache-2.0
+# SPDX-FileCopyrightText: 2025, John Unland
+
+version=8.2.13
+
+cd -- "$TMPDIR"
+
+rm -rf readline-$version
+
+unpack "${worktree}/sources/readline-$version.tar.gz"
+
+cd readline-$version
+
+sed -i '/MV.*old/d' Makefile.in
+
+sed -i '/{OLDSUFF}/c:' support/shlib-install
+
+sed -i 's/-Wl,-rpath,[^ ]*//' support/shobj-conf
+
+./configure --prefix=/usr \
+    --disable-static \
+    --with-curses \
+    --docdir=/usr/share/doc/readline-$version
+
+make SHLIB_LIBS="-lncursesw" -j${jobs}
+
+make SHLIB_LIBS="-lncursesw" install
+
+if [ "$CLEANUP" == true ]; then
+    cd -- "$TMPDIR" && rm -rf readline-$version
+fi

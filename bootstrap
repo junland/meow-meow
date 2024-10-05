@@ -373,6 +373,13 @@ for step_file in ${worktree}/stages/${stage}/${@:-??-*}; do
     # Clear hash table
     hash -r >/dev/null 2>&1 || true
 
+    # Set cleanup variable to false if the opt_keep variable is set to opt_keep
+    if test "$opt_keep" = opt_keep; then
+        CLEANUP=false
+    else
+        CLEANUP=true
+    fi
+
     # If we are running stage 2 or 3 we need to run the scripts in a chroot environment
     if test "$stage" = 2 || test "$stage" = 3; then
         # Pass in the stage2 scripts into bash with the chroot command
@@ -391,6 +398,7 @@ for step_file in ${worktree}/stages/${stage}/${@:-??-*}; do
             BTLDFLAGS="$BTLDFLAGS" \
             BTCC="$BTCC" \
             BTCXX="$BTCXX" \
+            CLEANUP="$CLEANUP" \
             target="$target" \
             arch="$arch" \
             worktree="/var/local/build" \

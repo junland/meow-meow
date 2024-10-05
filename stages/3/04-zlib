@@ -22,6 +22,6 @@ make -j${jobs} install
 
 rm -fv /usr/lib/libz.a
 
-cleanup() {
+if [ "$CLEANUP" == true ]; then
     cd -- "$TMPDIR" && rm -rf zlib-$version
-}
+fi

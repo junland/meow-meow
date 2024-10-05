@@ -1,0 +1,25 @@
+# Build script for file.
+# SPDX-License-Identifier: Apache-2.0
+# SPDX-FileCopyrightText: 2025, John Unland
+
+version=5.45
+
+cd -- "$TMPDIR"
+
+rm -rf file-$version
+
+unpack "${worktree}/sources/file-$version.tar.gz"
+
+cd file-$version
+
+./configure --prefix=/usr
+
+make -j${jobs}
+
+make -j${jobs} check
+
+make -j${jobs} install
+
+if [ "$CLEANUP" == true ]; then
+    cd -- "$TMPDIR" && rm -rf file-$version
+fi

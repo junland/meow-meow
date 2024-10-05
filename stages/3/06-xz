@@ -1,0 +1,27 @@
+# Build script for xz.
+# SPDX-License-Identifier: Apache-2.0
+# SPDX-FileCopyrightText: 2025, John Unland
+
+version=5.6.2
+
+cd -- "$TMPDIR"
+
+rm -rf xz-$version
+
+unpack "${worktree}/sources/xz-$version.tar.xz"
+
+cd xz-$version
+
+./configure --prefix=/usr    \
+            --disable-static \
+            --docdir=/usr/share/doc/xz-$version
+
+make -j${jobs}
+
+make -j${jobs} check
+
+make -j${jobs} install
+
+if [ "$CLEANUP" == true ]; then
+    cd -- "$TMPDIR" && rm -rf xz-$version
+fi

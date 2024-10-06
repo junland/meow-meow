@@ -8,7 +8,7 @@ cd -- "$TMPDIR"
 
 rm -rf xz-$version
 
-unpack "${worktree}/sources/xz-$version.tar.xz"
+unpack "${worktree}/sources/xz-$version.tar.gz"
 
 cd xz-$version
 

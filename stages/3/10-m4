@@ -1,0 +1,25 @@
+# Build script for m4.
+# SPDX-License-Identifier: Apache-2.0
+# SPDX-FileCopyrightText: 2025, John Unland
+
+version=1.4.19
+
+cd -- "$TMPDIR"
+
+rm -rf m4-$version
+
+unpack "${worktree}/sources/m4-$version.tar.gz"
+
+cd m4-$version
+
+./configure --prefix=/usr
+
+make -j${jobs}
+
+make check -j${jobs}
+
+make install -j${jobs}
+
+if [ "$CLEANUP" == true ]; then
+    cd -- "$TMPDIR" && rm -rf m4-$version
+fi

@@ -1,0 +1,54 @@
+# Build script for tcl.
+# SPDX-License-Identifier: Apache-2.0
+# SPDX-FileCopyrightText: 2025, John Unland
+
+version=8.6.15
+
+cd -- "$TMPDIR"
+
+rm -rf tcl-$version
+
+unpack "${worktree}/sources/tcl$version-src.tar.gz"
+
+cd tcl-$version
+
+SRCDIR=$(pwd)
+
+cd unix
+
+./configure --prefix=/usr \
+    --mandir=/usr/share/man \
+    --disable-rpath
+
+make
+
+sed -e "s|$SRCDIR/unix|/usr/lib|" \
+    -e "s|$SRCDIR|/usr/include|" \
+    -i tclConfig.sh
+
+sed -e "s|$SRCDIR/unix/pkgs/tdbc1.1.7|/usr/lib/tdbc1.1.7|" \
+    -e "s|$SRCDIR/pkgs/tdbc1.1.7/generic|/usr/include|" \
+    -e "s|$SRCDIR/pkgs/tdbc1.1.7/library|/usr/lib/tcl8.6|" \
+    -e "s|$SRCDIR/pkgs/tdbc1.1.7|/usr/include|" \
+    -i pkgs/tdbc1.1.7/tdbcConfig.sh
+
+sed -e "s|$SRCDIR/unix/pkgs/itcl4.2.4|/usr/lib/itcl4.2.4|" \
+    -e "s|$SRCDIR/pkgs/itcl4.2.4/generic|/usr/include|" \
+    -e "s|$SRCDIR/pkgs/itcl4.2.4|/usr/include|" \
+    -i pkgs/itcl4.2.4/itclConfig.sh
+
+unset SRCDIR
+
+make test -j${jobs}
+
+make install -j${jobs}
+
+chmod -v u+w /usr/lib/libtcl8.6.so
+
+make install-private-headers -j${jobs}
+
+ln -sfv tclsh8.6 /usr/bin/tclsh
+
+if [ "$CLEANUP" == true ]; then
+    cd -- "$TMPDIR" && rm -rf tcl-$version
+fi

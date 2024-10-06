@@ -1,0 +1,31 @@
+# Build script for flex.
+# SPDX-License-Identifier: Apache-2.0
+# SPDX-FileCopyrightText: 2025, John Unland
+
+version=2.6.4
+
+cd -- "$TMPDIR"
+
+rm -rf flex-$version
+
+unpack "${worktree}/sources/flex-$version.tar.gz"
+
+cd flex-$version
+
+./configure --prefix=/usr \
+    --docdir=/usr/share/doc/flex-${version} \
+    --disable-static
+
+make -j${jobs}
+
+make check -j${jobs}
+
+make install -j${jobs}
+
+ln -sv flex /usr/bin/lex
+
+ln -sv flex.1 /usr/share/man/man1/lex.1
+
+if [ "$CLEANUP" == true ]; then
+    cd -- "$TMPDIR" && rm -rf flex-$version
+fi

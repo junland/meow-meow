@@ -1,0 +1,25 @@
+# Build script for bc.
+# SPDX-License-Identifier: Apache-2.0
+# SPDX-FileCopyrightText: 2025, John Unland
+
+version=6.7.6
+
+cd -- "$TMPDIR"
+
+rm -rf bc-$version
+
+unpack "${worktree}/sources/bc-$version.tar.xz"
+
+cd bc-$version
+
+CC=gcc ./configure --prefix=/usr -G -O3 -r
+
+make -j${jobs}
+
+make test -j${jobs}
+
+make install -j${jobs}
+
+if [ "$CLEANUP" == true ]; then
+    cd -- "$TMPDIR" && rm -rf bc-$version
+fi

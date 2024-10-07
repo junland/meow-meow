@@ -20,22 +20,22 @@ cd unix
     --mandir=/usr/share/man \
     --disable-rpath
 
-make
+make -j${jobs}
 
 sed -e "s|$SRCDIR/unix|/usr/lib|" \
     -e "s|$SRCDIR|/usr/include|" \
     -i tclConfig.sh
 
-sed -e "s|$SRCDIR/unix/pkgs/tdbc1.1.7|/usr/lib/tdbc1.1.7|" \
-    -e "s|$SRCDIR/pkgs/tdbc1.1.7/generic|/usr/include|" \
-    -e "s|$SRCDIR/pkgs/tdbc1.1.7/library|/usr/lib/tcl8.6|" \
-    -e "s|$SRCDIR/pkgs/tdbc1.1.7|/usr/include|" \
-    -i pkgs/tdbc1.1.7/tdbcConfig.sh
+sed -e "s|$SRCDIR/unix/pkgs/tdbc1.1.9|/usr/lib/tdbc1.1.9|" \
+    -e "s|$SRCDIR/pkgs/tdbc1.1.9/generic|/usr/include|"    \
+    -e "s|$SRCDIR/pkgs/tdbc1.1.9/library|/usr/lib/tcl8.6|" \
+    -e "s|$SRCDIR/pkgs/tdbc1.1.9|/usr/include|"            \
+    -i pkgs/tdbc1.1.9/tdbcConfig.sh
 
-sed -e "s|$SRCDIR/unix/pkgs/itcl4.2.4|/usr/lib/itcl4.2.4|" \
-    -e "s|$SRCDIR/pkgs/itcl4.2.4/generic|/usr/include|" \
-    -e "s|$SRCDIR/pkgs/itcl4.2.4|/usr/include|" \
-    -i pkgs/itcl4.2.4/itclConfig.sh
+sed -e "s|$SRCDIR/unix/pkgs/itcl4.3.0|/usr/lib/itcl4.3.0|" \
+    -e "s|$SRCDIR/pkgs/itcl4.3.0/generic|/usr/include|"    \
+    -e "s|$SRCDIR/pkgs/itcl4.3.0|/usr/include|"            \
+    -i pkgs/itcl4.3.0/itclConfig.sh
 
 unset SRCDIR
 

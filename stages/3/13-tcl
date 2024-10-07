@@ -10,7 +10,7 @@ rm -rf tcl-$version
 
 unpack "${worktree}/sources/tcl$version-src.tar.gz"
 
-cd tcl-$version
+cd tcl$version
 
 SRCDIR=$(pwd)
 

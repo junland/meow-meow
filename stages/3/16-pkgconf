@@ -21,6 +21,7 @@ make -j${jobs}
 make install -j${jobs}
 
 ln -sv pkgconf /usr/bin/pkg-config
+
 ln -sv pkgconf.1 /usr/share/man/man1/pkg-config.1
 
 if [ "$CLEANUP" == true ]; then

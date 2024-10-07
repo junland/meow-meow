@@ -1,0 +1,31 @@
+# Build script for dejagnu.
+# SPDX-License-Identifier: Apache-2.0
+# SPDX-FileCopyrightText: 2025, John Unland
+
+version=1.6.3
+
+cd -- "$TMPDIR"
+
+rm -rf dejagnu-$version
+
+unpack "${worktree}/sources/dejagnu-$version.tar.gz"
+
+cd dejagnu-$version
+
+./configure --prefix=/usr
+
+makeinfo --html --no-split -o doc/dejagnu.html ../doc/dejagnu.texi
+
+makeinfo --plaintext -o doc/dejagnu.txt ../doc/dejagnu.texi
+
+make check -j${jobs}
+
+make install -j${jobs}
+
+install -v -dm755  /usr/share/doc/dejagnu-${version}
+
+install -v -m644   doc/dejagnu.{html,txt} /usr/share/doc/dejagnu-${version}
+
+if [ "$CLEANUP" == true ]; then
+    cd -- "$TMPDIR" && rm -rf dejagnu-$version
+fi

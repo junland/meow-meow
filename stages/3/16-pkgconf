@@ -1,0 +1,28 @@
+# Build script for pkgconf.
+# SPDX-License-Identifier: Apache-2.0
+# SPDX-FileCopyrightText: 2025, John Unland
+
+version=2.3.0
+
+cd -- "$TMPDIR"
+
+rm -rf pkgconf-$version
+
+unpack "${worktree}/sources/pkgconf-$version.tar.xz"
+
+cd pkgconf-$version
+
+./configure --prefix=/usr \
+    --disable-static \
+    --docdir=/usr/share/doc/pkgconf-${version}
+
+make -j${jobs}
+
+make install -j${jobs}
+
+ln -sv pkgconf /usr/bin/pkg-config
+ln -sv pkgconf.1 /usr/share/man/man1/pkg-config.1
+
+if [ "$CLEANUP" == true ]; then
+    cd -- "$TMPDIR" && rm -rf pkgconf-$version
+fi

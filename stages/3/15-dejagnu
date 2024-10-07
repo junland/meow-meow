@@ -12,7 +12,9 @@ unpack "${worktree}/sources/dejagnu-$version.tar.gz"
 
 cd dejagnu-$version
 
-./configure --prefix=/usr
+mkdir -v build && cd build
+
+../configure --prefix=/usr
 
 makeinfo --html --no-split -o doc/dejagnu.html ../doc/dejagnu.texi
 

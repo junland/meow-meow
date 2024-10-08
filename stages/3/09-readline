@@ -18,7 +18,8 @@ sed -i '/{OLDSUFF}/c:' support/shlib-install
 
 sed -i 's/-Wl,-rpath,[^ ]*//' support/shobj-conf
 
-./configure --prefix=/usr \
+./configure \
+    --prefix=/usr \
     --disable-static \
     --with-curses \
     --docdir=/usr/share/doc/readline-$version

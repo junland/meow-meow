@@ -15,17 +15,18 @@ cd binutils-${version}
 
 mkdir -v build && cd build
 
-../configure --prefix=/usr       \
-             --sysconfdir=/etc   \
-             --enable-gold       \
-             --enable-ld=default \
-             --enable-plugins    \
-             --enable-shared     \
-             --disable-werror    \
-             --enable-64-bit-bfd \
-             --enable-new-dtags  \
-             --with-system-zlib  \
-             --enable-default-hash-style=gnu
+../configure \
+    --prefix=/usr \
+    --sysconfdir=/etc \
+    --enable-gold \
+    --enable-ld=default \
+    --enable-plugins \
+    --enable-shared \
+    --disable-werror \
+    --enable-64-bit-bfd \
+    --enable-new-dtags \
+    --with-system-zlib \
+    --enable-default-hash-style=gnu
 
 make tooldir=/usr -j${jobs}
 
@@ -33,7 +34,14 @@ make -k check -j${jobs} || true
 
 echo "Checking the test results"
 
-grep '^FAIL:' $(find -name '*.log')
+# Check the test results and if tests exceed 12 fails, exit with an error
+if [ $(grep -c '^FAIL' $(find -name '*.log')) -gt 12 ]; then
+    echo "Too many tests failed"
+    echo "Outputting the test log failures"
+    grep '^FAIL:' $(find -name '*.log')
+    echo ""
+    exit 1
+fi
 
 make tooldir=/usr install
 

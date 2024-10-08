@@ -12,7 +12,8 @@ unpack "${worktree}/sources/flex-$version.tar.gz"
 
 cd flex-$version
 
-./configure --prefix=/usr \
+./configure \
+    --prefix=/usr \
     --docdir=/usr/share/doc/flex-${version} \
     --disable-static
 

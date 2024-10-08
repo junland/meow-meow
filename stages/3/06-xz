@@ -12,9 +12,10 @@ unpack "${worktree}/sources/xz-$version.tar.gz"
 
 cd xz-$version
 
-./configure --prefix=/usr    \
-            --disable-static \
-            --docdir=/usr/share/doc/xz-$version
+./configure \
+    --prefix=/usr \
+    --disable-static \
+    --docdir=/usr/share/doc/xz-$version
 
 make -j${jobs}
 

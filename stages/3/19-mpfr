@@ -1,0 +1,29 @@
+# Build script for mpfr.
+# SPDX-License-Identifier: Apache-2.0
+# SPDX-FileCopyrightText: 2025, John Unland
+
+version=4.2.1
+
+cd -- "$TMPDIR"
+
+rm -rf mpfr-$version
+
+unpack "${worktree}/sources/mpfr-$version.tar.xz"
+
+cd mpfr-$version
+
+./configure \
+    --prefix=/usr \
+    --disable-static \
+    --enable-thread-safe \
+    --docdir=/usr/share/doc/mpfr-${version}
+
+make -j${jobs}
+
+make check -j${jobs}
+
+make install -j${jobs}
+
+if [ "$CLEANUP" == true ]; then
+    cd -- "$TMPDIR" && rm -rf mpfr-$version
+fi

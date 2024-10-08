@@ -12,7 +12,8 @@ unpack "${worktree}/sources/pkgconf-$version.tar.xz"
 
 cd pkgconf-$version
 
-./configure --prefix=/usr \
+./configure \
+    --prefix=/usr \
     --disable-static \
     --docdir=/usr/share/doc/pkgconf-${version}
 

@@ -1,0 +1,38 @@
+# Build script for gmp.
+# SPDX-License-Identifier: Apache-2.0
+# SPDX-FileCopyrightText: 2025, John Unland
+
+version=6.3.0
+
+cd -- "$TMPDIR"
+
+rm -rf gmp-$version
+
+unpack "${worktree}/sources/gmp-$version.tar.xz"
+
+cd gmp-$version
+
+./configure \
+    --prefix=/usr \
+    --enable-cxx \
+    --disable-static \
+    --docdir=/usr/share/doc/gmp-${version}
+
+make -j${jobs}
+
+make check 2>&1 | tee gmp-check-log
+
+# Ensure at least 199 tests pass.
+if [ "$(awk '/tests passed/{total+=$2} END{print total}' gmp-check-log)" -lt 199 ]; then
+    echo "Needed at least 199 tests to pass"
+    echo "Outputting the test log"
+    cat gmp-check-log
+    echo ""
+    exit 1
+fi
+
+make install -j${jobs}
+
+if [ "$CLEANUP" == true ]; then
+    cd -- "$TMPDIR" && rm -rf gmp-$version
+fi

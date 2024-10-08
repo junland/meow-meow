@@ -165,6 +165,7 @@ jobs=8
 output="${worktree}/OUTPUT.${PROGRAM}"
 TMPDIR="${TMPDIR:=${output}/sources}"
 VENDOR="${VENDOR:=lfs}"
+QEMU_STATIC_PATH=${QEMU_STATIC_PATH:-"/usr/bin/"}
 
 # Compose vendor name adding "-" as suffix
 test -n "$VENDOR" && VENDOR="${VENDOR}-"
@@ -382,8 +383,23 @@ for step_file in ${worktree}/stages/${stage}/${@:-??-*}; do
 
     # If we are running stage 2 or 3 we need to run the scripts in a chroot environment
     if test "$stage" = 2 || test "$stage" = 3; then
+        # If target arch is not the same as the host arch, we need to use qemu
+        if test "$arch" != "$(uname -m)"; then
+            # Check if the qemu-static binary is available so that it can be copied to the chroot environment
+            if ! test -f "${QEMU_STATIC_PATH}/qemu-${arch}-static"; then
+                warn "${PROGRAM}: qemu-${arch}-static binary not found"
+                exit 1
+            fi
+
+            # Copy the qemu-static binary to the chroot environment
+            cp -v "${QEMU_STATIC_PATH}/qemu-${arch}-static" "$LFS/usr/bin"
+
+            # Set the qemu-static binary as the interpreter for the chroot environment
+            QEMU_STATIC_BIN="/usr/bin/qemu-${arch}-static"
+        fi
+
         # Pass in the stage2 scripts into bash with the chroot command
-        chroot "$LFS" /usr/bin/env -i \
+        chroot "$LFS" ${QEMU_STATIC_BIN} /usr/bin/env -i \
             HOME="/var/local/build" \
             TERM="$TERM" \
             LC_ALL=POSIX \

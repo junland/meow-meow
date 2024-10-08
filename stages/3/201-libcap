@@ -1,0 +1,23 @@
+# Build script for libcap.
+# SPDX-License-Identifier: Apache-2.0
+# SPDX-FileCopyrightText: 2025, John Unland
+
+version=2.70
+
+cd -- "$TMPDIR"
+
+rm -rf libcap-${version}
+
+unpack "${worktree}/sources/libcap-${version}.tar.gz"
+
+sed -i '/install -m.*STA/d' libcap/Makefile
+
+make prefix=/usr lib=lib -j${jobs}
+
+make test -j${jobs}
+
+make prefix=/usr lib=lib install -j${jobs}
+
+if [ "$CLEANUP" == true ]; then
+    cd -- "$TMPDIR" && rm -rf libcap-${version}
+fi

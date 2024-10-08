@@ -19,7 +19,7 @@ cd acl-${version}
 
 make -j${jobs}
 
-make check -j${jobs}
+make check -j1
 
 make install -j${jobs}
 

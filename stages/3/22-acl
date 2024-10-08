@@ -1,0 +1,28 @@
+# Build script for acl.
+# SPDX-License-Identifier: Apache-2.0
+# SPDX-FileCopyrightText: 2025, John Unland
+
+version=2.3.2
+
+cd -- "$TMPDIR"
+
+rm -rf acl-${version}
+
+unpack "${worktree}/sources/acl-${version}.tar.xz"
+
+cd acl-${version}
+
+./configure \
+    --prefix=/usr \
+    --disable-static \
+    --docdir=/usr/share/doc/acl-${version}
+
+make -j${jobs}
+
+make check -j${jobs}
+
+make install -j${jobs}
+
+if [ "$CLEANUP" == true ]; then
+    cd -- "$TMPDIR" && rm -rf acl-${version}
+fi

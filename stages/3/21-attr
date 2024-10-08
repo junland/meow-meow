@@ -1,0 +1,29 @@
+# Build script for attr.
+# SPDX-License-Identifier: Apache-2.0
+# SPDX-FileCopyrightText: 2025, John Unland
+
+version=2.5.2
+
+cd -- "$TMPDIR"
+
+rm -rf attr-${version}
+
+unpack "${worktree}/sources/attr-${version}.tar.gz"
+
+cd attr-${version}
+
+./configure \
+    --prefix=/usr \
+    --disable-static \
+    --sysconfdir=/etc \
+    --docdir=/usr/share/doc/attr-${version}
+
+make -j${jobs}
+
+make check -j${jobs}
+
+make install -j${jobs}
+
+if [ "$CLEANUP" == true ]; then
+    cd -- "$TMPDIR" && rm -rf attr-${version}
+fi

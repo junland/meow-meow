@@ -8,7 +8,14 @@ cd -- "$TMPDIR"
 
 rm -rf tzdata-${version}
 
-unpack "${worktree}/sources/tzdata${version}.tar.gz"
+# In the tar file add a parent directory to avoid cluttering the root directory
+mkdir -pv tzdata-${version}
+
+cp -v "${worktree}/sources/tzdata${version}.tar.gz" ${worktree}/sources/tzdata-${version}/tzdata-${version}.tar.gz
+
+cd tzdata-${version}
+
+unpack ${worktree}/sources/tzdata-${version}/tzdata-${version}.tar.gz
 
 ZONEINFO=/usr/share/zoneinfo
 mkdir -pv $ZONEINFO/{posix,right}

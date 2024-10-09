@@ -165,6 +165,7 @@ jobs=8
 output="${worktree}/OUTPUT.${PROGRAM}"
 TMPDIR="${TMPDIR:=${output}/sources}"
 VENDOR="${VENDOR:=lfs}"
+CLEANUP=true
 QEMU_STATIC_PATH=${QEMU_STATIC_PATH:-"/usr/bin/"}
 
 # Compose vendor name adding "-" as suffix
@@ -375,10 +376,12 @@ for step_file in ${worktree}/stages/${stage}/${@:-??-*}; do
     hash -r >/dev/null 2>&1 || true
 
     # Set cleanup variable to false if the opt_keep variable is set to opt_keep
-    if test "$opt_keep" = opt_keep; then
-        CLEANUP=false
-    else
+    if test "$opt_keep" != opt_keep; then
+        echo "${PROGRAM}: Cleanup variable set to true"
         CLEANUP=true
+    else
+        echo "${PROGRAM}: Cleanup variable set to false"
+        CLEANUP=false
     fi
 
     # If we are running stage 2 or 3 we need to run the scripts in a chroot environment
@@ -464,6 +467,7 @@ for step_file in ${worktree}/stages/${stage}/${@:-??-*}; do
     # Delete declared directories on the cleanup() function
     if test "$opt_keep" != opt_keep; then
         if type cleanup 1>/dev/null 2>/dev/null; then
+            echo "${PROGRAM}: Running cleanup ..."
             cleanup
             chkstatus_or_exit 2
             unset -f cleanup

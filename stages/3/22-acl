@@ -19,7 +19,8 @@ cd acl-${version}
 
 make -j${jobs}
 
-make check -j1
+# Defer after coreutils
+#make check -j1
 
 make install -j${jobs}
 

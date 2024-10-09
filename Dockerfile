@@ -18,10 +18,13 @@ RUN apt-get update && apt-get upgrade -y && apt-get install -y --no-install-reco
     apt-transport-https ca-certificates \
     autoconf automake autopoint \
     bc bison expect flex gawk gettext gettext-base \
+    binutils-dev libelf-dev \
     build-essential \
     curl \
     dos2unix \
     git \
+    gperf \
+    libacl1-dev \
     libarchive-dev \
     libarchive-tools \
     libbison-dev \
@@ -37,7 +40,9 @@ RUN apt-get update && apt-get upgrade -y && apt-get install -y --no-install-reco
     python3 \
     qemu-user-static \
     rsync \
+    sudo \
     texinfo \
+    texlive-base \
     tree \
     unzip \
     wget \
@@ -60,9 +65,6 @@ RUN groupadd builder \
     && echo 'builder ALL=(ALL) NOPASSWD:ALL' >>/etc/sudoers \
     && echo 'builder:builder' | chpasswd
 
-# Clear hashing for builder user
-RUN echo "hash -r >/dev/null 2>&1 || true" >>/home/builder/.bashrc
-
 # Set work directory
 WORKDIR /home/builder
 
@@ -74,6 +76,11 @@ RUN chmod +x ./bootstrap ./stages/**/* ./utils/*
 
 # Run find command to make sure everything is in Unix format
 RUN find /home/builder -type f -exec dos2unix {} \;
+
+# More setup for builder user
+RUN echo "set +h" >> /home/builder/.bashrc
+RUN echo "umask 022" >> /home/builder/.bashrc
+RUN echo "hash -r >/dev/null 2>&1 || true" >>/home/builder/.bashrc
 
 # Make sure everything is the correct permissions
 RUN chown -R builder:builder /home/builder

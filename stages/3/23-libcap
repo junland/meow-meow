@@ -10,7 +10,9 @@ rm -rf libcap-${version}
 
 unpack "${worktree}/sources/libcap-${version}.tar.gz"
 
-sed -i '/install -m.*STA/d' libcap/Makefile
+cd libcap-${version}
+
+sed -i '/install -m.*STA/d' Makefile
 
 make prefix=/usr lib=lib -j${jobs}
 

@@ -2,9 +2,16 @@
 # SPDX-License-Identifier: Apache-2.0
 # SPDX-FileCopyrightText: 2025, John Unland
 
-touch $LFS/var/log/{btmp,lastlog,faillog,wtmp}
-chgrp -v utmp $LFS/var/log/lastlog
-chmod -v 664 $LFS/var/log/lastlog
+touch /var/log/{btmp,lastlog,faillog,wtmp}
+chgrp -v utmp /var/log/lastlog
+chmod -v 664 /var/log/lastlog
+
+localedef -i C -f UTF-8 C.UTF-8
+
+echo "tester:x:101:101::/home/tester:/bin/bash" >> /etc/passwd
+echo "tester:x:101:" >> /etc/group
+
+install -o tester -d /home/tester
 
 ln -sfv /proc/self/mounts /etc/mtab
 ln -sfv /run /var/run

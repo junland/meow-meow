@@ -21,5 +21,5 @@ make test -j${jobs}
 make prefix=/usr lib=lib install -j${jobs}
 
 if [ "$CLEANUP" == true ]; then
-    cd -- "$TMPDIR" && rm -rvf libcap-${version}
+    cd -- "$TMPDIR" && rm -rf libcap-${version}
 fi

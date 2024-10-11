@@ -1,0 +1,46 @@
+# Build script for ncurses.
+# SPDX-License-Identifier: Apache-2.0
+# SPDX-FileCopyrightText: 2025, John Unland
+
+version=6.5
+
+cd -- "$TMPDIR"
+
+rm -rf ncurses-${version}
+unpack "${worktree}/sources/ncurses-${version}.tar.gz"
+
+# Build instructions
+cd ncurses-${version}
+
+./configure \
+    --prefix=/usr \
+    --mandir=/usr/share/man \
+    --with-shared \
+    --without-debug \
+    --without-normal \
+    --with-cxx-shared \
+    --enable-pc-files \
+    --with-pkg-config-libdir=/usr/lib/pkgconfig
+
+make -j${jobs}
+
+make DESTDIR=$PWD/dest install -j${jobs}
+
+install -vm755 $PWD/dest/usr/lib/libncursesw.so.${version} /usr/lib
+
+rm -v $PWD/dest/usr/lib/libncursesw.so.${version}
+
+sed -e 's/^#if.*XOPEN.*$/#if 1/' -i $PWD/dest/usr/include/curses.h
+
+cp -av $PWD/dest/* /
+
+for lib in ncurses form panel menu; do
+    ln -sfv lib${lib}w.so /usr/lib/lib${lib}.so
+    ln -sfv ${lib}w.pc /usr/lib/pkgconfig/${lib}.pc
+done
+
+ln -sfv libncursesw.so /usr/lib/libcurses.so
+
+if [ "$CLEANUP" == true ]; then
+    cd -- "$TMPDIR" && rm -rf ncurses-${version}
+fi

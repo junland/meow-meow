@@ -45,3 +45,25 @@ sed -e 's/no-pic /&-no-pie /' -i ../gcc/testsuite/gcc.target/i386/pr113689-1.c
 sed -e 's/300000/(1|300000)/' -i ../libgomp/testsuite/libgomp.c-c++-common/pr109062.c
 sed -e 's/{ target nonpic } //' -e '/GOTPCREL/d' \
     -i ../gcc/testsuite/gcc.target/i386/fentryname3.c
+
+chown -R tester .
+
+su tester -c "PATH=$PATH make -k check"
+
+../contrib/test_summary
+
+make install -j${jobs}
+
+chown -v -R root:root /usr/lib/gcc/$(gcc -dumpmachine)/14.2.0/include{,-fixed}
+
+ln -svr /usr/bin/cpp /usr/lib
+
+ln -sfv ../../libexec/gcc/$(gcc -dumpmachine)/14.2.0/liblto_plugin.so /usr/lib/bfd-plugins/
+
+mkdir -pv /usr/share/gdb/auto-load/usr/lib
+
+mv -v /usr/lib/*gdb.py /usr/share/gdb/auto-load/usr/lib
+
+if [ "$CLEANUP" == true ]; then
+    cd -- "$TMPDIR" && rm -rf gcc-${version}
+fi

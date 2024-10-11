@@ -1,0 +1,26 @@
+# Build script for sed.
+# SPDX-License-Identifier: Apache-2.0
+# SPDX-FileCopyrightText: 2025, John Unland
+
+version=4.9
+
+cd -- "$TMPDIR"
+
+rm -rf sed-$version
+unpack "${worktree}/sources/sed-$version.tar.xz"
+
+cd sed-$version
+
+./configure --prefix=/usr
+
+make -j${jobs}
+
+chown -R tester .
+
+su tester -c "PATH=$PATH make check"
+
+make install -j${jobs}
+
+if [ "$CLEANUP" == true ]; then
+    cd -- "$TMPDIR" && rm -rf sed-$version
+fi

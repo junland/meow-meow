@@ -290,7 +290,7 @@ CONFIG_SITE=$LFS/usr/share/config.site
 export PATH VENDOR TMPDIR CONFIG_SITE
 
 # Main loop
-for step_file in ${worktree}/stages/${stage}/${@:-??-*}; do
+for step_file in ${worktree}/stages/${stage}/${@:-??-*} ${worktree}/stages/${stage}/${@:-???-*}; do
     step_file="${step_file##*/}"
     done_file=".stage-${stage}-${step_file}.done"
 

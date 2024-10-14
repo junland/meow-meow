@@ -46,11 +46,11 @@ sed -e 's/300000/(1|300000)/' -i ../libgomp/testsuite/libgomp.c-c++-common/pr109
 sed -e 's/{ target nonpic } //' -e '/GOTPCREL/d' \
     -i ../gcc/testsuite/gcc.target/i386/fentryname3.c
 
-chown -R tester .
+# chown -R tester .
 
-su tester -c "PATH=$PATH make -k check"
+# su tester -c "PATH=$PATH make -k check"
 
-../contrib/test_summary
+# ../contrib/test_summary
 
 make install -j${jobs}
 

@@ -36,7 +36,10 @@ mkdir -v build && cd build
     --with-system-zlib \
     --enable-languages=c,c++
 
-make -j${jobs}
+# Set the number of jobs to half the number of available processors
+reduced_jobs=$(($jobs / 2))
+
+make -j2
 
 ulimit -s -H unlimited
 

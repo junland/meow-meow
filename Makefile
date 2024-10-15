@@ -18,7 +18,7 @@ setup:
 	chmod +x bootstrap
 
 .PHONY: bootstrap-0
-bootstrap-0: is_container setup
+bootstrap-0: is_container setup source
 	$(BOOTSTRAP_SH) -s0 -a $(TARGET_ARCH) -j $(JOBS) 2>&1 | tee _stage0-log.txt
 
 .PHONY: bootstrap-1

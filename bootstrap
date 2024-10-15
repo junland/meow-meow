@@ -308,11 +308,23 @@ for step_file in ${worktree}/stages/${stage}/*-*; do
     # Create pre-settings for stage 0
     if test "$stage" = 0; then
         echo "Running pre-settings..."
+
+        # Make sure we are not running as root.
+        if test "$(id -u)" -eq 0; then
+            warn "${PROGRAM}: You must not run this stage as root"
+            exit 1
+        fi
     fi
 
     # Create pre-settings for stage 1
     if test "$stage" = 1; then
         echo "Running pre-settings..."
+
+        # Make sure we are not running as root.
+        if test "$(id -u)" -eq 0; then
+            warn "${PROGRAM}: You must not run this stage as root"
+            exit 1
+        fi
     fi
 
     # Create pre-settings for stage 2 and 3

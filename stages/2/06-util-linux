@@ -28,7 +28,7 @@ mkdir -pv /var/lib/hwclock
     --disable-static \
     --disable-liblastlog2 \
     --without-python \
-    --docdir=/usr/share/doc/util-linux-2.40.2
+    --docdir=/usr/share/doc/util-linux-${version}
 
 make -j${jobs}
 

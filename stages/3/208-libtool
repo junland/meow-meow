@@ -1,0 +1,27 @@
+# Build script for libtool.
+# SPDX-License-Identifier: Apache-2.0
+# SPDX-FileCopyrightText: 2025, John Unland
+
+version=2.4.7
+
+cd -- "$TMPDIR"
+
+rm -rf libtool-$version
+
+unpack "${worktree}/sources/libtool-$version.tar.xz"
+
+cd libtool-$version
+
+./configure --prefix=/usr
+
+make -j${jobs}
+
+make -k check -j${jobs}
+
+make install -j${jobs}
+
+rm -fv /usr/lib/libltdl.a
+
+if [ "$CLEANUP" == true ]; then
+    cd -- "$TMPDIR" && rm -rf libtool-$version
+fi

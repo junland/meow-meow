@@ -1,0 +1,25 @@
+# Build script for gperf.
+# SPDX-License-Identifier: Apache-2.0
+# SPDX-FileCopyrightText: 2025, John Unland
+
+version=3.1
+
+cd -- "$TMPDIR"
+
+rm -rf gperf-$version
+
+unpack "${worktree}/sources/gperf-$version.tar.gz"
+
+cd gperf-$version
+
+./configure --prefix=/usr --docdir=/usr/share/doc/gperf-$version
+
+make -j${jobs}
+
+make -k check -j1
+
+make install -j${jobs}
+
+if [ "$CLEANUP" == true ]; then
+    cd -- "$TMPDIR" && rm -rf gperf-$version
+fi

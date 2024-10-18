@@ -1,0 +1,27 @@
+# Build script for gdbm.
+# SPDX-License-Identifier: Apache-2.0
+# SPDX-FileCopyrightText: 2025, John Unland
+
+version=1.24
+
+cd -- "$TMPDIR"
+
+rm -rf gdbm-$version
+
+unpack "${worktree}/sources/gdbm-$version.tar.gz"
+
+cd gdbm-$version
+
+./configure --prefix=/usr    \
+            --disable-static \
+            --enable-libgdbm-compat
+
+make -j${jobs}
+
+make check -j1
+
+make install -j${jobs}
+
+if [ "$CLEANUP" == true ]; then
+    cd -- "$TMPDIR" && rm -rf gdbm-$version
+fi

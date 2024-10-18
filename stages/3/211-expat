@@ -1,0 +1,27 @@
+# Build script for expat.
+# SPDX-License-Identifier: Apache-2.0
+# SPDX-FileCopyrightText: 2025, John Unland
+
+version=2.6.2
+
+cd -- "$TMPDIR"
+
+rm -rf expat-$version
+
+unpack "${worktree}/sources/expat-$version.tar.xz"
+
+cd expat-$version
+
+./configure --prefix=/usr    \
+            --disable-static \
+            --docdir=/usr/share/doc/expat-$version
+
+make -j${jobs}
+
+make check -j1
+
+make install -j${jobs}
+
+if [ "$CLEANUP" == true ]; then
+    cd -- "$TMPDIR" && rm -rf expat-$version
+fi

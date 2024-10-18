@@ -12,9 +12,10 @@ unpack "${worktree}/sources/expat-$version.tar.xz"
 
 cd expat-$version
 
-./configure --prefix=/usr    \
-            --disable-static \
-            --docdir=/usr/share/doc/expat-$version
+./configure \
+    --prefix=/usr \
+    --disable-static \
+    --docdir=/usr/share/doc/expat-$version
 
 make -j${jobs}
 

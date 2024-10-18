@@ -12,7 +12,9 @@ unpack "${worktree}/sources/gperf-$version.tar.gz"
 
 cd gperf-$version
 
-./configure --prefix=/usr --docdir=/usr/share/doc/gperf-$version
+./configure \
+    --prefix=/usr \
+    --docdir=/usr/share/doc/gperf-$version
 
 make -j${jobs}
 

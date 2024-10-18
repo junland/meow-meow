@@ -12,9 +12,10 @@ unpack "${worktree}/sources/gdbm-$version.tar.gz"
 
 cd gdbm-$version
 
-./configure --prefix=/usr    \
-            --disable-static \
-            --enable-libgdbm-compat
+./configure \
+    --prefix=/usr \
+    --disable-static \
+    --enable-libgdbm-compat
 
 make -j${jobs}
 

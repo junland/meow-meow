@@ -17,6 +17,8 @@ qi/*.tar.lz.sha256
 *.gem
 *.png
 *~
+*.py
+*.pyc
 
 # Ignore suffixes at sources/
 sources/*.gz

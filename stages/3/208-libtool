@@ -16,7 +16,7 @@ cd libtool-$version
 
 make -j${jobs}
 
-make -k check -j${jobs}
+make -k check -j1
 
 make install -j${jobs}
 

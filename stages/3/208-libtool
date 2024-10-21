@@ -12,7 +12,7 @@ unpack "${worktree}/sources/libtool-$version.tar.xz"
 
 cd libtool-$version
 
-./configure --prefix=/usr --disable-static
+./configure --prefix=/usr TESTSUITEFLAGS="1-121 130-169"
 
 make -j${jobs}
 

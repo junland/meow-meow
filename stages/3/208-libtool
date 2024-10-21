@@ -12,11 +12,11 @@ unpack "${worktree}/sources/libtool-$version.tar.xz"
 
 cd libtool-$version
 
-./configure --prefix=/usr TESTSUITEFLAGS="1-121 130-168"
+./configure --prefix=/usr
 
 make -j${jobs}
 
-make -k check -j1
+make -k check -j1 TESTSUITEFLAGS="1-121 130-168"
 
 make install -j${jobs}
 

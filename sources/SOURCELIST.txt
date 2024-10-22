@@ -28,7 +28,7 @@ https://ftp.gnu.org/gnu/groff/groff-1.23.0.tar.gz
 https://ftp.gnu.org/gnu/gzip/gzip-1.13.tar.xz
 https://ftp.gnu.org/gnu/inetutils/inetutils-2.5.tar.xz
 https://ftp.gnu.org/gnu/less/less-661.tar.gz
-https://ftp.gnu.org/gnu/libtool/libtool-2.4.7.tar.xz
+https://ftp.gnu.org/gnu/libtool/libtool-2.5.3.tar.xz
 https://ftp.gnu.org/gnu/m4/m4-1.4.19.tar.gz
 https://ftp.gnu.org/gnu/make/make-4.4.1.tar.gz
 https://ftp.gnu.org/gnu/mpc/mpc-1.3.1.tar.gz

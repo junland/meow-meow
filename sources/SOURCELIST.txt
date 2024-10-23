@@ -59,7 +59,7 @@ https://gitlab.com/psmisc/psmisc/-/archive/v23.7/psmisc-v23.7.tar.gz
 https://launchpad.net/intltool/trunk/0.51.0/+download/intltool-0.51.0.tar.gz
 https://prdownloads.sourceforge.net/tcl/tcl8.6.15-src.tar.gz
 https://sourceware.org/ftp/elfutils/0.191/elfutils-0.191.tar.bz2
-https://www.cpan.org/src/5.0/perl-5.38.2.tar.xz
+https://www.cpan.org/src/5.0/perl-5.40.0.tar.xz
 https://www.kernel.org/pub/linux/utils/kernel/kmod/kmod-33.tar.xz
 https://www.kernel.org/pub/linux/utils/util-linux/v2.40/util-linux-2.40.2.tar.xz
 https://www.openssl.org/source/openssl-3.3.1.tar.gz

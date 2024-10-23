@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: Apache-2.0
 # SPDX-FileCopyrightText: 2025, John Unland
 
-version=5.38.2
+version=5.40.0
 
 cd -- "$TMPDIR"
 

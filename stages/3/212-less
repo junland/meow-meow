@@ -1,0 +1,25 @@
+# Build script for less.
+# SPDX-License-Identifier: Apache-2.0
+# SPDX-FileCopyrightText: 2025, John Unland
+
+version=661
+
+cd -- "$TMPDIR"
+
+rm -rf m4-$version
+
+unpack "${worktree}/sources/less-$version.tar.gz"
+
+cd less-$version
+
+./configure --prefix=/usr --sysconfdir=/etc
+
+make -j${jobs}
+
+make check -j${jobs}
+
+make install -j${jobs}
+
+if [ "$CLEANUP" == true ]; then
+    cd -- "$TMPDIR" && rm -rf less-$version
+fi

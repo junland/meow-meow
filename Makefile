@@ -1,10 +1,9 @@
-IMAGE_NAME := "builder:latest"
-TARGET_ARCH := "x86_64"
+IMAGE_NAME ?= "builder:latest"
+TARGET_ARCH ?= "x86_64"
 BOOTSTRAP_SH := "$(shell pwd)/bootstrap"
 SHELL := /bin/bash -o pipefail
-SUDO := /bin/sudo
-JOBS := $(shell nproc)
-
+SUDO ?= /bin/sudo
+JOBS ?= $(shell nproc)
 
 .PHONY: source
 source:

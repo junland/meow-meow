@@ -1,0 +1,32 @@
+# Build script for openssl.
+# SPDX-License-Identifier: Apache-2.0
+# SPDX-FileCopyrightText: 2025, John Unland
+
+version=1.17
+
+cd -- "$TMPDIR"
+
+rm -rf openssl-$version
+
+unpack "${worktree}/sources/openssl-$version.tar.xz"
+
+cd openssl-$version
+
+./config \
+    --prefix=/usr \
+    --openssldir=/etc/ssl \
+    --libdir=lib \
+    shared \
+    zlib-dynamic
+
+make -j${jobs}
+
+HARNESS_JOBS=$(nproc) make test
+
+sed -i '/INSTALL_LIBS/s/libcrypto.a libssl.a//' Makefile
+
+make MANSUFFIX=ssl install -j${jobs}
+
+if [ "$CLEANUP" == true ]; then
+    cd -- "$TMPDIR" && rm -rf openssl-$version
+fi

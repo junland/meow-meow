@@ -1,0 +1,25 @@
+# Build script for automake.
+# SPDX-License-Identifier: Apache-2.0
+# SPDX-FileCopyrightText: 2025, John Unland
+
+version=1.17
+
+cd -- "$TMPDIR"
+
+rm -rf automake-$version
+
+unpack "${worktree}/sources/automake-$version.tar.xz"
+
+cd automake-$version
+
+./configure --prefix=/usr
+
+make -j${jobs}
+
+make check -j$(($(nproc) > 4 ? $(nproc) : 4))
+
+make install -j${jobs}
+
+if [ "$CLEANUP" == true ]; then
+    cd -- "$TMPDIR" && rm -rf automake-$version
+fi

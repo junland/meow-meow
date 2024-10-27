@@ -1,0 +1,29 @@
+# Build script for libffi.
+# SPDX-License-Identifier: Apache-2.0
+# SPDX-FileCopyrightText: 2025, John Unland
+
+version=3.4.6
+
+cd -- "$TMPDIR"
+
+rm -rf libffi-$version
+
+unpack "${worktree}/sources/libffi-$version.tar.gz"
+
+cd libffi-$version
+
+./configure \
+    --prefix=/usr \
+    --bindir=/bin \
+    --disable-static \
+    --with-gcc-arch=native
+
+make -j${jobs}
+
+make check -j${jobs}
+
+make install -j${jobs}
+
+if [ "$CLEANUP" == true ]; then
+    cd -- "$TMPDIR" && rm -rf libffi-$version
+fi

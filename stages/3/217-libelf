@@ -1,0 +1,32 @@
+# Build script for libelf.
+# SPDX-License-Identifier: Apache-2.0
+# SPDX-FileCopyrightText: 2025, John Unland
+
+version=0.191
+
+cd -- "$TMPDIR"
+
+rm -rf elfutils-$version
+
+unpack "${worktree}/sources/elfutils-$version.tar.bz2"
+
+cd elfutils-$version
+
+./configure \
+    --prefix=/usr \
+    --disable-debuginfod \
+    --enable-libdebuginfod=dummy
+
+make -j${jobs}
+
+make check -j${jobs}
+
+make -C libelf install
+
+install -vm644 config/libelf.pc /usr/lib/pkgconfig
+
+rm /usr/lib/libelf.a
+
+if [ "$CLEANUP" == true ]; then
+    cd -- "$TMPDIR" && rm -rf elfutils-$version
+fi

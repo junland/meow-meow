@@ -34,5 +34,5 @@ make install -j${jobs}
 ln -svf expect${version}/libexpect${version}.so /usr/lib/libexpect${version}.so
 
 if [ "$CLEANUP" == true ]; then
-    cd -- "$TMPDIR" && rm -rf expect-$version
+    cd -- "$TMPDIR" && rm -rf expect$version
 fi

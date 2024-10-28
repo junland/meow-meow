@@ -14,6 +14,6 @@ cd iana-etc-$version
 
 cp -v services protocols /etc
 
-cleanup() {
+if [ "$CLEANUP" == true ]; then
     cd -- "$TMPDIR" && rm -rf iana-etc-$version
-}
+fi

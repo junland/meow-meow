@@ -2,13 +2,13 @@
 # SPDX-License-Identifier: Apache-2.0
 # SPDX-FileCopyrightText: 2025, John Unland
 
-version=1.17
+version=3.3.1
 
 cd -- "$TMPDIR"
 
 rm -rf openssl-$version
 
-unpack "${worktree}/sources/openssl-$version.tar.xz"
+unpack "${worktree}/sources/openssl-$version.tar.gz"
 
 cd openssl-$version
 

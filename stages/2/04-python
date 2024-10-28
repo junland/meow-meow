@@ -28,5 +28,5 @@ make -j${jobs} install
 echo "Done installing Python-$version"
 
 cleanup() {
-    cd -- "$TMPDIR" && rm -rf Python-$version
+    cd -- "$TMPDIR" && rm -rfv Python-$version
 }

@@ -17,10 +17,7 @@ sed -i "s/echo/#echo/" src/egrep.sh
 
 make -j${jobs}
 
-# Set jobs to half of the number of processors
-test_jobs=$(($(jobs) / 2))
-
-make check -j${test_jobs}
+make check -j1
 
 make install -j${jobs}
 

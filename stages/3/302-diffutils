@@ -1,0 +1,24 @@
+# Build script for diffutils.
+# SPDX-License-Identifier: Apache-2.0
+# SPDX-FileCopyrightText: 2025, John Unland
+
+version=3.10
+
+cd -- "$TMPDIR"
+
+rm -rf diffutils-$version
+unpack "${worktree}/sources/diffutils-$version.tar.xz"
+
+cd diffutils-$version
+
+./configure --prefix=/usr
+
+make -j${jobs}
+
+make check -j${jobs}
+
+make install -j${jobs}
+
+if [ "$CLEANUP" == true ]; then
+    cd -- "$TMPDIR" && rm -rf diffutils-$version
+fi

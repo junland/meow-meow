@@ -21,7 +21,7 @@ cd openssl-$version
 
 make -j${jobs}
 
-HARNESS_JOBS=$(nproc) make test
+HARNESS_JOBS=1 make test
 
 sed -i '/INSTALL_LIBS/s/libcrypto.a libssl.a//' Makefile
 

@@ -1,0 +1,26 @@
+# Build script for make.
+# SPDX-License-Identifier: Apache-2.0
+# SPDX-FileCopyrightText: 2025, John Unland
+
+version=4.4.1
+
+cd -- "$TMPDIR"
+
+rm -rf make-$version
+
+unpack "${worktree}/sources/make-$version.tar.gz"
+
+cd make-$version
+
+./configure --prefix=/usr
+
+make -j${jobs}
+
+chown -R tester .
+su tester -c "PATH=$PATH make check  -j${jobs}"
+
+make install -j${jobs}
+
+if [ "$CLEANUP" == true ]; then
+    cd -- "$TMPDIR" && rm -rf make-$version
+fi

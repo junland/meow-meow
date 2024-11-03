@@ -1,0 +1,30 @@
+# Build script for gawk.
+# SPDX-License-Identifier: Apache-2.0
+# SPDX-FileCopyrightText: 2025, John Unland
+
+version=5.3.0
+
+cd -- "$TMPDIR"
+
+rm -rf gawk-$version
+unpack "${worktree}/sources/gawk-$version.tar.xz"
+
+cd gawk-$version
+
+sed -i 's/extras//' Makefile.in
+
+./configure --prefix=/usr
+
+make -j${jobs}
+
+chown -R tester .
+
+su tester -c "PATH=$PATH make check -j${jobs}"
+
+rm -f /usr/bin/gawk-$version
+
+make install -j${jobs}
+
+if [ "$CLEANUP" == true ]; then
+    cd -- "$TMPDIR" && rm -rf gawk-$version
+fi

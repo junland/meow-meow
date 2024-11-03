@@ -1,0 +1,27 @@
+# Build script for findutils.
+# SPDX-License-Identifier: Apache-2.0
+# SPDX-FileCopyrightText: 2025, John Unland
+
+version=4.8.0
+
+cd -- "$TMPDIR"
+
+tar -xf "$SRCDIR/findutils-$version.tar.xz"
+
+cd "findutils-$version"
+
+./configure \
+    --prefix=/usr \
+    --localstatedir=/var/lib/locate
+
+make -j${jobs}
+
+chown -R tester .
+
+su tester -c "PATH=$PATH make check -j${jobs}"
+
+make install -j${jobs}
+
+if [ "$CLEANUP" == true ]; then
+    cd -- "$TMPDIR" && rm -rf "findutils-$version"
+fi

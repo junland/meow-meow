@@ -82,8 +82,8 @@ chkstatus_or_exit() {
     status=$?
 
     if test $status -ne 0; then
-        # Run the demount_chroot function if the stage is set to 2
-        if test "$stage" = 2; then
+        # Run the demount_chroot function if the stage is set to 2 or 3
+        if test "$stage" = 2 || test "$stage" = 3; then
             demount_chroot
         fi
 

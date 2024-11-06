@@ -7,6 +7,7 @@ version=3.10
 cd -- "$TMPDIR"
 
 rm -rf diffutils-$version
+
 unpack "${worktree}/sources/diffutils-$version.tar.xz"
 
 cd diffutils-$version

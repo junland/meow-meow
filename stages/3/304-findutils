@@ -6,9 +6,9 @@ version=4.8.0
 
 cd -- "$TMPDIR"
 
-tar -xf "$SRCDIR/findutils-$version.tar.xz"
+unpack "${worktree}/sources/findutils-$version.tar.xz"
 
-cd "findutils-$version"
+cd findutils-$version
 
 ./configure \
     --prefix=/usr \

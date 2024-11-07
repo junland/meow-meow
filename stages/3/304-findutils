@@ -6,6 +6,10 @@ version=4.8.0
 
 cd -- "$TMPDIR"
 
+pwd
+
+rm -rf findutils-$version
+
 unpack "${worktree}/sources/findutils-$version.tar.xz"
 
 cd findutils-$version
@@ -23,5 +27,5 @@ su tester -c "PATH=$PATH make check -j${jobs}"
 make install -j${jobs}
 
 if [ "$CLEANUP" == true ]; then
-    cd -- "$TMPDIR" && rm -rf "findutils-$version"
+    cd -- "$TMPDIR" && rm -rf findutils-$version
 fi

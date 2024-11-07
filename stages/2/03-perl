@@ -27,6 +27,6 @@ make -j${jobs}
 
 make -j${jobs} install
 
-cleanup() {
+if [ "$CLEANUP" == true ]; then
     cd -- "$TMPDIR" && rm -rf perl-$version
-}
+fi

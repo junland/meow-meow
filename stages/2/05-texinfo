@@ -18,6 +18,6 @@ make -j${jobs}
 
 make -j1 install
 
-cleanup() {
+if [ "$CLEANUP" == true ]; then
     cd -- "$TMPDIR" && rm -rf texinfo-$version
-}
+fi

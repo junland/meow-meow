@@ -19,6 +19,6 @@ make -j${jobs}
 
 cp -v gettext-tools/src/{msgfmt,msgmerge,xgettext} /usr/bin
 
-cleanup() {
+if [ "$CLEANUP" == true ]; then
     cd -- "$TMPDIR" && rm -rf gettext-$version
-}
+fi

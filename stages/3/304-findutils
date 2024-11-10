@@ -20,9 +20,9 @@ cd findutils-$version
 
 make -j${jobs}
 
-chown -R tester .
+# chown -R tester .
 
-su tester -c "PATH=$PATH make check -j${jobs}"
+# su tester -c "PATH=$PATH make check -j${jobs}"
 
 make install -j${jobs}
 

@@ -1,0 +1,25 @@
+# Build script for tar.
+# SPDX-License-Identifier: Apache-2.0
+# SPDX-FileCopyrightText: 2025, John Unland
+
+version=1.35
+
+cd -- "$TMPDIR"
+
+rm -rf tar-$version
+
+unpack "${worktree}/sources/tar-$version.tar.xz"
+
+cd tar-$version
+
+FORCE_UNSAFE_CONFIGURE=1 ./configure --prefix=/usr
+
+make -j${jobs}
+
+make check -j${jobs}
+
+make install -j${jobs}
+
+if [ "$CLEANUP" == true ]; then
+    cd -- "$TMPDIR" && rm -rf tar-$version
+fi

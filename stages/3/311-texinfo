@@ -1,0 +1,27 @@
+# Build script for texinfo.
+# SPDX-License-Identifier: Apache-2.0
+# SPDX-FileCopyrightText: 2025, John Unland
+
+version=7.1
+
+cd -- "$TMPDIR"
+
+rm -rf texinfo-$version
+
+unpack "${worktree}/sources/texinfo-$version.tar.xz"
+
+cd texinfo-$version
+
+./configure --prefix=/usr
+
+make -j${jobs}
+
+make check -j${jobs}
+
+make install -j${jobs}
+
+make TEXMF=/usr/share/texmf install-text -j${jobs}
+
+if [ "$CLEANUP" == true ]; then
+    cd -- "$TMPDIR" && rm -rf texinfo-$version
+fi

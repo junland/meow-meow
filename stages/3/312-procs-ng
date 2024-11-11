@@ -1,0 +1,31 @@
+# Build script for procs-ng.
+# SPDX-License-Identifier: Apache-2.0
+# SPDX-FileCopyrightText: 2025, John Unland
+
+version=4.0.4
+
+cd -- "$TMPDIR"
+
+rm -rf procs-ng-$version
+
+unpack "${worktree}/sources/procs-ng-$version.tar.gz"
+
+cd procs-ng-$version
+
+./configure \
+    --prefix=/usr \
+    --docdir=/usr/share/doc/procps-ng-$version \
+    --disable-static \
+    --disable-kill
+
+make -j${jobs}
+
+chown -R tester .
+
+su tester -c "PATH=$PATH make check"
+
+make install -j${jobs}
+
+if [ "$CLEANUP" == true ]; then
+    cd -- "$TMPDIR" && rm -rf procs-ng-$version
+fi

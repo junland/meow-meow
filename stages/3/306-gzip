@@ -1,0 +1,27 @@
+# Build script for gzip.
+# SPDX-License-Identifier: Apache-2.0
+# SPDX-FileCopyrightText: 2025, John Unland
+
+version=1.13
+
+cd -- "$TMPDIR"
+
+rm -rf gzip-${version}
+
+unpack "${worktree}/sources/gzip-${version}.tar.xz"
+
+cd gzip-${version}
+
+./configure \
+    --prefix=/usr \
+    --docdir=/usr/share/doc/gzip-${version}
+
+make -j${jobs}
+
+make check -j1
+
+make install -j${jobs}
+
+if [ "$CLEANUP" == true ]; then
+    cd -- "$TMPDIR" && rm -rf gzip-${version}
+fi

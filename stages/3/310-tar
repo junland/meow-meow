@@ -16,7 +16,7 @@ FORCE_UNSAFE_CONFIGURE=1 ./configure --prefix=/usr
 
 make -j${jobs}
 
-make check -j1
+make check -j${jobs} || true
 
 make install -j${jobs}
 

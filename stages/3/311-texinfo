@@ -20,7 +20,7 @@ make check -j${jobs}
 
 make install -j${jobs}
 
-make TEXMF=/usr/share/texmf install-text -j${jobs}
+make TEXMF=/usr/share/texmf install-tex -j${jobs}
 
 if [ "$CLEANUP" == true ]; then
     cd -- "$TMPDIR" && rm -rf texinfo-$version

@@ -8,7 +8,7 @@ cd -- "$TMPDIR"
 
 rm -rf procs-ng-$version
 
-unpack "${worktree}/sources/procs-ng-$version.tar.gz"
+unpack "${worktree}/sources/procs-ng-$version.tar.xz"
 
 cd procs-ng-$version
 

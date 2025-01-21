@@ -8,7 +8,7 @@ cd -- "$TMPDIR"
 
 rm -rf procps-ng-v$version
 
-unpack "${worktree}/sources/procps-ng-$version.tar.gz"
+unpack "${worktree}/sources/procps-ng-v$version.tar.gz"
 
 cd procps-ng-$version
 

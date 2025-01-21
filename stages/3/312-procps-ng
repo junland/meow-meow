@@ -12,6 +12,8 @@ unpack "${worktree}/sources/procps-v$version.tar.gz"
 
 cd procps-v$version
 
+./autogen.sh
+
 ./configure \
     --prefix=/usr \
     --docdir=/usr/share/doc/procps-ng-$version \

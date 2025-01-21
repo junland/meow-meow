@@ -6,11 +6,11 @@ version=4.0.4
 
 cd -- "$TMPDIR"
 
-rm -rf procps-ng-v$version
+rm -rf procps-v$version
 
-unpack "${worktree}/sources/procps-ng-v$version.tar.gz"
+unpack "${worktree}/sources/procps-v$version.tar.gz"
 
-cd procps-ng-$version
+cd procps-v$version
 
 ./configure \
     --prefix=/usr \
@@ -27,5 +27,5 @@ su tester -c "PATH=$PATH make check"
 make install -j${jobs}
 
 if [ "$CLEANUP" == true ]; then
-    cd -- "$TMPDIR" && rm -rf procps-ng-$version
+    cd -- "$TMPDIR" && rm -rf procps-$version
 fi

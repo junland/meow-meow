@@ -98,17 +98,20 @@ mount_chroot() {
     # Mount the required filesystems for chroot
     warn "Mounting chroot environment ..."
 
+    msg "Adding nodes to chroot ..."
+
     # Create console and tty devices if they do not exist
     [ -e $LFS/dev/console ] && mknod -m 600 "$LFS/dev/console" c 5 1
     [ -e $LFS/dev/null ] && mknod -m 666 "$LFS/dev/null" c 1 3
     [ -e $LFS/dev/zero ] && mknod -m 666 "$LFS/dev/zero" c 1 5
     [ -e $LFS/dev/tty ] && mknod -m 666 "$LFS/dev/tty" c 5 0
 
-    mount -v --bind /dev "$LFS/dev"
-    mount -vt devpts devpts -o gid=5,mode=0620 "$LFS/dev/pts" 
-    mount -vt proc proc "$LFS/proc"
-    mount -vt sysfs sysfs "$LFS/sys"
-    mount -vt tmpfs tmpfs "$LFS/run"
+    mount -v --bind /dev $ROOTFS/dev
+    mount -vt devpts devpts -o gid=5,mode=0620,nosuid,noexec $ROOTFS/dev/pts
+    mount -vt proc proc -o nosuid,noexec,nodev $ROOTFS/proc
+    mount -vt sysfs sysfs -o nosuid,noexec,nodev,ro $ROOTFS/sys
+    mount -v /run --bind --make-private $ROOTFS/run
+    #mount --bind /dev/pts "$ROOTFS"/dev/pts
 
     if [ -h $LFS/dev/shm ]; then
       install -v -d -m 1777 $LFS$(realpath /dev/shm)

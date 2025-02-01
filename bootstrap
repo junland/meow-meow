@@ -95,12 +95,10 @@ chkstatus_or_exit() {
 }
 
 mount_chroot() {
-    # Mount the required filesystems for chroot
     warn "Mounting chroot environment ..."
 
     echo "Creating mount directories ..."
-    
-    mkdir -pv $LFS/{dev,proc,sys,run}
+    mkdir -pv $LFS/{dev/shm,proc,sys,run}
 
     echo "Adding nodes to chroot ..."
 
@@ -110,12 +108,11 @@ mount_chroot() {
     [ -e $LFS/dev/zero ] && mknod -m 666 "$LFS/dev/zero" c 1 5
     [ -e $LFS/dev/tty ] && mknod -m 666 "$LFS/dev/tty" c 5 0
 
+    echo "Mounting chroot..."
     mount -v --bind /dev $ROOTFS/dev
     mount -vt devpts devpts -o gid=5,mode=0620 $ROOTFS/dev/pts
     mount -vt proc proc -o nosuid,noexec,nodev $ROOTFS/proc
     mount -vt sysfs sysfs -o nosuid,noexec,nodev,ro $ROOTFS/sys
-    mount -v /run --bind --make-private $ROOTFS/run
-    #mount --bind /dev/pts "$ROOTFS"/dev/pts
 
     if [ -h $LFS/dev/shm ]; then
       echo "Creating shared memory directory ..."

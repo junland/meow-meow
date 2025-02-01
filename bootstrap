@@ -109,10 +109,10 @@ mount_chroot() {
     [ -e $LFS/dev/tty ] && mknod -m 666 "$LFS/dev/tty" c 5 0
 
     echo "Mounting chroot..."
-    mount -v --bind /dev $ROOTFS/dev
-    mount -vt devpts devpts -o gid=5,mode=0620 $ROOTFS/dev/pts
-    mount -vt proc proc -o nosuid,noexec,nodev $ROOTFS/proc
-    mount -vt sysfs sysfs -o nosuid,noexec,nodev,ro $ROOTFS/sys
+    mount -v --bind /dev $LFS/dev
+    mount -vt devpts devpts -o gid=5,mode=0620 $LFS/dev/pts
+    mount -vt proc proc -o nosuid,noexec,nodev $LFS/proc
+    mount -vt sysfs sysfs -o nosuid,noexec,nodev,ro $LFS/sys
 
     if [ -h $LFS/dev/shm ]; then
       echo "Creating shared memory directory ..."

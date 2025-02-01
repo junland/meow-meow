@@ -98,6 +98,10 @@ mount_chroot() {
     # Mount the required filesystems for chroot
     warn "Mounting chroot environment ..."
 
+    msg "Creating mount directories ..."
+    
+    mkdir -pv $LFS/{dev,proc,sys,run}
+
     msg "Adding nodes to chroot ..."
 
     # Create console and tty devices if they do not exist
@@ -107,15 +111,17 @@ mount_chroot() {
     [ -e $LFS/dev/tty ] && mknod -m 666 "$LFS/dev/tty" c 5 0
 
     mount -v --bind /dev $ROOTFS/dev
-    mount -vt devpts devpts -o gid=5,mode=0620,nosuid,noexec $ROOTFS/dev/pts
+    mount -vt devpts devpts -o gid=5,mode=0620 $ROOTFS/dev/pts
     mount -vt proc proc -o nosuid,noexec,nodev $ROOTFS/proc
     mount -vt sysfs sysfs -o nosuid,noexec,nodev,ro $ROOTFS/sys
     mount -v /run --bind --make-private $ROOTFS/run
     #mount --bind /dev/pts "$ROOTFS"/dev/pts
 
     if [ -h $LFS/dev/shm ]; then
+      msg "Creating shared memory directory ..."
       install -v -d -m 1777 $LFS$(realpath /dev/shm)
     else
+      msg "Mounting shared memory directory ..."
       mount -vt tmpfs -o nosuid,nodev tmpfs $LFS/dev/shm
     fi
 }

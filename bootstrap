@@ -98,20 +98,20 @@ mount_chroot() {
     warn "Mounting chroot environment ..."
 
     echo "Creating mount directories ..."
-    mkdir -pv $LFS/{dev/shm,proc,sys,run,tmp}
+    mkdir -pv "$LFS"/{dev/shm,proc,sys,run,tmp}
 
     echo "Mounting chroot..."
-    mount -v --bind /dev $LFS/dev
-    mount -vt devpts devpts -o gid=5,mode=0620 $LFS/dev/pts
-    mount -vt proc proc -o nosuid,noexec,nodev $LFS/proc
-    mount -vt sysfs sysfs -o nosuid,noexec,nodev,ro $LFS/sys
+    mount -v --bind /dev "$LFS/dev"
+    mount -vt devpts devpts -o gid=5,mode=0620 "$LFS/dev/pts"
+    mount -vt proc proc -o nosuid,noexec,nodev "$LFS/proc"
+    mount -vt sysfs sysfs -o nosuid,noexec,nodev,ro "$LFS/sys"
 
-    if [ -h $LFS/dev/shm ]; then
+    if [ -h "$LFS/dev/shm" ]; then
       echo "Creating shared memory directory ..."
-      install -v -d -m 1777 $LFS$(realpath /dev/shm)
+      install -v -d -m 1777 "$LFS"$(realpath /dev/shm)
     else
       echo "Mounting shared memory directory ..."
-      mount -vt tmpfs -o nosuid,nodev tmpfs $LFS/dev/shm
+      mount -vt tmpfs -o nosuid,nodev tmpfs "$LFS/dev/shm"
     fi
 }
 

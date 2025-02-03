@@ -102,9 +102,10 @@ mount_chroot() {
 
     echo "Mounting chroot..."
     mount -v --bind /dev "$LFS/dev"
-    mount -vt devpts devpts -o gid=5,mode=0620 "$LFS/dev/pts"
+    mount -v --bind /dev/pts "$LFS/dev/pts"
     mount -vt proc proc -o nosuid,noexec,nodev "$LFS/proc"
     mount -vt sysfs sysfs -o nosuid,noexec,nodev,ro "$LFS/sys"
+    mount -v --bind /run "$LFS/run"
 
     if [ -h "$LFS/dev/shm" ]; then
       echo "Creating shared memory directory ..."

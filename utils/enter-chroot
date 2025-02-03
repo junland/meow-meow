@@ -35,7 +35,6 @@ mount_chroot() {
     msg "Mounting chroot..."
     mount -v --bind /dev "$ROOTFS/dev"
     mount -v --bind /dev/pts "$ROOTFS/dev/pts"
-
     mount -vt proc proc -o nosuid,noexec,nodev "$ROOTFS/proc"
     mount -vt sysfs sysfs -o nosuid,noexec,nodev,ro "$ROOTFS/sys"
     mount -v --bind /run "$ROOTFS/run"

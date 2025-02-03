@@ -1,0 +1,54 @@
+#!/bin/bash
+# SPDX-License-Identifier: GPL-3.0-or-later
+# SPDX-FileCopyrightText: 2025, John Unland
+
+trap umount_chroot \
+    HUP INT QUIT TERM \
+    SIGHUP SIGINT SIGQUIT SIGILL \
+    SIGABRT SIGTRAP SIGTERM SIGSEGV
+
+msg() {
+    printf '[\033[32m INFO\033[m ] %s\n' "$@"
+}
+
+fail() {
+    printf '[\033[31m FAIL\033[m ] %s\n' "$@"
+    exit 1
+}
+
+warn() {
+    printf '[\033[33m WARN\033[m ] %s\n' "$@"
+}
+
+umount_chroot() {
+    msg "Unmounting chroot..."
+    # Define the required mount points
+    mount_points=("$ROOTFS/dev/pts" "$ROOTFS/dev/shm" "$ROOTFS/dev" "$ROOTFS/run" "$ROOTFS/proc" "$ROOTFS/sys")
+
+    # Make sure we dont have any left over mounts
+    for point in "${mount_points[@]}"; do
+        if mountpoint -q "$point"; then
+            echo "Unmounting $point ..."
+            if ! umount "$point"; then
+                warn "Failed to unmount $point doing a lazy unmount ..."
+                umount -l "$point"
+            fi
+        else
+            echo "$point is not mounted."
+        fi
+    done
+}
+
+if [ -z "$1" ]; then
+    fail "No rootfs directory has been specified"
+fi
+
+if [ ! -d "$1" ]; then
+    fail "$1 is not a directory."
+fi
+
+ROOTFS=$1
+
+umount_chroot
+
+exit 0

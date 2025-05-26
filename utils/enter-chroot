@@ -88,19 +88,19 @@ if [ -n "$2" ]; then
         TERM="$TERM" \
         LC_ALL=POSIX \
         MAKEFLAGS="-j${CPU_JOBS}" \
-        PS1='(chroot-qemu) \u:\w\$ '
+        PS1='(chroot-qemu) \u:\w\$ ' \
+        TESTSUITEFLAGS="-j${CPU_JOBS}" \
+        PATH=/bin:/usr/bin:/sbin:/usr/sbin /bin/bash --login
+else
+    chroot "$ROOTFS" /usr/bin/env -i \
+        HOME=/ \
+        TERM="$TERM" \
+        LC_ALL=POSIX \
+        MAKEFLAGS="-j${CPU_JOBS}" \
+        PS1='(chroot-native) \u:\w\$ ' \
         TESTSUITEFLAGS="-j${CPU_JOBS}" \
         PATH=/bin:/usr/bin:/sbin:/usr/sbin /bin/bash --login
 fi
-
-chroot "$ROOTFS" /usr/bin/env -i \
-    HOME=/ \
-    TERM="$TERM" \
-    LC_ALL=POSIX \
-    MAKEFLAGS="-j${CPU_JOBS}" \
-    PS1='(chroot-native) \u:\w\$ ' \
-    TESTSUITEFLAGS="-j${CPU_JOBS}" \
-    PATH=/bin:/usr/bin:/sbin:/usr/sbin /bin/bash --login
 
 umount_chroot
 

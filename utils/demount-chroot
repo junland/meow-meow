@@ -2,11 +2,6 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # SPDX-FileCopyrightText: 2025, John Unland
 
-trap umount_chroot \
-    HUP INT QUIT TERM \
-    SIGHUP SIGINT SIGQUIT SIGILL \
-    SIGABRT SIGTRAP SIGTERM SIGSEGV
-
 msg() {
     printf '[\033[32m INFO\033[m ] %s\n' "$@"
 }
@@ -48,6 +43,17 @@ if [ ! -d "$1" ]; then
 fi
 
 ROOTFS=$1
+
+umount_chroot
+
+exit 0
+ROOTFS=$1
+
+# Set up trap after ROOTFS is defined
+trap umount_chroot \
+    HUP INT QUIT TERM \
+    SIGHUP SIGINT SIGQUIT SIGILL \
+    SIGABRT SIGTRAP SIGTERM SIGSEGV
 
 umount_chroot
 

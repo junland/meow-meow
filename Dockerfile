@@ -100,3 +100,6 @@ RUN make bootstrap-0
 
 # Run bootstrap script for stage 1
 RUN make bootstrap-1
+
+# Use make as the entrypoint
+ENTRYPOINT ["make"]

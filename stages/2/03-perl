@@ -10,6 +10,8 @@ rm -rf perl-$version
 
 unpack "${worktree}/sources/perl-$version.tar.xz"
 
+echo "Building Perl $version..."
+
 cd perl-$version
 
 sh Configure -des \

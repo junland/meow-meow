@@ -1,4 +1,4 @@
-FROM ubuntu:24.04
+FROM ubuntu:24.04 as base
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -9,6 +9,9 @@ ENV LC_ALL=POSIX
 ENV LANGUAGE=POSIX
 
 RUN touch .dockerenv
+
+# Touch /.dockerenv to prevent Docker from trying to mount the host's /etc/mtab
+RUN touch /.dockerenv
 
 # Set timezone
 RUN ln -snf /usr/share/zoneinfo/$TIMEZONE /etc/localtime && echo $TIMEZONE >/etc/timezone
@@ -87,3 +90,16 @@ RUN chown -R builder:builder /home/builder
 
 # Switch to builder user
 USER builder
+
+FROM base as builder
+
+WORKDIR /home/builder
+
+# Run bootstrap script for stage 0
+RUN make bootstrap-0
+
+# Run bootstrap script for stage 1
+RUN make bootstrap-1
+
+# Run bootstrap script for stage 2
+RUN make bootstrap-2
